@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { connection } from "next/server";
+import { SelfTestsUnavailable } from "@/components/self-test/SelfTestsUnavailable";
 import { api } from "@/lib/api";
 import type { SelfTestSummary } from "@/types/self-test";
 
@@ -10,7 +12,15 @@ export const metadata: Metadata = {
 };
 
 export default async function SelfTestsPage() {
-  const tests = await api<SelfTestSummary[]>("/self-tests");
+  // Fetch at request time, so builds never depend on the API being reachable.
+  await connection();
+  let tests: SelfTestSummary[];
+  try {
+    tests = await api<SelfTestSummary[]>("/self-tests");
+  } catch (err) {
+    console.error("Self-tests list unavailable:", err);
+    return <SelfTestsUnavailable />;
+  }
 
   return (
     <>
