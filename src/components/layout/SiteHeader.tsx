@@ -4,19 +4,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { nav } from "./nav";
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  // The menu belongs to the page it was opened on, so navigating closes it.
+  const [openOn, setOpenOn] = useState<string | null>(null);
+  const open = openOn === pathname;
+  const [signedIn, setSignedIn] = useState(false);
 
-  // Close the mobile menu whenever the route changes.
-  useEffect(() => setOpen(false), [pathname]);
+  // Fires once with the current session, then on every sign-in or sign-out.
+  useEffect(() => {
+    const { data } = createClient().auth.onAuthStateChange((_event, session) => setSignedIn(!!session));
+    return () => data.subscription.unsubscribe();
+  }, []);
 
   const isActive = (href: string) =>
     href === "/events"
       ? pathname === "/events"
       : pathname === href || pathname.startsWith(`${href}/`);
+
+  const account = signedIn
+    ? { href: "/dashboard", label: "My account" }
+    : { href: "/login", label: "Sign in" };
 
   return (
     <header className="sticky top-0 z-40 border-b border-rule bg-limestone/95 backdrop-blur supports-[backdrop-filter]:bg-limestone/80">
@@ -26,7 +37,7 @@ export function SiteHeader() {
       >
         Skip to content
       </a>
-      <div className="wrap flex h-22 items-center justify-between gap-6">
+      <div className="wrap flex h-22 items-center justify-between gap-4">
         <Link href="/" className="shrink-0" aria-label="Encounter Ground home">
           <Image
             src="/brand/lockup.png"
@@ -38,14 +49,14 @@ export function SiteHeader() {
           />
         </Link>
 
-        <nav aria-label="Main" className="hidden md:block">
-          <ul className="flex items-center gap-1">
+        <nav aria-label="Main" className="hidden xl:block">
+          <ul className="flex items-center gap-0.5">
             {nav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
-                  className="rounded-full px-3.5 py-2 text-[0.95rem] font-medium text-slate transition-colors hover:text-slate-ink aria-[current=page]:bg-slate aria-[current=page]:text-chalk"
+                  className="rounded-full px-3 py-2 text-[0.95rem] font-medium text-slate transition-colors hover:text-slate-ink aria-[current=page]:bg-slate aria-[current=page]:text-chalk"
                 >
                   {item.label}
                 </Link>
@@ -54,24 +65,36 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <button
-          type="button"
-          className="inline-flex h-11 items-center gap-2 rounded-full border border-slate/30 px-4 text-sm font-semibold text-slate-ink md:hidden"
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? "Close" : "Menu"}
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            href={account.href}
+            aria-current={isActive(account.href) ? "page" : undefined}
+            className="hidden rounded-full px-3 py-2 text-[0.95rem] font-semibold text-slate-ink hover:text-amber aria-[current=page]:text-amber xl:inline-block"
+          >
+            {account.label}
+          </Link>
+          <Link href="/give" className="btn btn-fire min-h-11 px-5 py-2">
+            Give
+          </Link>
+          <button
+            type="button"
+            className="inline-flex h-11 items-center gap-2 rounded-full border border-slate/30 px-4 text-sm font-semibold text-slate-ink xl:hidden"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            onClick={() => setOpenOn(open ? null : pathname)}
+          >
+            {open ? "Close" : "Menu"}
+          </button>
+        </div>
       </div>
 
       <nav
         id="mobile-nav"
         aria-label="Main"
         hidden={!open}
-        className="border-t border-rule bg-limestone md:hidden"
+        className="max-h-[calc(100dvh-5.5rem)] overflow-y-auto border-t border-rule bg-limestone xl:hidden"
       >
-        <ul className="wrap flex flex-col py-3">
+        <ul className="wrap grid py-3 sm:grid-cols-2 sm:gap-x-8">
           <li>
             <Link href="/" className="block py-3 font-display text-2xl text-slate-ink">
               Home
@@ -89,6 +112,16 @@ export function SiteHeader() {
             </li>
           ))}
         </ul>
+        <div className="wrap flex flex-wrap gap-3 border-t border-rule py-5">
+          <Link href={account.href} className="btn btn-quiet text-slate-ink">
+            {account.label}
+          </Link>
+          {!signedIn && (
+            <Link href="/register" className="btn btn-quiet text-slate-ink">
+              Create an account
+            </Link>
+          )}
+        </div>
       </nav>
     </header>
   );

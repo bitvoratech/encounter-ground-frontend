@@ -24,7 +24,7 @@ export function SiteFooter() {
         <nav aria-label="Footer">
           <h2 className="font-display text-xl text-chalk">Explore</h2>
           <ul className="mt-4 space-y-2.5">
-            {nav.map((item) => (
+            {[...nav, { href: "/give", label: "Give" }, { href: "/login", label: "Sign in" }].map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="hover:text-flame">
                   {item.label}
