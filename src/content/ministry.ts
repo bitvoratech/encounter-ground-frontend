@@ -80,3 +80,60 @@ export const yada = {
     "Dress as one who is coming into the presence of their King.",
   ],
 };
+
+// Home page sections carried over from the former WordPress site (encounterground.org).
+export const home = {
+  tagline: "Dominion in Intimacy",
+  welcome:
+    "Let us discover faith together as we grow in intimacy through our fellowship with the Spirit of God! Join us in this spiritual journey, growing in the grace and knowledge of our Lord Jesus Christ.",
+  // TODO: replace with on-site registration once member accounts ship.
+  joinUsUrl:
+    "https://docs.google.com/forms/d/e/1FAIpQLScAXJFIqkya7AkuC0X5mHlw9oz1aKj93E97rCyAc5XLgufk7A/viewform",
+  whoWeAre: {
+    heading: "A House of Dominion Through Intimacy",
+    // The old site gave two different founding years (2001 and 2021), so the
+    // year is left out until the ministry confirms it.
+    body: [
+      "Encounter Ground is a vibrant faith community dedicated to spreading the teachings of the Bible through passionate prayer, prophetic ministry, and uplifting worship. Founded through a simple act of obedience, our doors, both physical and virtual, are open to all.",
+      "We are a family, growing together in the Spirit, known for our love for God’s Word, our devotion to dwelling in His presence, and our desire to behold His beauty daily.",
+      "We believe the most incredible adventure of every believer begins with a loving, interactive relationship with the Holy Spirit.",
+    ],
+  },
+  pillars: [
+    {
+      title: "Dwelling Place for His Presence",
+      body: "Our main goal is to create a sanctuary, both physical and virtual, where individuals can experience the tangible presence of God.",
+    },
+    {
+      title: "Equip Disciples Through Biblical Truth",
+      body: "We are dedicated to the practical teaching of the Bible, empowering believers to move from simply hearing the Word to living it out.",
+    },
+    {
+      title: "Activate a Prophetic and Praying Community",
+      body: "We foster a culture of prayer and prophetic ministry, training our community to engage in dynamic relationship with the Holy Spirit.",
+    },
+    {
+      title: "Fulfill the Great Commission in Our Generation",
+      body: "We are committed to spreading the knowledge of God’s glory to the ends of the earth.",
+    },
+  ],
+  streams: [
+    { name: "YouTube replays", detail: "Catch up on past streams", href: "https://www.youtube.com/@encountergroundtv/streams" },
+    { name: "Mixlr", detail: "Listen live on audio", href: "https://encounterground.mixlr.com/events/2805055" },
+    { name: "Zoom", detail: "Join the live meeting", href: "https://us02web.zoom.us/j/8248076803?pwd=a0Q4WWcxTjVmOFE1THBNWVpBOTZPUT09" },
+  ],
+};
+
+export type BankAccount = { bank: string; accountName: string; accountNumber: string; currency: string };
+
+// Giving. The old site's Donations page was a broken link, so there are no
+// details to carry over. Add the ministry's accounts here once confirmed;
+// online giving arrives with the Paystack integration.
+export const giving = {
+  bankAccounts: [] as BankAccount[],
+  uses: [
+    { title: "Prayer & streams", body: "Zoe Healing Stream, the Prayer Stretches and the live streams that carry them." },
+    { title: "YADA Conference", body: "A free conference every December, open to everyone who is hungry for God." },
+    { title: "Discipleship", body: "The discipleship classes and the Ministry School, so teaching reaches more people." },
+  ],
+};
