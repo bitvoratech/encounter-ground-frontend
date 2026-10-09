@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+/*
+  Encounter Ground brand tokens, taken from the logo:
+  slate and stone from the altar stones, flame and amber from the fire.
+  Gold is reserved for things that are "lit": primary actions and the conference.
+*/
+@theme {
+  --color-limestone: #eff0ee;   /* page */
+  --color-chalk: #f8f8f6;       /* raised surfaces */
+  --color-slate: #485868;       /* ink, structure */
+  --color-slate-deep: #27323d;  /* the one dark band, footer */
+  --color-slate-ink: #1d2630;   /* headings on light */
+  --color-stone: #888898;       /* the lighter stones */
+  --color-stone-muted: #5f6b77; /* secondary text on light (AA on limestone) */
+  --color-rule: #d5d8db;
+  --color-flame: #f8b808;       /* fire */
+  --color-flame-hot: #ffcf3d;
+  --color-amber: #8a5a06;       /* gold text on light surfaces (AA) */
+  --color-amber-logo: #b87808;
+
+  --font-display: var(--font-gloock), Georgia, serif;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale: a perfect fourth (1.333) from 17px body */
+  --text-body: 1.0625rem;
+  --text-lede: 1.25rem;
+  --text-h3: 1.5rem;
+  --text-h2: clamp(1.875rem, 1.4rem + 2vw, 2.75rem);
+  --text-h1: clamp(2.375rem, 1.6rem + 3.6vw, 4.25rem);
+  --text-display: clamp(2.75rem, 1.4rem + 6vw, 6rem);
+}
+
+@layer base {
+  html {
+    background: var(--color-limestone);
+    color: var(--color-slate-ink);
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  ::selection { background: var(--color-flame); color: var(--color-slate-ink); }
+  :focus-visible {
+    outline: 3px solid var(--color-flame);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .wrap { padding-inline: 2rem; }
+  }
+  .measure { max-width: 38rem; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.75rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.2;
+    transition: background-color 150ms, color 150ms, border-color 150ms;
+  }
+  .btn-fire { background: var(--color-flame); color: var(--color-slate-ink); }
+  .btn-fire:hover { background: var(--color-flame-hot); }
+  .btn-quiet {
+    border: 1.5px solid currentColor;
+    color: inherit;
+  }
+  .btn-quiet:hover { background: color-mix(in oklab, currentColor 8%, transparent); }
+
+  .link {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: var(--color-flame);
+  }
+  .link:hover { text-decoration-thickness: 3px; }
+
+  .prose-eg p + p { margin-top: 1.1em; }
+  .prose-eg { line-height: 1.7; }
+}
+
+/*
+  The conference "fire": a low glow rising from the bottom of the dark band.
+  One deliberate moment, used only on the YADA sections.
+*/
+.ember {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--color-slate-deep);
+  color: var(--color-chalk);
+}
+.ember::before {
+  content: "";
+  position: absolute;
+  inset: auto -10% -18% -10%;
+  height: 75%;
+  z-index: -1;
+  background:
+    radial-gradient(55% 60% at 50% 100%, rgb(248 184 8 / 0.42), transparent 72%),
+    radial-gradient(28% 40% at 70% 100%, rgb(255 207 61 / 0.35), transparent 72%);
+  filter: blur(8px);
+  animation: kindle 2.4s ease-out both;
+}
+@keyframes kindle {
+  from { opacity: 0; transform: translateY(12%); }
+  to   { opacity: 1; transform: none; }
+}
