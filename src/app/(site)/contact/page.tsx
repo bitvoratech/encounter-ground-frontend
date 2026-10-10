@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/site/ContactForm";
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { contact } from "@/content/ministry";
 
 export const metadata: Metadata = {
@@ -58,9 +59,10 @@ export default function ContactPage() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex flex-wrap items-baseline justify-between gap-2 py-5"
+                  className="group flex flex-wrap items-center justify-between gap-2 py-5"
                 >
-                  <span className="font-display text-2xl text-slate-ink group-hover:text-amber">
+                  <span className="inline-flex items-center gap-3 font-display text-2xl text-slate-ink group-hover:text-amber">
+                    <SocialIcon name={s.name} size={26} className="text-amber" />
                     {s.name}
                   </span>
                   <span className="text-stone-muted">{s.handle}</span>
