@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { contact } from "@/content/ministry";
-import { nav } from "./nav";
+import { navLinks } from "./nav";
 
 export function SiteFooter() {
   return (
@@ -24,7 +24,7 @@ export function SiteFooter() {
         <nav aria-label="Footer">
           <h2 className="font-display text-xl text-chalk">Explore</h2>
           <ul className="mt-4 space-y-2.5">
-            {[...nav, { href: "/give", label: "Give" }, { href: "/login", label: "Sign in" }].map((item) => (
+            {[...navLinks, { href: "/give", label: "Give" }, { href: "/login", label: "Sign in" }].map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="hover:text-flame">
                   {item.label}

@@ -138,3 +138,21 @@
   from { opacity: 0; transform: translateY(12%); }
   to   { opacity: 1; transform: none; }
 }
+
+/*
+  "Dominion in Intimacy": burnished gold lettering for the home hero, dark
+  enough at the top to read on the bright clouds, with a soft halo behind it.
+*/
+.hero-title {
+  background: linear-gradient(180deg, #4a2f02 0%, #7a4f05 45%, #a86c06 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 18px rgb(255 248 230 / 0.9));
+  /* The gradient only paints inside the box; room for the "y" descender */
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+@media (forced-colors: active) {
+  .hero-title { color: CanvasText; background: none; }
+}

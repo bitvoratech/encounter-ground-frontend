@@ -31,8 +31,17 @@ export const books: Book[] = [
     slug: "from-bride-to-beloved",
     title: "From Bride to Beloved",
     audience: "Adults",
-    cover: "/images/books/from-bride-to-beloved.jpg",
+    cover: "/images/books/from-bride-to-beloved-cover.jpg",
     // The old shop linked this title to the author store rather than a product page.
+    buyUrl: authorStoreUrl,
+  },
+  {
+    slug: "whispers-the-journal",
+    title: "Whispers: The Journal",
+    subtitle: "Living out my scroll each day guided by His gentle whispers",
+    audience: "Journal",
+    cover: "/images/books/whispers-the-journal.jpg",
+    // TODO: swap for the product link once the ministry shares it.
     buyUrl: authorStoreUrl,
   },
   {

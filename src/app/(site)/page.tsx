@@ -4,7 +4,7 @@ import { YadaBand } from "@/components/site/YadaBand";
 import { contact, discipleshipClasses, home, mandate, programmes } from "@/content/ministry";
 import { formatPostDate, posts } from "@/content/posts";
 import { authorStoreUrl } from "@/content/books";
-import heroImage from "../../../public/images/home/hero-presence.webp";
+import heroImage from "../../../public/images/home/hero-angels.jpg";
 import streamsImage from "../../../public/images/home/streams-gates.jpg";
 import founderImage from "../../../public/images/home/founder-toyin-bello.jpg";
 import bethElImage from "../../../public/images/home/beth-el-institute.jpg";
@@ -17,8 +17,8 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero: the golden hall from the former site, darkened so the words stay legible */}
-      <section className="relative isolate overflow-hidden bg-slate-deep text-chalk">
+      {/* Hero: angels around a pool of light; the words sit in the bright centre */}
+      <section className="relative isolate overflow-hidden bg-[#f3e6c4] text-slate-ink">
         <Image
           src={heroImage}
           alt=""
@@ -26,23 +26,24 @@ export default function HomePage() {
           priority
           placeholder="blur"
           sizes="100vw"
-          className="-z-10 object-cover object-[30%_center]"
+          className="-z-10 object-cover object-[center_22%]"
         />
+        {/* Lifts the centre so the text reads cleanly over the clouds */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-deep/85 via-slate-deep/45 to-transparent"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_55%_60%_at_50%_55%,rgb(255_250_236/0.8),rgb(255_250_236/0.35)_60%,transparent_85%)]"
         />
-        <div className="wrap flex min-h-[34rem] flex-col justify-center py-20 md:min-h-[40rem] md:py-28">
-          <p className="text-lg font-semibold tracking-wide text-flame">Encounter Ground</p>
-          <h1 className="mt-3 max-w-3xl text-[length:var(--text-display)] leading-[0.95]">
+        {/* On phones the text starts below the cross; on wider screens it centres in the light */}
+        <div className="wrap flex min-h-[40rem] flex-col items-center justify-start pb-20 pt-48 text-center md:min-h-[46rem] md:justify-center md:py-32">
+          <h1 className="hero-title max-w-5xl text-[clamp(3.5rem,1.6rem+8.5vw,8.5rem)] leading-[0.92]">
             {home.tagline}
           </h1>
-          <p className="mt-7 max-w-[34rem] text-lede leading-relaxed text-chalk/90">{home.welcome}</p>
-          <div className="mt-10 flex flex-wrap gap-3">
+          <p className="mt-8 max-w-[36rem] text-lede leading-relaxed text-slate-ink/85">{home.welcome}</p>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
             <a href={home.joinUsUrl} {...external} className="btn btn-fire">
               Join us
             </a>
-            <Link href="/about" className="btn btn-quiet">
+            <Link href="/about" className="btn btn-quiet text-slate-ink">
               Read our story
             </Link>
           </div>
