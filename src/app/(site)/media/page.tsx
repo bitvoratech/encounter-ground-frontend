@@ -1,3 +1,4 @@
+import { IconArrowUpRight } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -51,9 +52,9 @@ export default function MediaPage() {
               >
                 <span className="font-display text-[2rem] leading-tight text-slate-ink">{s.name}</span>
                 <span className="mt-2 text-stone-muted">{s.detail}</span>
-                <span className="mt-8 font-semibold text-amber group-hover:underline">
+                <span className="mt-8 inline-flex items-center gap-1.5 font-semibold text-amber group-hover:underline">
                   Open {s.name.split(" ")[0]}
-                  <span aria-hidden="true"> →</span>
+                  <IconArrowUpRight aria-hidden="true" size={18} stroke={2} />
                 </span>
               </a>
             </li>

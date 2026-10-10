@@ -1,5 +1,6 @@
 "use client";
 
+import { IconChevronDown, IconMenu2, IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -63,13 +64,12 @@ function NavDropdown({ group }: { group: NavGroup }) {
         className={`${pill} inline-flex items-center gap-1.5 ${groupActive ? pillActive : ""}`}
       >
         {group.label}
-        <svg
+        <IconChevronDown
           aria-hidden="true"
-          viewBox="0 0 12 12"
-          className={`size-3 transition-transform ${open ? "rotate-180" : ""}`}
-        >
-          <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+          size={16}
+          stroke={2}
+          className={`transition-transform ${open ? "rotate-180" : ""}`}
+        />
       </button>
       {/* pt-2 bridges the gap so the menu doesn't close as the pointer moves down */}
       <div id={menuId} hidden={!open} className="absolute left-1/2 top-full z-50 w-60 -translate-x-1/2 pt-2">
@@ -167,6 +167,7 @@ export function SiteHeader() {
             aria-controls="mobile-nav"
             onClick={() => setOpenOn(open ? null : pathname)}
           >
+            {open ? <IconX aria-hidden="true" size={18} stroke={2} /> : <IconMenu2 aria-hidden="true" size={18} stroke={2} />}
             {open ? "Close" : "Menu"}
           </button>
         </div>
