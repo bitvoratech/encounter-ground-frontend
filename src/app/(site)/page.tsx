@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { YadaBand } from "@/components/site/YadaBand";
-import { contact, discipleshipClasses, home, mandate, programmes } from "@/content/ministry";
+import { contact, home, mandate, programmes } from "@/content/ministry";
+import { school, schoolClasses } from "@/content/school";
 import { formatPostDate, posts } from "@/content/posts";
 import { authorStoreUrl } from "@/content/books";
 import heroImage from "../../../public/images/home/hero-angels.jpg";
@@ -232,27 +233,42 @@ export default function HomePage() {
 
       <YadaBand />
 
-      {/* Discipleship classes */}
-      <section aria-labelledby="classes-heading">
-        <div className="wrap py-16 md:py-24">
-          <div className="grid gap-10 md:grid-cols-[1fr_2fr] md:items-end">
-            <div>
-              <h2 id="classes-heading" className="text-[length:var(--text-h2)] text-slate-ink">
-                Discipleship classes
-              </h2>
-              <p className="mt-4 max-w-sm text-stone-muted">
-                Structured teaching for every stage of the walk. Classes move online
-                when the Ministry School opens on this site.
-              </p>
-            </div>
-            <ul className="flex flex-wrap gap-x-10 gap-y-3">
-              {discipleshipClasses.map((c) => (
-                <li key={c} className="font-display text-[length:var(--text-h2)] text-slate">
-                  {c}
+      {/* The school: Beth-El Institute, where the discipleship classes live */}
+      <section aria-labelledby="school-heading">
+        <div className="wrap grid gap-12 py-16 md:grid-cols-[3fr_2fr] md:items-center md:gap-16 md:py-24">
+          <div>
+            <p className="font-semibold text-amber">The ministry school</p>
+            <h2 id="school-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
+              {school.name}
+            </h2>
+            <p className="measure mt-6 text-[1.125rem] text-slate-ink/90">{school.summary}</p>
+            <p className="measure mt-4 text-stone-muted">{school.meaning}</p>
+            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+              {schoolClasses.map((c) => (
+                <li key={c.name} className="rounded-2xl border border-rule bg-chalk px-5 py-4">
+                  <span className="font-display text-2xl text-slate-ink">{c.name}</span>
+                  <span className="block text-sm text-stone-muted">{c.meaning}</span>
                 </li>
               ))}
             </ul>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/school" className="btn btn-fire">
+                Visit the school
+              </Link>
+              <Link href="/school/enrol" className="btn btn-quiet text-slate-ink">
+                Enrol
+              </Link>
+            </div>
           </div>
+          <Link href="/school" className="group order-first block overflow-hidden rounded-3xl border border-rule md:order-none">
+            <Image
+              src={bethElImage}
+              alt="Beth-El Institute of the Supernatural, an offshoot of Encounter Ground"
+              placeholder="blur"
+              sizes="(min-width: 768px) 35vw, 90vw"
+              className="w-full transition-transform duration-500 group-hover:scale-[1.02]"
+            />
+          </Link>
         </div>
       </section>
 
