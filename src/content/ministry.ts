@@ -62,7 +62,7 @@ export const programmes: Programme[] = [
   { slug: "yada-intimacy-conference-2026", name: "YADA Intimacy Conference", when: "December", detail: "Yearly conference" },
 ];
 
-export const discipleshipClasses = ["Halak", "Chayil", "Becoming", "Whispers"];
+export const discipleshipClasses = ["Halak", "Chayil", "Becoming", "Whispers"] as const;
 
 export const yada = {
   slug: "yada-intimacy-conference-2026",

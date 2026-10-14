@@ -6,7 +6,11 @@ import { createClient } from "@/lib/supabase/server";
 export const metadata: Metadata = { title: "My account", robots: { index: false } };
 
 const soon = [
-  { title: "My courses", body: "Ministry School classes you’re enrolled in will appear here." },
+  {
+    title: "My courses",
+    body: "Beth-El Institute classes you’re enrolled in will appear here.",
+    link: { href: "/school/classes", label: "Browse the classes" },
+  },
   { title: "My books", body: "E-books you buy from the bookstore will be readable here." },
 ];
 
@@ -69,6 +73,11 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
               <h2 className="text-h3 text-slate-ink">{s.title}</h2>
               <p className="mt-3 text-stone-muted">{s.body}</p>
               <p className="mt-6 text-sm font-semibold text-amber">Coming soon</p>
+              {s.link && (
+                <Link href={s.link.href} className="link mt-2 inline-block text-sm font-semibold text-slate-ink">
+                  {s.link.label}
+                </Link>
+              )}
             </article>
           ))}
         </div>
