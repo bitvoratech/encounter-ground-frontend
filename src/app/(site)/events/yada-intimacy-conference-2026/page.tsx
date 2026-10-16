@@ -22,6 +22,9 @@ export default function YadaPage() {
           </h1>
           <p className="mt-10 text-chalk/70">Theme</p>
           <p className="font-display text-3xl text-flame-hot md:text-5xl">{yada.theme}</p>
+          <a href={yada.registerUrl} target="_blank" rel="noopener noreferrer" className="btn btn-fire mt-10">
+            Register now
+          </a>
         </div>
       </header>
 
@@ -66,16 +69,21 @@ export default function YadaPage() {
         <div className="wrap flex flex-col gap-6 py-14 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 id="register-heading" className="text-h3 md:text-[2rem] text-slate-ink">
-              Registration opens soon
+              Registration is open
             </h2>
             <p className="mt-2 max-w-lg text-stone-muted">
-              Follow the WhatsApp channel to hear the moment it opens. You’ll be able
-              to request transport from your area when you register.
+              Save your seat for {yada.when}. You can request transport from your area
+              when you register, and follow the WhatsApp channel for updates.
             </p>
           </div>
-          <a href={whatsapp.href} target="_blank" rel="noopener noreferrer" className="btn btn-fire self-start md:self-auto">
-            Follow on WhatsApp
-          </a>
+          <div className="flex flex-wrap gap-3 self-start md:self-auto">
+            <a href={yada.registerUrl} target="_blank" rel="noopener noreferrer" className="btn btn-fire">
+              Register for YADA 2026
+            </a>
+            <a href={whatsapp.href} target="_blank" rel="noopener noreferrer" className="btn btn-quiet text-slate-ink">
+              Follow on WhatsApp
+            </a>
+          </div>
         </div>
       </section>
     </>

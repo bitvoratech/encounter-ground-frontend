@@ -24,11 +24,16 @@ export function YadaBand({ showLink = true }: { showLink?: boolean }) {
           <p className="mt-1 font-display text-3xl leading-tight text-flame-hot md:text-4xl">
             {yada.theme}
           </p>
-          {showLink && (
-            <Link href={`/events/${yada.slug}`} className="btn btn-fire mt-8">
-              About the conference
-            </Link>
-          )}
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a href={yada.registerUrl} target="_blank" rel="noopener noreferrer" className="btn btn-fire">
+              Register now
+            </a>
+            {showLink && (
+              <Link href={`/events/${yada.slug}`} className="btn btn-quiet text-chalk">
+                About the conference
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </section>

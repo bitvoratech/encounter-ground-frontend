@@ -24,7 +24,7 @@ export const posts: Post[] = [
       "Prayer is a way to communicate with God, seek guidance, and find peace in times of trouble.",
     category: "Mission",
     publishedAt: "2022-04-24",
-    image: "/images/blog/power-of-prayer.webp",
+    image: "/images/blog/power-of-prayer.jpg",
     legacyPath: "/discover-the-power-of-prayer-connecting-with-encounter-ground",
     body: [
       { type: "p", text: "If you are looking to deepen your faith and spiritual connection, Encounter Ground is the perfect online platform for you. This ministry offers a range of services, including Bible teaching, prayer, prophecy, and worship, to help you strengthen your Christian beliefs and draw closer to God." },
@@ -42,7 +42,7 @@ export const posts: Post[] = [
       "Bible teaching is a powerful tool that can help us gain insight, wisdom, and strengthen our relationship with the Lord.",
     category: "Mission",
     publishedAt: "2022-04-24",
-    image: "/images/blog/deepening-your-faith.webp",
+    image: "/images/blog/deepening-your-faith.jpg",
     legacyPath: "/deepening-your-faith",
     body: [
       { type: "p", text: "Are you looking to deepen your faith and grow closer to God through studying the Bible? As believers, it is important to continuously seek growth and understanding in our spiritual journey. Bible teaching is a powerful tool that can help us gain insight, wisdom, and strengthen our relationship with the Lord." },
