@@ -6,7 +6,7 @@ import { school, schoolClasses } from "@/content/school";
 import bethElImage from "../../../../public/images/home/beth-el-institute.jpg";
 
 export const metadata: Metadata = {
-  title: school.name,
+  title: { absolute: school.name },
   description: school.summary,
 };
 

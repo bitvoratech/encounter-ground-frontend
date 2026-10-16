@@ -3,7 +3,7 @@ import Link from "next/link";
 import { school, schoolClasses } from "@/content/school";
 
 export const metadata: Metadata = {
-  title: `Classes · ${school.shortName}`,
+  title: "Classes",
   description: `The discipleship classes of ${school.name}: ${schoolClasses.map((c) => c.name).join(", ")}.`,
 };
 
