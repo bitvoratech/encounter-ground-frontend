@@ -3,7 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "My account", robots: { index: false } };
+export const metadata: Metadata = { title: "My dashboard", robots: { index: false } };
 
 const soon = [
   {
@@ -28,7 +28,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
   return (
     <>
       <header className="wrap pb-10 pt-14 md:pt-20">
-        <p className="font-semibold text-amber">My account</p>
+        <p className="font-semibold text-amber">My dashboard</p>
         <h1 className="mt-2 text-[length:var(--text-h1)] text-slate-ink">Welcome, {firstName}</h1>
         {password === "updated" && (
           <p role="status" className="mt-6 inline-block rounded-xl bg-flame/15 px-4 py-3 font-semibold text-amber">

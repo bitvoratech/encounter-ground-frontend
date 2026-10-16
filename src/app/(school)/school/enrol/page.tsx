@@ -4,7 +4,7 @@ import { contact } from "@/content/ministry";
 import { enrolSteps, school } from "@/content/school";
 
 export const metadata: Metadata = {
-  title: `Enrol · ${school.shortName}`,
+  title: "Enrol",
   description: `How to join ${school.name} and follow your classes from your Encounter Ground dashboard.`,
 };
 

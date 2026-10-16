@@ -52,9 +52,10 @@ export const enrolSteps = [
   { title: "Learn from your dashboard", body: "Your classes will appear under My courses on your dashboard as they open." },
 ];
 
-/** The three school pages, for the school's own sub-navigation. */
+/** The school site's navigation, including the student dashboard. */
 export const schoolNav = [
   { href: "/school", label: "Overview" },
   { href: "/school/classes", label: "Classes" },
   { href: "/school/enrol", label: "Enrol" },
+  { href: "/dashboard", label: "My dashboard" },
 ] as const;

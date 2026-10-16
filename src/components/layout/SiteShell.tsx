@@ -1,7 +1,7 @@
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 
-/** Header, main landmark and footer shared by the public site, store, auth and portal. */
+/** Header, main landmark and footer shared by the public site, store and auth pages. */
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <>
