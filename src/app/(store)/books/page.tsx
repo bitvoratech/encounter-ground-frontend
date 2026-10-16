@@ -13,7 +13,7 @@ const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 export default function BooksPage() {
   return (
     <>
-      <header className="wrap pb-12 pt-14 md:pt-20">
+      <header className="page-hero wrap pb-12 pt-14 md:pt-20">
         <p className="font-semibold text-amber">Bookstore</p>
         <h1 className="mt-2 text-[length:var(--text-h1)] text-slate-ink">Books by Toyin Bello</h1>
         <p className="mt-5 max-w-[36rem] text-lede leading-relaxed text-stone-muted">

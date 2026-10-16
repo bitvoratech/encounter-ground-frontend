@@ -175,3 +175,20 @@
     animation: none;
   }
 }
+
+/* Swipeable rows (home pillars): scroll without a visible scrollbar. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+  Inner page headers: the warm light of the home hero, fading into the page.
+  border-image paints it full-bleed even though the header is the narrow .wrap box,
+  without causing horizontal scroll.
+*/
+.page-hero {
+  border-image: linear-gradient(180deg, #f6ead0, var(--color-limestone)) fill 0 // 0 100vw;
+}

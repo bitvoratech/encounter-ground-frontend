@@ -1,13 +1,13 @@
 "use client";
 
-import { IconChevronDown, IconMenu2, IconX } from "@tabler/icons-react";
+import { IconChevronDown, IconHeartHandshake, IconMenu2, IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { contact } from "@/content/ministry";
-import { createClient } from "@/lib/supabase/client";
+import { useFullScreenMenu, useSignedIn } from "./useFullScreenMenu";
 import { isGroup, nav, type NavGroup, type NavItem } from "./nav";
 
 const pill =
@@ -94,65 +94,9 @@ function NavDropdown({ group }: { group: NavGroup }) {
 }
 
 export function SiteHeader() {
-  const pathname = usePathname();
   const isActive = useIsActive();
-  // The menu belongs to the page it was opened on, so navigating closes it.
-  const [openOn, setOpenOn] = useState<string | null>(null);
-  const open = openOn === pathname;
-  const [signedIn, setSignedIn] = useState(false);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  // Fires once with the current session, then on every sign-in or sign-out.
-  useEffect(() => {
-    const { data } = createClient().auth.onAuthStateChange((_event, session) => setSignedIn(!!session));
-    return () => data.subscription.unsubscribe();
-  }, []);
-
-  const closeMenu = () => {
-    setOpenOn(null);
-    menuButtonRef.current?.focus();
-  };
-
-  // While the full-screen menu is open: lock page scroll, keep Tab inside it, and close it
-  // on Escape or when the screen grows to the desktop layout.
-  useEffect(() => {
-    if (!open) return;
-    const root = document.documentElement;
-    const previousOverflow = root.style.overflow;
-    root.style.overflow = "hidden";
-    const menu = menuRef.current;
-    menu?.querySelector<HTMLElement>("a, button")?.focus();
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpenOn(null);
-        menuButtonRef.current?.focus();
-        return;
-      }
-      if (e.key !== "Tab" || !menu) return;
-      const focusable = menu.querySelectorAll<HTMLElement>("a, button");
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-    const desktop = window.matchMedia("(min-width: 64rem)");
-    const onDesktop = (e: MediaQueryListEvent) => e.matches && setOpenOn(null);
-
-    document.addEventListener("keydown", onKey);
-    desktop.addEventListener("change", onDesktop);
-    return () => {
-      root.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onKey);
-      desktop.removeEventListener("change", onDesktop);
-    };
-  }, [open]);
+  const { open, buttonRef: menuButtonRef, menuRef, openMenu, closeMenu } = useFullScreenMenu();
+  const signedIn = useSignedIn();
 
   const account = signedIn
     ? { href: "/dashboard", label: "My account" }
@@ -173,7 +117,7 @@ export function SiteHeader() {
         >
           Skip to content
         </a>
-        <div className="wrap flex h-22 items-center justify-between gap-4">
+        <div className="wrap flex h-18 lg:h-22 items-center justify-between gap-4">
           <Link href="/" className="shrink-0" aria-label="Encounter Ground home">
             <Image
               src="/brand/lockup.png"
@@ -181,7 +125,7 @@ export function SiteHeader() {
               width={467}
               height={480}
               priority
-              className="h-[4.5rem] w-auto"
+              className="h-14 lg:h-[4.5rem] w-auto"
             />
           </Link>
 
@@ -214,18 +158,19 @@ export function SiteHeader() {
               {account.label}
             </Link>
             <Link href="/give" className="btn btn-fire min-h-11 px-5 py-2">
+            <IconHeartHandshake aria-hidden="true" size={18} stroke={2} className="-ml-1" />
               Give
             </Link>
             <button
               ref={menuButtonRef}
               type="button"
-              className="inline-flex h-11 items-center gap-2 rounded-full border border-slate/30 px-4 text-sm font-semibold text-slate-ink lg:hidden"
+              className="grid size-11 place-items-center rounded-full border border-slate/30 text-sm font-semibold text-slate-ink lg:hidden"
               aria-expanded={open}
               aria-controls="mobile-nav"
-              onClick={() => setOpenOn(pathname)}
+              aria-label="Open menu"
+              onClick={openMenu}
             >
-              <IconMenu2 aria-hidden="true" size={18} stroke={2} />
-              Menu
+              <IconMenu2 aria-hidden="true" size={20} stroke={2} />
             </button>
           </div>
         </div>
@@ -242,17 +187,17 @@ export function SiteHeader() {
         hidden={!open}
         className="fixed inset-0 z-50 flex flex-col bg-slate-deep text-chalk lg:hidden"
       >
-        <div className="wrap flex h-22 shrink-0 items-center justify-between gap-4 border-b border-chalk/10">
+        <div className="wrap flex h-18 shrink-0 items-center justify-between gap-4 border-b border-chalk/10">
           <Link href="/" aria-label="Encounter Ground home">
-            <Image src="/brand/lockup-light.png" alt="" width={467} height={480} className="h-[4.5rem] w-auto" />
+            <Image src="/brand/lockup-light.png" alt="" width={467} height={480} className="h-14 w-auto" />
           </Link>
           <button
             type="button"
             onClick={closeMenu}
-            className="inline-flex h-11 items-center gap-2 rounded-full border border-chalk/30 px-4 text-sm font-semibold text-chalk"
+            aria-label="Close menu"
+            className="grid size-11 place-items-center rounded-full border border-chalk/30 text-sm font-semibold text-chalk"
           >
-            <IconX aria-hidden="true" size={18} stroke={2} />
-            Close
+            <IconX aria-hidden="true" size={20} stroke={2} />
           </button>
         </div>
 

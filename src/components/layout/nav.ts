@@ -10,7 +10,6 @@ export const isGroup = (item: NavItem): item is NavGroup => "children" in item;
 export const nav: NavItem[] = [
   { href: "/about", label: "Who we are" },
   { href: "/events", label: "Programmes" },
-  { href: "/school", label: "School" },
   { href: "/events/yada-intimacy-conference-2026", label: "YADA 2026" },
   {
     label: "Media",
