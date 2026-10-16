@@ -69,6 +69,7 @@ export const yada = {
   name: "YADA Intimacy Conference",
   year: 2026,
   theme: "Reviving the Ancient Well",
+  registerUrl: "https://tinyurl.com/RegisterforYADA2026",
   // Dates and times are withheld until the ministry confirms them.
   when: "December 2026",
   about: [

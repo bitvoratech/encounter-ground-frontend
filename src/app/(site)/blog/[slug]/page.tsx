@@ -21,7 +21,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
 
   return (
     <article>
-      <header className="wrap pb-10 pt-14 md:pt-20">
+      <header className="page-hero wrap pb-10 pt-14 md:pt-20">
         <p className="text-stone-muted">
           <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
           {" · "}

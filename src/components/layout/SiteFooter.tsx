@@ -88,7 +88,7 @@ export function SiteFooter() {
           </ul>
         </div>
 
-        <nav aria-label="Footer" className="grid gap-12 sm:col-span-2 sm:grid-cols-2 lg:col-span-2">
+        <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:col-span-2 sm:gap-12 lg:col-span-2">
           <Column title="Explore">
             {explore.map((item) => (
               <li key={item.href}>

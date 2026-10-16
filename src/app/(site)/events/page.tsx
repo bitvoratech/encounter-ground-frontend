@@ -13,7 +13,7 @@ export default function EventsPage() {
 
   return (
     <>
-      <header className="wrap pb-12 pt-14 md:pt-20">
+      <header className="page-hero wrap pb-12 pt-14 md:pt-20">
         <h1 className="text-[length:var(--text-h1)] text-slate-ink">Programmes</h1>
         <p className="mt-5 max-w-[34rem] text-lede leading-relaxed text-stone-muted">
           Regular meetings for prayer and healing, and one conference each December.

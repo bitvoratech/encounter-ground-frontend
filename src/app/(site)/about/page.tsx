@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <header className="wrap pb-12 pt-14 md:pb-16 md:pt-20">
+      <header className="page-hero wrap pb-12 pt-14 md:pb-16 md:pt-20">
         <h1 className="max-w-3xl text-[length:var(--text-h1)] text-slate-ink">
           Every person has a scroll written by God
         </h1>

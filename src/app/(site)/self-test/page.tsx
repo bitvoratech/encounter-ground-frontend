@@ -24,7 +24,7 @@ export default async function SelfTestsPage() {
 
   return (
     <>
-      <header className="wrap pb-12 pt-14 md:pt-20">
+      <header className="page-hero wrap pb-12 pt-14 md:pt-20">
         <h1 className="text-[length:var(--text-h1)] text-slate-ink">Self-tests</h1>
         <p className="mt-5 max-w-[34rem] text-lede leading-relaxed text-stone-muted">
           Quiet, honest reflection on how God has wired you. Answer as you are

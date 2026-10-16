@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <>
-      <header className="wrap pb-12 pt-14 md:pt-20">
+      <header className="page-hero wrap pb-12 pt-14 md:pt-20">
         <h1 className="text-[length:var(--text-h1)] text-slate-ink">Blog</h1>
         <p className="mt-5 max-w-[34rem] text-lede leading-relaxed text-stone-muted">
           Discover faith, grow in grace, behold His beauty.
