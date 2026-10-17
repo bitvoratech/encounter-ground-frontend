@@ -133,10 +133,9 @@ function CartBody({ onMessage }: { onMessage: (message: string) => void }) {
           </dl>
           {samplePrices && <p className="mt-2 text-right text-sm text-stone-muted">Sample prices: final prices to come.</p>}
 
-          <button type="button" disabled className="btn btn-fire mt-6 w-full cursor-not-allowed opacity-60">
+          <Link href="/checkout" className="btn btn-fire mt-6 w-full">
             Checkout
-          </button>
-          <p className="mt-3 text-center text-sm text-stone-muted">Checkout opens with the next update.</p>
+          </Link>
 
           <p className="mt-6 flex items-start gap-3 border-t border-rule pt-5 text-sm text-stone-muted">
             <IconDeviceLaptop aria-hidden="true" size={20} stroke={1.75} className="mt-0.5 shrink-0 text-amber" />

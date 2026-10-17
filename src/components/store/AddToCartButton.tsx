@@ -1,13 +1,16 @@
 "use client";
 
-import { IconCheck, IconShoppingBag } from "@tabler/icons-react";
+import { IconBook, IconCheck, IconShoppingBag } from "@tabler/icons-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { addToCart, removeFromCart, useCart } from "@/lib/cart";
+import { useLibrary } from "@/lib/library";
 
-/** Add an e-book to the cart; once it is in, offer the way to the cart instead. */
+/** Add an e-book to the cart; once it is in, offer the way to the cart instead. A book
+ * the visitor already owns offers reading instead of buying. */
 export function AddToCartButton({ slug, title }: { slug: string; title: string }) {
   const cart = useCart();
+  const owned = useLibrary()?.includes(slug) ?? false;
   const inCart = cart?.includes(slug) ?? false;
   const [message, setMessage] = useState("");
   // Which control should take focus after the swap: the visitor's button disappears.
@@ -19,6 +22,21 @@ export function AddToCartButton({ slug, title }: { slug: string; title: string }
     if (focusNext === "cart" && inCart) goToCartRef.current?.focus();
     if (focusNext === "add" && !inCart) addRef.current?.focus();
   }, [focusNext, inCart]);
+
+  if (owned) {
+    return (
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+        <p className="inline-flex items-center gap-2 font-semibold text-slate-ink">
+          <IconCheck aria-hidden="true" size={20} stroke={2} className="text-amber" />
+          In your library
+        </p>
+        <Link href="/my-books" className="btn btn-fire">
+          <IconBook aria-hidden="true" size={20} stroke={1.75} />
+          Read in My books
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div>

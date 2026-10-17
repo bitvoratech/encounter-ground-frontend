@@ -11,7 +11,6 @@ const soon = [
     body: "Beth-El Institute classes you’re enrolled in will appear here.",
     link: { href: "/school/classes", label: "Browse the classes" },
   },
-  { title: "My books", body: "E-books you buy from the bookstore will be readable here." },
 ];
 
 export default async function DashboardPage({ searchParams }: PageProps<"/dashboard">) {
@@ -65,6 +64,14 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
             </p>
             <Link href="/self-test" className="btn btn-fire mt-6">
               Take a self-test
+            </Link>
+          </article>
+
+          <article className="rounded-3xl border border-rule bg-limestone p-6">
+            <h2 className="text-h3 text-slate-ink">My books</h2>
+            <p className="mt-3 text-stone-muted">E-books you buy in the bookstore, ready to read on any device.</p>
+            <Link href="/my-books" className="btn btn-fire mt-6">
+              Open My books
             </Link>
           </article>
 

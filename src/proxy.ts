@@ -2,8 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Pages that need a signed-in member, and pages a signed-in member doesn't need.
-// Add /my-books and /my-courses here (and to the matcher) when those pages ship.
-const MEMBERS_ONLY = ["/dashboard", "/reset-password"];
+// Add /my-courses here (and to the matcher) when that page ships.
+const MEMBERS_ONLY = ["/dashboard", "/reset-password", "/checkout", "/my-books"];
 const GUESTS_ONLY = ["/login", "/register", "/forgot-password"];
 
 const matches = (path: string, prefixes: string[]) =>
@@ -38,7 +38,9 @@ export async function proxy(request: NextRequest) {
   if (!user && matches(path, MEMBERS_ONLY)) {
     const url = request.nextUrl.clone();
     url.pathname = path === "/reset-password" ? "/forgot-password" : "/login";
-    url.search = path === "/reset-password" ? "" : `?next=${encodeURIComponent(path)}`;
+    // Keep the query too, e.g. the order reference on /checkout/complete?ref=…
+    const back = path + request.nextUrl.search;
+    url.search = path === "/reset-password" ? "" : `?next=${encodeURIComponent(back)}`;
     return NextResponse.redirect(url);
   }
   if (user && matches(path, GUESTS_ONLY)) {
@@ -55,6 +57,8 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/dashboard/:path*",
+    "/checkout/:path*",
+    "/my-books/:path*",
     "/reset-password",
     "/login",
     "/register",
