@@ -33,7 +33,7 @@ export default function ContactPage() {
           <div className="grid content-start gap-10">
             <div>
               <h2 className="font-sans text-base text-stone-muted">Email</h2>
-              <a href={`mailto:${contact.email}`} className="link mt-2 inline-block break-all font-display text-[1.75rem] text-slate-ink">
+              <a href={`mailto:${contact.email}`} className="link mt-2 inline-block font-display text-[1.375rem] text-slate-ink [overflow-wrap:anywhere] sm:text-[1.75rem]">
                 {contact.email}
               </a>
             </div>

@@ -23,7 +23,7 @@ export default function BooksPage() {
       </header>
 
       <section aria-label="Books" className="border-t border-rule bg-chalk">
-        <ul className="wrap grid gap-x-8 gap-y-14 py-14 sm:grid-cols-2 lg:grid-cols-3 md:py-20">
+        <ul className="wrap grid grid-cols-2 gap-x-4 gap-y-10 py-12 sm:gap-x-8 sm:gap-y-14 md:py-20 lg:grid-cols-3">
           {books.map((book) => (
             <li key={book.slug} className="flex flex-col">
               <a href={book.buyUrl} {...external} className="group block" tabIndex={-1} aria-hidden="true">
@@ -32,15 +32,15 @@ export default function BooksPage() {
                   alt=""
                   width={683}
                   height={1024}
-                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
-                  className="aspect-[2/3] w-full rounded-2xl bg-limestone object-cover shadow-[0_18px_40px_-20px_rgb(29_38_48/0.55)] transition-transform duration-300 group-hover:-translate-y-1"
+                  sizes="(min-width: 1024px) 30vw, 45vw"
+                  className="aspect-[2/3] w-full rounded-xl sm:rounded-2xl bg-limestone object-cover shadow-[0_18px_40px_-20px_rgb(29_38_48/0.55)] transition-transform duration-300 group-hover:-translate-y-1"
                 />
               </a>
-              <p className="mt-5 text-sm font-semibold text-amber">{book.audience}</p>
-              <h2 className="mt-1 text-h3 text-slate-ink">{book.title}</h2>
-              {book.subtitle && <p className="mt-2 text-stone-muted">{book.subtitle}</p>}
-              <div className="mt-auto pt-5">
-                <a href={book.buyUrl} {...external} className="btn btn-fire">
+              <p className="mt-4 text-xs font-semibold text-amber sm:mt-5 sm:text-sm">{book.audience}</p>
+              <h2 className="mt-1 text-lg leading-snug text-slate-ink sm:text-h3">{book.title}</h2>
+              {book.subtitle && <p className="mt-1.5 text-sm text-stone-muted sm:mt-2 sm:text-base">{book.subtitle}</p>}
+              <div className="mt-auto pt-4 sm:pt-5">
+                <a href={book.buyUrl} {...external} className="btn btn-fire w-full px-3 text-sm sm:w-auto sm:px-[1.4rem] sm:text-base">
                   Buy on Amazon
                   <span className="sr-only">: {book.title}{book.subtitle ? `, ${book.audience}` : ""}</span>
                 </a>

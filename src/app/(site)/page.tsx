@@ -1,13 +1,7 @@
-import {
-  IconArrowRight,
-  IconArrowUpRight,
-  IconBrandWhatsapp,
-  IconBrandYoutube,
-  IconHeadphones,
-  IconVideo,
-} from "@tabler/icons-react";
+import { IconArrowRight, IconArrowUpRight, IconBrandWhatsapp } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
+import { streamIcon } from "@/components/site/streamIcons";
 import { YadaBand } from "@/components/site/YadaBand";
 import { contact, home, mandate, programmes, yada } from "@/content/ministry";
 import { school, schoolClasses } from "@/content/school";
@@ -20,12 +14,6 @@ import bethElImage from "../../../public/images/home/beth-el-institute.jpg";
 import booksImage from "../../../public/images/home/books-by-toyin-bello.jpg";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
-
-const streamIcons: Record<string, typeof IconVideo> = {
-  "YouTube replays": IconBrandYoutube,
-  Mixlr: IconHeadphones,
-  Zoom: IconVideo,
-};
 
 export default function HomePage() {
   const youtube = home.streams[0]!;
@@ -202,7 +190,7 @@ export default function HomePage() {
           </div>
           <ul className="mx-auto mt-10 grid max-w-4xl gap-3 sm:grid-cols-3 sm:gap-4">
             {home.streams.map((s) => {
-              const Icon = streamIcons[s.name] ?? IconVideo;
+              const Icon = streamIcon(s.name);
               return (
                 <li key={s.name}>
                   <a

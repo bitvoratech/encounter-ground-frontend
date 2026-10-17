@@ -38,7 +38,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
           height={473}
           priority
           sizes="(min-width: 1152px) 1088px, 100vw"
-          className="aspect-[2/1] w-full rounded-3xl object-cover"
+          className="aspect-[4/3] w-full rounded-3xl object-cover sm:aspect-[2/1]"
         />
       </div>
 
