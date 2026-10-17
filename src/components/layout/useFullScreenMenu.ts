@@ -67,15 +67,34 @@ export function useFullScreenMenu() {
   };
 }
 
+export type Account = { name: string; email: string; avatarUrl: string | null };
+
 /**
- * Whether a member is signed in; updates on every sign-in or sign-out. `null` until the
- * session has been checked, so callers can avoid flashing the signed-out state.
+ * The signed-in member, `null` when signed out, or `undefined` until the session has been
+ * checked (so callers can avoid flashing the signed-out state). Updates on every sign-in or
+ * sign-out.
  */
-export function useSignedIn() {
-  const [signedIn, setSignedIn] = useState<boolean | null>(null);
+export function useAccount(): Account | null | undefined {
+  const [account, setAccount] = useState<Account | null | undefined>(undefined);
   useEffect(() => {
-    const { data } = createClient().auth.onAuthStateChange((_event, session) => setSignedIn(!!session));
+    const { data } = createClient().auth.onAuthStateChange((_event, session) => {
+      const user = session?.user;
+      if (!user) return setAccount(null);
+      const meta = user.user_metadata ?? {};
+      setAccount({
+        name: (meta.full_name as string | undefined) || user.email || "Member",
+        email: user.email ?? "",
+        // Set by OAuth providers or a future profile photo upload.
+        avatarUrl: (meta.avatar_url as string | undefined) ?? null,
+      });
+    });
     return () => data.subscription.unsubscribe();
   }, []);
-  return signedIn;
+  return account;
+}
+
+/** Whether a member is signed in; `null` until the session has been checked. */
+export function useSignedIn() {
+  const account = useAccount();
+  return account === undefined ? null : !!account;
 }

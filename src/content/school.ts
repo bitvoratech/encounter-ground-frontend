@@ -52,11 +52,9 @@ export const enrolSteps = [
   { title: "Learn at your own pace", body: "Enrol from the class page. Your classes live in My courses, with your progress and checkpoints." },
 ];
 
-/** The school site's navigation, including the student dashboard. */
+/** The school site's main navigation. Enrol, My dashboard and the account menu sit at the
+ * right of the header instead (see SchoolHeader). */
 export const schoolNav = [
   { href: "/school", label: "Overview" },
   { href: "/school/classes", label: "Classes" },
-  { href: "/school/enrol", label: "Enrol" },
-  { href: "/my-courses", label: "My courses" },
-  { href: "/dashboard", label: "My dashboard" },
 ] as const;

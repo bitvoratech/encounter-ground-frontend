@@ -1,14 +1,17 @@
 "use client";
 
-import { IconArrowLeft, IconMenu2, IconX } from "@tabler/icons-react";
+import { IconArrowLeft, IconLayoutDashboard, IconLogout, IconMenu2, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useFullScreenMenu, useSignedIn } from "@/components/layout/useFullScreenMenu";
+import { useAccount, useFullScreenMenu } from "@/components/layout/useFullScreenMenu";
 import { school, schoolNav } from "@/content/school";
+import { useEnrolments } from "@/lib/learning";
+import { AccountMenu, accountLinks } from "./AccountMenu";
+import { Avatar } from "./Avatar";
 
-function Wordmark({ className = "" }: { className?: string }) {
+function Wordmark() {
   return (
-    <Link href="/school" className={`leading-tight ${className}`} aria-label={`${school.name} home`}>
+    <Link href="/school" className="shrink-0 leading-tight" aria-label={`${school.name} home`}>
       <span className="block font-display text-[1.375rem] text-slate-ink lg:text-2xl">{school.shortName}</span>
       <span className="block text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-amber lg:text-xs">
         of the Supernatural
@@ -17,12 +20,20 @@ function Wordmark({ className = "" }: { className?: string }) {
   );
 }
 
-/** Beth-El Institute's own header: the school is a separate site from the Encounter Ground pages. */
+/**
+ * Beth-El Institute's own header. Like other learning platforms, the student's way in sits at
+ * the top right: "My dashboard" beside Enrol, then the avatar with the account menu. Once
+ * someone has enrolled, Enrol drops away.
+ */
 export function SchoolHeader() {
   const pathname = usePathname();
   const { open, buttonRef, menuRef, openMenu, closeMenu } = useFullScreenMenu();
-  const signedIn = useSignedIn();
+  const account = useAccount();
+  const enrolments = useEnrolments();
+  const enrolled = (enrolments?.length ?? 0) > 0;
   const signIn = `/login?next=${encodeURIComponent(pathname)}`;
+  const isCurrent = (href: string) => (href === "/school" ? pathname === href : pathname === href || pathname.startsWith(`${href}/`));
+  const onDashboard = pathname === "/dashboard";
 
   return (
     <>
@@ -33,16 +44,16 @@ export function SchoolHeader() {
         >
           Skip to content
         </a>
-        <div className="wrap flex h-18 items-center justify-between gap-6 lg:h-20">
+        <div className="wrap flex h-18 items-center justify-between gap-4 lg:h-20">
           <Wordmark />
 
-          <nav aria-label="School" className="hidden lg:block">
-            <ul className="flex items-center gap-1">
+          <nav aria-label="School" className="hidden flex-1 lg:block">
+            <ul className="flex items-center gap-1 pl-6">
               {schoolNav.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    aria-current={pathname === item.href ? "page" : undefined}
+                    aria-current={isCurrent(item.href) ? "page" : undefined}
                     className="block rounded-full px-3.5 py-2 text-[0.95rem] font-medium text-slate transition-colors hover:text-slate-ink aria-[current=page]:bg-slate aria-[current=page]:text-chalk"
                   >
                     {item.label}
@@ -52,18 +63,46 @@ export function SchoolHeader() {
             </ul>
           </nav>
 
-          <div className="flex items-center gap-2">
-            {!signedIn && (
-              <Link
-                href={signIn}
-                className="hidden rounded-full px-3 py-2 text-[0.95rem] font-semibold text-slate-ink hover:text-amber lg:inline-block"
-              >
-                Sign in
-              </Link>
+          <div className="flex items-center gap-2 sm:gap-3">
+            {account === undefined ? (
+              // Session not checked yet: hold the space without guessing.
+              <span aria-hidden="true" className="size-10 rounded-full bg-limestone" />
+            ) : account === null ? (
+              <>
+                <Link href={signIn} className="hidden rounded-full px-3 py-2 text-[0.95rem] font-semibold text-slate-ink hover:text-amber sm:inline-block">
+                  Sign in
+                </Link>
+                <Link href="/school/enrol" className="btn btn-fire min-h-11 px-5 py-2">
+                  Enrol
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/dashboard"
+                  aria-current={onDashboard ? "page" : undefined}
+                  className={`${enrolled ? "btn btn-fire" : "btn btn-quiet text-slate-ink"} hidden min-h-11 px-5 py-2 lg:inline-flex`}
+                >
+                  My dashboard
+                </Link>
+                {enrolled ? (
+                  // Phones: no room for the full button, so the dashboard keeps an icon of its own.
+                  <Link
+                    href="/dashboard"
+                    aria-label="My dashboard"
+                    aria-current={onDashboard ? "page" : undefined}
+                    className="grid size-11 place-items-center rounded-full bg-flame text-slate-ink lg:hidden"
+                  >
+                    <IconLayoutDashboard aria-hidden="true" size={20} stroke={1.75} />
+                  </Link>
+                ) : (
+                  <Link href="/school/classes" className="btn btn-fire min-h-11 px-5 py-2">
+                    Enrol
+                  </Link>
+                )}
+                <AccountMenu account={account} />
+              </>
             )}
-            <Link href="/school/enrol" className="btn btn-fire min-h-11 px-5 py-2">
-              Enrol
-            </Link>
             <button
               ref={buttonRef}
               type="button"
@@ -101,46 +140,81 @@ export function SchoolHeader() {
           </button>
         </div>
 
-        <nav aria-label="School" className="flex-1 overflow-y-auto">
-          <ul className="wrap py-6">
-            {schoolNav.map((item, i) => (
-              <li key={item.href} className="menu-in border-b border-rule" style={{ "--i": i } as React.CSSProperties}>
-                <Link
-                  href={item.href}
-                  aria-current={pathname === item.href ? "page" : undefined}
-                  className="flex items-baseline gap-4 py-4 font-display text-[clamp(2rem,1.4rem+3vw,2.75rem)] leading-tight transition-colors hover:text-amber aria-[current=page]:text-amber"
-                >
-                  <span aria-hidden="true" className="font-sans text-sm font-semibold text-amber">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="flex-1 overflow-y-auto">
+          <nav aria-label="School">
+            <ul className="wrap pt-4">
+              {[...schoolNav, { href: "/school/enrol", label: "How to enrol" }].map((item, i) => (
+                <li key={item.href} className="menu-in border-b border-rule" style={{ "--i": i } as React.CSSProperties}>
+                  <Link
+                    href={item.href}
+                    aria-current={pathname === item.href ? "page" : undefined}
+                    className="flex items-baseline gap-4 py-4 font-display text-[clamp(2rem,1.4rem+3vw,2.75rem)] leading-tight transition-colors hover:text-amber aria-[current=page]:text-amber"
+                  >
+                    <span aria-hidden="true" className="font-sans text-sm font-semibold text-amber">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {account && (
+            <section aria-label="Your account" className="wrap py-6">
+              <div className="flex items-center gap-3 rounded-2xl bg-limestone p-4">
+                <Avatar name={account.name} src={account.avatarUrl} size={48} />
+                <div className="min-w-0">
+                  <p className="truncate font-semibold text-slate-ink">{account.name}</p>
+                  <p className="truncate text-sm text-stone-muted">{account.email}</p>
+                </div>
+              </div>
+              <ul className="mt-3 grid gap-1">
+                {accountLinks.map(({ href, label, Icon }) => (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      aria-current={pathname === href ? "page" : undefined}
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-lg font-medium text-slate-ink hover:bg-limestone aria-[current=page]:bg-limestone"
+                    >
+                      <Icon aria-hidden="true" size={22} stroke={1.75} className="text-amber" />
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </div>
 
         <div className="wrap shrink-0 border-t border-rule py-5">
           <div className="flex gap-3">
-            <Link href="/school/enrol" className="btn btn-fire flex-1">
-              Enrol
-            </Link>
-            {signedIn ? (
-              <form action="/auth/signout" method="post" className="flex flex-1">
-                <button type="submit" className="btn btn-quiet flex-1 text-slate-ink">
-                  Sign out
-                </button>
-              </form>
+            {account ? (
+              <>
+                {!enrolled && (
+                  <Link href="/school/classes" className="btn btn-fire flex-1">
+                    Enrol
+                  </Link>
+                )}
+                <form action="/auth/signout" method="post" className="flex flex-1">
+                  <button type="submit" className="btn btn-quiet flex-1 text-slate-ink">
+                    <IconLogout aria-hidden="true" size={18} stroke={1.75} />
+                    Sign out
+                  </button>
+                </form>
+              </>
             ) : (
-              <Link href={signIn} className="btn btn-quiet flex-1 text-slate-ink">
-                Sign in
-              </Link>
+              <>
+                <Link href="/school/enrol" className="btn btn-fire flex-1">
+                  Enrol
+                </Link>
+                <Link href={signIn} className="btn btn-quiet flex-1 text-slate-ink">
+                  Sign in
+                </Link>
+              </>
             )}
           </div>
-          <Link
-            href="/"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-stone-muted hover:text-slate-ink"
-          >
+          <Link href="/" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-stone-muted hover:text-slate-ink">
             <IconArrowLeft aria-hidden="true" size={16} stroke={2} />A school of Encounter Ground
           </Link>
         </div>
