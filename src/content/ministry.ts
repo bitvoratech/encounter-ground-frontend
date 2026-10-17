@@ -3,9 +3,9 @@
 // API is wired up in week 2. Keep wording as the ministry gave it.
 
 export const contact = {
-  email: "general@encounterground.org",
-  phoneDisplay: "0809 997 7733",
-  phoneHref: "tel:+2348099977733",
+  email: "info@encounterground.org",
+  phoneDisplay: "0818 517 6780",
+  phoneHref: "tel:+234-818-517-6780",
   socials: [
     { name: "Instagram", handle: "@encounter_ground", href: "https://www.instagram.com/encounter_ground" },
     // TODO: confirm the exact YouTube channel URL with the ministry.
@@ -68,7 +68,7 @@ export const yada = {
   slug: "yada-intimacy-conference-2026",
   name: "YADA Intimacy Conference",
   year: 2026,
-  theme: "Reviving the Ancient Well",
+  theme: "Reviving the Ancient Well Of True Worship",
   registerUrl: "https://tinyurl.com/RegisterforYADA2026",
   // Dates and times are withheld until the ministry confirms them.
   when: "December 2026",
@@ -133,7 +133,7 @@ export type BankAccount = { bank: string; accountName: string; accountNumber: st
 export const giving = {
   bankAccounts: [] as BankAccount[],
   uses: [
-    { title: "Prayer & streams", body: "Zoe Healing Stream, the Prayer Stretches and the live streams that carry them." },
+    { title: "Prayer & streams", body: "Zoe Healing Stream, the Prayer Stretches and the live streams that carry us." },
     { title: "YADA Conference", body: "A free conference every December, open to everyone who is hungry for God." },
     { title: "Discipleship", body: "The discipleship classes and the Ministry School, so teaching reaches more people." },
   ],
