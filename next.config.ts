@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 import { posts } from "./src/content/posts";
 
 const nextConfig: NextConfig = {
+  // YouTube video thumbnails on the media page.
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" }],
+  },
   // Old WordPress URLs (encounterground.org) that people may have saved or shared.
   async redirects() {
     return [
