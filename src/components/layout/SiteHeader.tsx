@@ -12,7 +12,9 @@ import { isGroup, nav, type NavGroup, type NavItem } from "./nav";
 
 const pill =
   "rounded-full px-3.5 py-2 text-[0.95rem] font-medium text-slate transition-colors hover:text-slate-ink";
-const pillActive = "bg-slate text-chalk hover:text-chalk";
+// Keyed on data-active so it outranks the plain text-slate above (two bare text colours on one
+// element resolve by stylesheet order, which left the label slate-on-slate).
+const pillActive = "data-active:bg-slate data-active:text-chalk data-active:hover:text-chalk";
 
 function useIsActive() {
   const pathname = usePathname();
@@ -63,7 +65,8 @@ function NavDropdown({ group }: { group: NavGroup }) {
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpenOn(open ? null : pathname)}
-        className={`${pill} inline-flex items-center gap-1.5 ${groupActive ? pillActive : ""}`}
+        data-active={groupActive || undefined}
+        className={`${pill} ${pillActive} inline-flex items-center gap-1.5`}
       >
         {group.label}
         <IconChevronDown
