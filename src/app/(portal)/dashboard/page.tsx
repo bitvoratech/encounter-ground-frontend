@@ -5,13 +5,6 @@ import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "My dashboard", robots: { index: false } };
 
-const soon = [
-  {
-    title: "My courses",
-    body: "Beth-El Institute classes you’re enrolled in will appear here.",
-    link: { href: "/school/classes", label: "Browse the classes" },
-  },
-];
 
 export default async function DashboardPage({ searchParams }: PageProps<"/dashboard">) {
   const supabase = await createClient();
@@ -37,7 +30,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
       </header>
 
       <section aria-label="Your account" className="border-t border-rule bg-chalk">
-        <div className="wrap grid gap-6 py-14 md:grid-cols-3 md:py-20">
+        <div className="wrap grid gap-6 py-14 md:grid-cols-2 md:py-20 xl:grid-cols-4">
           <article className="rounded-3xl border border-rule bg-limestone p-6">
             <h2 className="text-h3 text-slate-ink">Your details</h2>
             <dl className="mt-4 grid gap-3">
@@ -68,25 +61,20 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
           </article>
 
           <article className="rounded-3xl border border-rule bg-limestone p-6">
+            <h2 className="text-h3 text-slate-ink">My courses</h2>
+            <p className="mt-3 text-stone-muted">Your Beth-El Institute classes, with your progress and checkpoints.</p>
+            <Link href="/my-courses" className="btn btn-fire mt-6">
+              Open My courses
+            </Link>
+          </article>
+
+          <article className="rounded-3xl border border-rule bg-limestone p-6">
             <h2 className="text-h3 text-slate-ink">My books</h2>
             <p className="mt-3 text-stone-muted">E-books you buy in the bookstore, ready to read on any device.</p>
             <Link href="/my-books" className="btn btn-fire mt-6">
               Open My books
             </Link>
           </article>
-
-          {soon.map((s) => (
-            <article key={s.title} className="rounded-3xl border border-dashed border-rule p-6">
-              <h2 className="text-h3 text-slate-ink">{s.title}</h2>
-              <p className="mt-3 text-stone-muted">{s.body}</p>
-              <p className="mt-6 text-sm font-semibold text-amber">Coming soon</p>
-              {s.link && (
-                <Link href={s.link.href} className="link mt-2 inline-block text-sm font-semibold text-slate-ink">
-                  {s.link.label}
-                </Link>
-              )}
-            </article>
-          ))}
         </div>
       </section>
 

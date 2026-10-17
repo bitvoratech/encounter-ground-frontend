@@ -67,9 +67,12 @@ export function useFullScreenMenu() {
   };
 }
 
-/** Whether a member is signed in; updates on every sign-in or sign-out. */
+/**
+ * Whether a member is signed in; updates on every sign-in or sign-out. `null` until the
+ * session has been checked, so callers can avoid flashing the signed-out state.
+ */
 export function useSignedIn() {
-  const [signedIn, setSignedIn] = useState(false);
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
   useEffect(() => {
     const { data } = createClient().auth.onAuthStateChange((_event, session) => setSignedIn(!!session));
     return () => data.subscription.unsubscribe();

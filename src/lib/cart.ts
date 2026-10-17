@@ -7,7 +7,7 @@ import { createSlugStore } from "./slugStore";
 // e-books sell one copy each, and prices always come from the catalogue, never from storage.
 // When checkout reaches the backend, the server recomputes the order from these slugs.
 
-const store = createSlugStore("eg-cart-v1");
+const store = createSlugStore("eg-cart-v1", (slug) => !!findBook(slug));
 
 export const useCart = store.useSlugs;
 

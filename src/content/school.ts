@@ -49,7 +49,7 @@ export const schoolClasses: SchoolClass[] = discipleshipClasses.map((name) => ({
 export const enrolSteps = [
   { title: "Create your account", body: "One Encounter Ground account holds your classes, books and self-test results." },
   { title: "Choose a class", body: "Start with Halak if you are new, or pick the class that fits where you are." },
-  { title: "Learn from your dashboard", body: "Your classes will appear under My courses on your dashboard as they open." },
+  { title: "Learn at your own pace", body: "Enrol from the class page. Your classes live in My courses, with your progress and checkpoints." },
 ];
 
 /** The school site's navigation, including the student dashboard. */
@@ -57,5 +57,6 @@ export const schoolNav = [
   { href: "/school", label: "Overview" },
   { href: "/school/classes", label: "Classes" },
   { href: "/school/enrol", label: "Enrol" },
+  { href: "/my-courses", label: "My courses" },
   { href: "/dashboard", label: "My dashboard" },
 ] as const;

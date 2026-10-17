@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { formatMinutes } from "@/components/school/lessonKinds";
+import { courseMinutes, courses, lessonCount } from "@/content/courses";
 import { school, schoolClasses } from "@/content/school";
 
 export const metadata: Metadata = {
@@ -14,22 +16,30 @@ export default function SchoolClassesPage() {
         <p className="font-semibold text-amber">{school.shortName}</p>
         <h1 className="mt-2 text-[length:var(--text-h1)] text-slate-ink">The classes</h1>
         <p className="mt-5 max-w-[34rem] text-lede leading-relaxed text-stone-muted">
-          Structured teaching for every stage of the walk. Classes open online here, and the
-          ones you join appear on your dashboard.
+          Structured teaching for every stage of the walk, online and at your own pace. The
+          first lesson of every class is a free preview.
         </p>
       </header>
 
       <section aria-label="Classes" className="border-t border-rule bg-chalk">
         <ol className="wrap grid gap-5 py-14 md:grid-cols-2 md:py-20">
-          {schoolClasses.map((c, i) => (
-            <li key={c.name} className="flex flex-col rounded-3xl border border-rule bg-limestone p-6 md:p-8">
-              <span className="font-display text-4xl text-amber-logo" aria-hidden="true">
-                {String(i + 1).padStart(2, "0")}
-              </span>
+          {courses.map((c, i) => (
+            <li key={c.slug} className="flex flex-col rounded-3xl border border-rule bg-limestone p-6 md:p-8">
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-display text-4xl text-amber-logo" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                {c.badge && <span className="rounded-full bg-slate px-3 py-1 text-xs font-semibold text-chalk">{c.badge}</span>}
+              </div>
               <h2 className="mt-4 text-[length:var(--text-h2)] text-slate-ink">{c.name}</h2>
               <p className="mt-1 font-semibold text-amber">{c.meaning}</p>
-              <p className="mt-4 flex-1 text-[1.125rem] text-slate-ink/90">{c.body}</p>
-              <p className="mt-6 text-sm font-semibold text-stone-muted">Opening online soon</p>
+              <p className="mt-4 flex-1 text-[1.125rem] text-slate-ink/90">{c.summary}</p>
+              <p className="mt-6 text-sm text-stone-muted">
+                {c.modules.length} modules · {lessonCount(c)} lessons · about {formatMinutes(courseMinutes(c))}
+              </p>
+              <Link href={`/school/classes/${c.slug}`} className="btn btn-fire mt-5 self-start">
+                View class<span className="sr-only">: {c.name}</span>
+              </Link>
             </li>
           ))}
         </ol>
@@ -47,8 +57,8 @@ export default function SchoolClassesPage() {
             <Link href="/school/enrol" className="btn btn-fire">
               Enrol
             </Link>
-            <Link href="/dashboard" className="btn btn-quiet text-slate-ink">
-              Go to my dashboard
+            <Link href="/my-courses" className="btn btn-quiet text-slate-ink">
+              My courses
             </Link>
           </div>
         </div>

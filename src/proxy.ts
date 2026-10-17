@@ -2,8 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Pages that need a signed-in member, and pages a signed-in member doesn't need.
-// Add /my-courses here (and to the matcher) when that page ships.
-const MEMBERS_ONLY = ["/dashboard", "/reset-password", "/checkout", "/my-books"];
+const MEMBERS_ONLY = ["/dashboard", "/reset-password", "/checkout", "/my-books", "/my-courses"];
 const GUESTS_ONLY = ["/login", "/register", "/forgot-password"];
 
 const matches = (path: string, prefixes: string[]) =>
@@ -59,6 +58,7 @@ export const config = {
     "/dashboard/:path*",
     "/checkout/:path*",
     "/my-books/:path*",
+    "/my-courses/:path*",
     "/reset-password",
     "/login",
     "/register",
