@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { CartLink } from "@/components/store/CartLink";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { contact } from "@/content/ministry";
 import { useFullScreenMenu, useSignedIn } from "./useFullScreenMenu";
@@ -160,6 +161,7 @@ export function SiteHeader() {
             >
               {account.label}
             </Link>
+            <CartLink />
             <Link href="/give" className="btn btn-fire min-h-11 px-5 py-2">
             <IconHeartHandshake aria-hidden="true" size={18} stroke={2} className="-ml-1" />
               Give

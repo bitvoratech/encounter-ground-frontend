@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AddToCartButton } from "@/components/store/AddToCartButton";
 import { CurrencySwitcher } from "@/components/store/CurrencySwitcher";
 import { Price } from "@/components/store/Price";
 import { books, findBook, samplePrices } from "@/content/books";
@@ -54,7 +55,7 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
             {book.subtitle && <p className="mt-4 max-w-xl text-lede leading-relaxed text-stone-muted">{book.subtitle}</p>}
             <p className="mt-4 text-stone-muted">by Toyin Bello</p>
 
-            {/* Buying panel: the cart arrives with the next update */}
+            {/* Buying panel */}
             <section aria-labelledby="buy-heading" className="mt-10 rounded-3xl border border-rule bg-chalk p-6 md:p-8">
               <h2 id="buy-heading" className="sr-only">
                 Buy the e-book
@@ -70,9 +71,9 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
                 <IconDeviceLaptop aria-hidden="true" size={22} stroke={1.75} className="mt-0.5 shrink-0 text-amber" />
                 Read it here on your phone, tablet or computer. It stays in My books, in your account.
               </p>
-              <p className="mt-6 rounded-2xl bg-flame/15 px-4 py-3 text-sm font-semibold text-amber">
-                Buying e-books on this site opens soon.
-              </p>
+              <div className="mt-6">
+                <AddToCartButton slug={book.slug} title={book.title} />
+              </div>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-rule pt-6">
                 <a href={book.amazonUrl} {...external} className="btn btn-quiet text-slate-ink">
                   Paperback on Amazon
