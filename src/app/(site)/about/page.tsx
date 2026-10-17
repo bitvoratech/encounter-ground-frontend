@@ -58,9 +58,9 @@ export default function AboutPage() {
           <h2 id="values-heading" className="text-[length:var(--text-h2)] text-slate-ink">
             What we hold to
           </h2>
-          <ul className="mt-10 grid gap-x-10 border-t border-rule sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-10 grid grid-cols-2 gap-x-6 border-t border-rule sm:gap-x-10 lg:grid-cols-3">
             {values.map((v) => (
-              <li key={v} className="border-b border-rule py-4 font-display text-2xl text-slate">
+              <li key={v} className="border-b border-rule py-3.5 font-display text-xl leading-snug text-slate sm:py-4 sm:text-2xl">
                 {v}
               </li>
             ))}
