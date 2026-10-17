@@ -69,7 +69,7 @@ export function LoginForm({ next, linkError }: { next?: string; linkError?: bool
       </button>
       <p className="text-stone-muted">
         New here?{" "}
-        <Link href="/register" className="link font-semibold text-slate-ink">
+        <Link href={next ? `/register?next=${encodeURIComponent(next)}` : "/register"} className="link font-semibold text-slate-ink">
           Create an account
         </Link>
       </p>
@@ -77,7 +77,7 @@ export function LoginForm({ next, linkError }: { next?: string; linkError?: bool
   );
 }
 
-export function RegisterForm() {
+export function RegisterForm({ next }: { next?: string }) {
   const [state, action, pending] = useActionState(signUp, undefined);
   if (state?.sentTo)
     return (
@@ -86,6 +86,7 @@ export function RegisterForm() {
   return (
     <form action={action} className="grid gap-5">
       <FormError state={state} />
+      <input type="hidden" name="next" value={next ?? ""} />
       <Field label="Full name" name="full_name" autoComplete="name" required maxLength={120} defaultValue={state?.values?.full_name} />
       <Field label="Email" name="email" type="email" autoComplete="email" required defaultValue={state?.values?.email} />
       <Field
@@ -111,7 +112,7 @@ export function RegisterForm() {
       </button>
       <p className="text-stone-muted">
         Already have an account?{" "}
-        <Link href="/login" className="link font-semibold text-slate-ink">
+        <Link href={next ? `/login?next=${encodeURIComponent(next)}` : "/login"} className="link font-semibold text-slate-ink">
           Sign in
         </Link>
       </p>

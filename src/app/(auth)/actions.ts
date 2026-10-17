@@ -36,6 +36,8 @@ export async function signUp(_prev: AuthState, form: FormData): Promise<AuthStat
   const phone = text(form, "phone");
   const email = text(form, "email");
   const password = String(form.get("password") ?? "");
+  // Where to land afterwards, e.g. back at checkout.
+  const next = safeNext(form.get("next"));
 
   const values = { full_name: fullName, phone, email };
   if (!fullName) return { error: "Please enter your name.", values };
@@ -49,7 +51,7 @@ export async function signUp(_prev: AuthState, form: FormData): Promise<AuthStat
     options: {
       // Copied into `profiles` by the on_auth_user_created trigger.
       data: { full_name: fullName, phone: phone || null },
-      emailRedirectTo: `${siteUrl}/auth/confirm?next=/dashboard`,
+      emailRedirectTo: `${siteUrl}/auth/confirm?next=${encodeURIComponent(next)}`,
     },
   });
   if (error) {
@@ -65,7 +67,7 @@ export async function signUp(_prev: AuthState, form: FormData): Promise<AuthStat
   }
 
   // With email confirmation off, Supabase signs the person straight in.
-  if (data.session) redirect("/dashboard");
+  if (data.session) redirect(next);
   return { sentTo: email };
 }
 
