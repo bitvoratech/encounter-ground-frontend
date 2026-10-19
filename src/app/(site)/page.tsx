@@ -82,12 +82,12 @@ export default function HomePage() {
           <figure className="mx-auto w-full max-w-[16rem] sm:max-w-xs md:max-w-none">
             <Image
               src={founderImage}
-              alt="Toyin Bello, founder of Encounter Ground"
+              alt="Toyin Bello,  of Encounter Ground"
               placeholder="blur"
               sizes="(min-width: 768px) 40vw, 16rem"
               className="aspect-[4/5] w-full rounded-3xl object-cover object-top"
             />
-            <figcaption className="mt-3 text-center text-sm text-stone-muted md:text-left">Toyin Bello, founder</figcaption>
+            <figcaption className="mt-3 text-center text-sm text-stone-muted md:text-left">Toyin Bello</figcaption>
           </figure>
           <div>
             <p className="font-semibold text-amber">Who we are</p>
