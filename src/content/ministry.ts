@@ -8,12 +8,20 @@ export const contact = {
   phoneHref: "tel:+234-818-517-6780",
   socials: [
     { name: "Instagram", handle: "@encounter_ground", href: "https://www.instagram.com/encounter_ground" },
-    // TODO: confirm the exact YouTube channel URL with the ministry.
+    // Confirmed 17 Oct 2026: @EncounterGroundTV and @encountergroundtv are the same channel.
     { name: "YouTube", handle: "EncounterGroundTV", href: "https://www.youtube.com/@EncounterGroundTV" },
     { name: "TikTok", handle: "@encounterground", href: "https://www.tiktok.com/@encounterground" },
     { name: "WhatsApp channel", handle: "Encounter Ground", href: "https://whatsapp.com/channel/0029VbDonGGKmCPZKguofK3T" },
   ],
 } as const;
+
+/** Encounter Ground TV. The media page shows its latest uploads (streams become replays). */
+export const youtubeChannel = {
+  name: "Encounter Ground TV",
+  id: "UCIKDW3WCWV10Qe25NUuSrdQ",
+  url: "https://www.youtube.com/@EncounterGroundTV",
+  subscribeUrl: "https://www.youtube.com/@EncounterGroundTV?sub_confirmation=1",
+};
 
 export const mandate = "Teach My people how to seek Me and find Me, so they can live according to the scroll I have written for them.";
 

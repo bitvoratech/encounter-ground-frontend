@@ -3,17 +3,20 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 // Self-hosted (SIL Open Font License) so builds never depend on Google Fonts.
-const gloock = localFont({
-  src: "../fonts/gloock-latin-400-normal.woff2",
-  weight: "400",
-  variable: "--font-gloock",
+// Fraunces for headings: a soft, slightly "wonky" variable serif (playful and storybook,
+// still reverent). Nunito for text: rounded and friendly. The client chose this pairing
+// (option A) on 19 Oct 2026, replacing Gloock + Hanken Grotesk as more playful.
+const fraunces = localFont({
+  src: "../fonts/fraunces-latin-var.woff2",
+  weight: "100 900",
+  variable: "--font-fraunces",
   display: "swap",
 });
 
-const hanken = localFont({
-  src: "../fonts/hanken-grotesk-latin-wght-normal.woff2",
-  weight: "100 900",
-  variable: "--font-hanken",
+const nunito = localFont({
+  src: "../fonts/nunito-latin-wght-normal.woff2",
+  weight: "200 1000",
+  variable: "--font-nunito",
   display: "swap",
 });
 
@@ -40,7 +43,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-NG" className={`${gloock.variable} ${hanken.variable}`}>
+    <html lang="en-NG" className={`${fraunces.variable} ${nunito.variable}`}>
       <body className="min-h-dvh flex flex-col antialiased">{children}</body>
     </html>
   );

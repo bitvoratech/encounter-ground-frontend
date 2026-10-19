@@ -16,7 +16,6 @@ import booksImage from "../../../public/images/home/books-by-toyin-bello.jpg";
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
 export default function HomePage() {
-  const youtube = home.streams[0]!;
   const whatsapp = contact.socials.find((s) => s.name === "WhatsApp channel")!;
 
   return (
@@ -217,9 +216,9 @@ export default function HomePage() {
             })}
           </ul>
           <div className="mt-10 text-center">
-            <a href={youtube.href} {...external} className="btn btn-fire">
+            <Link href="/media" className="btn btn-fire">
               Watch the replays
-            </a>
+            </Link>
           </div>
         </div>
       </section>

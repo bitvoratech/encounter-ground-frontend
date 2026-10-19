@@ -19,8 +19,8 @@
   --color-amber: #8a5a06;       /* gold text on light surfaces (AA) */
   --color-amber-logo: #b87808;
 
-  --font-display: var(--font-gloock), Georgia, serif;
-  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-nunito), ui-rounded, ui-sans-serif, system-ui, sans-serif;
 
   /* Type scale: a perfect fourth (1.333) from 17px body */
   --text-body: 1.0625rem;
@@ -44,12 +44,17 @@
   }
   h1, h2, h3 {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 600;
     line-height: 1.1;
     letter-spacing: -0.01em;
     text-wrap: balance;
   }
   p { text-wrap: pretty; }
+  /* Fraunces' playful setting: fully soft, with its "wonky" letters. Zero specificity, so a
+     weight or style utility on the element still wins. */
+  :where(h1, h2, h3, .font-display) {
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+  }
   ::selection { background: var(--color-flame); color: var(--color-slate-ink); }
   :focus-visible {
     outline: 3px solid var(--color-flame);

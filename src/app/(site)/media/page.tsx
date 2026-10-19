@@ -1,9 +1,11 @@
-import { IconArrowUpRight } from "@tabler/icons-react";
+import { IconArrowUpRight, IconBrandYoutube } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { streamIcon } from "@/components/site/streamIcons";
-import { contact, home, programmes } from "@/content/ministry";
+import { VideoLibrary } from "@/components/site/VideoLibrary";
+import { contact, home, programmes, youtubeChannel } from "@/content/ministry";
+import { getLatestVideos } from "@/lib/youtube";
 import streamsImage from "../../../../public/images/home/streams-gates.jpg";
 
 export const metadata: Metadata = {
@@ -14,8 +16,9 @@ export const metadata: Metadata = {
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
-export default function MediaPage() {
+export default async function MediaPage() {
   const live = programmes.filter((p) => p.when !== "December");
+  const videos = await getLatestVideos(youtubeChannel.id);
 
   return (
     <>
@@ -39,11 +42,46 @@ export default function MediaPage() {
             Catch up on our replays
           </h1>
           <p className="mt-5 max-w-[34rem] text-lede leading-relaxed text-chalk/90">
-            Every stream is recorded. Watch again on YouTube, listen on Mixlr,
+            Every stream is recorded. Watch the replays right here, listen on Mixlr,
             or join the next meeting live on Zoom.
           </p>
         </div>
       </header>
+
+      <section aria-labelledby="videos-heading" className="border-b border-rule">
+        <div className="wrap py-14 md:py-20">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="font-semibold text-amber">{youtubeChannel.name}</p>
+              <h2 id="videos-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
+                Latest streams and teachings
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a href={youtubeChannel.subscribeUrl} {...external} className="btn btn-fire">
+                <IconBrandYoutube aria-hidden="true" size={20} stroke={1.75} />
+                Subscribe
+              </a>
+              <a href={youtubeChannel.url} {...external} className="btn btn-quiet text-slate-ink">
+                All videos on YouTube
+              </a>
+            </div>
+          </div>
+          <div className="mt-10">
+            {videos && videos.length > 0 ? (
+              <VideoLibrary videos={videos} />
+            ) : (
+              <p className="rounded-3xl border border-rule bg-chalk p-6 text-stone-muted md:p-8">
+                The latest videos can’t be shown right now.{" "}
+                <a href={youtubeChannel.url} {...external} className="link font-semibold text-slate-ink">
+                  Watch them on YouTube
+                </a>
+                .
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
 
       <section aria-label="Where to watch and listen">
         <ul className="wrap grid gap-4 py-14 md:grid-cols-3 md:gap-5 md:py-20">

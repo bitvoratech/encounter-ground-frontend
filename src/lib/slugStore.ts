@@ -1,13 +1,13 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { findBook } from "@/content/books";
 
 /**
- * A list of book slugs kept in the browser (localStorage, or memory when storage is
- * blocked), shared across tabs and components. Unknown slugs and duplicates are dropped.
+ * A list of ids kept in the browser (localStorage, or memory when storage is blocked), shared
+ * across tabs and components. Ids that fail `isValid` (say, a book no longer sold) and
+ * duplicates are dropped.
  */
-export function createSlugStore(storageKey: string) {
+export function createSlugStore(storageKey: string, isValid: (id: string) => boolean) {
   const changeEvent = `${storageKey}-change`;
   const empty: string[] = [];
   let memory: string[] = empty;
@@ -19,7 +19,7 @@ export function createSlugStore(storageKey: string) {
     try {
       const value: unknown = raw ? JSON.parse(raw) : [];
       if (!Array.isArray(value)) return empty;
-      return [...new Set(value.filter((s): s is string => typeof s === "string" && !!findBook(s)))];
+      return [...new Set(value.filter((s): s is string => typeof s === "string" && isValid(s)))];
     } catch {
       return empty;
     }
