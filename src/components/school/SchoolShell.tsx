@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { contact } from "@/content/ministry";
 import { school } from "@/content/school";
@@ -14,8 +15,14 @@ export function SchoolShell({ children }: { children: React.ReactNode }) {
       <footer className="mt-auto bg-slate-deep text-chalk/70">
         <div className="wrap flex flex-col gap-4 py-10 text-sm lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="font-display text-lg text-chalk">{school.name}</p>
-            <p className="mt-1">
+            <Image
+              src="/brand/beth-el-wordmark-light.png"
+              alt={school.name}
+              width={537}
+              height={320}
+              className="h-20 w-auto"
+            />
+            <p className="mt-3">
               A school of{" "}
               <Link href="/" className="font-semibold text-chalk/90 underline-offset-4 hover:text-flame hover:underline">
                 Encounter Ground
