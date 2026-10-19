@@ -1,12 +1,14 @@
-import { IconArrowRight, IconArrowUpRight, IconBrandWhatsapp } from "@tabler/icons-react";
+import { IconArrowRight, IconArrowUpRight, IconBrandWhatsapp, IconPlayerPlayFilled } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { streamIcon } from "@/components/site/streamIcons";
 import { YadaBand } from "@/components/site/YadaBand";
-import { contact, home, mandate, programmes, yada } from "@/content/ministry";
+import { contact, home, mandate, programmes, yada, youtubeChannel } from "@/content/ministry";
 import { school, schoolClasses } from "@/content/school";
 import { formatPostDate, posts } from "@/content/posts";
 import { authorStoreUrl } from "@/content/books";
+import { formatVideoDate, mediaVideoHref, videoThumb } from "@/lib/videoFormat";
+import { getLatestVideos } from "@/lib/youtube";
 import heroImage from "../../../public/images/home/hero-gates.png";
 import streamsImage from "../../../public/images/home/streams-gates.jpg";
 import founderImage from "../../../public/images/home/founder-toyin-bello.jpg";
@@ -15,7 +17,9 @@ import booksImage from "../../../public/images/home/books-by-toyin-bello.jpg";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Refreshed hourly; null when YouTube can't be reached, and the stream links show instead.
+  const videos = (await getLatestVideos(youtubeChannel.id))?.slice(0, 4) ?? null;
   const whatsapp = contact.socials.find((s) => s.name === "WhatsApp channel")!;
 
   return (
@@ -182,42 +186,88 @@ export default function HomePage() {
         />
         <div className="wrap py-16 md:py-28">
           <div className="text-center">
-            <p className="font-semibold text-flame">Our streams</p>
+            <p className="font-semibold text-flame">{youtubeChannel.name}</p>
             <h2 id="streams-heading" className="mx-auto mt-2 max-w-2xl text-[length:var(--text-h2)]">
               Pray and worship with us, wherever you are
             </h2>
+            <p className="mx-auto mt-3 max-w-xl text-chalk/80">The latest streams and teachings. Every stream is recorded, so you can catch up any time.</p>
           </div>
-          <ul className="mx-auto mt-10 grid max-w-4xl gap-3 sm:grid-cols-3 sm:gap-4">
-            {home.streams.map((s) => {
-              const Icon = streamIcon(s.name);
-              return (
-                <li key={s.name}>
-                  <a
-                    href={s.href}
-                    {...external}
-                    className="group flex h-full items-center gap-4 rounded-2xl border border-chalk/20 bg-slate-deep/50 p-4 backdrop-blur-sm transition-colors hover:border-flame sm:flex-col sm:items-start sm:p-5"
-                  >
-                    <span className="grid size-12 shrink-0 place-items-center rounded-full bg-flame text-slate-ink">
-                      <Icon aria-hidden="true" size={22} stroke={1.75} />
+          {videos && videos.length > 0 ? (
+            <>
+              {/* The four latest Encounter Ground TV videos; each opens in the player on /media */}
+              <ul className="mt-10 grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-5 sm:gap-y-8 lg:grid-cols-4">
+                {videos.map((v) => (
+                  <li key={v.id}>
+                    <Link href={mediaVideoHref(v.id)} className="group block">
+                      <span className="relative block aspect-video overflow-hidden rounded-2xl bg-slate-deep shadow-[0_18px_40px_-20px_rgb(0_0_0/0.7)]">
+                        <Image
+                          src={videoThumb(v.id)}
+                          alt=""
+                          fill
+                          sizes="(min-width: 1024px) 22vw, 45vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                        />
+                        <span aria-hidden="true" className="absolute inset-0 grid place-items-center bg-slate-deep/20 transition-colors group-hover:bg-slate-deep/5">
+                          <span className="grid size-9 place-items-center rounded-full bg-flame text-slate-ink shadow-lg transition-transform group-hover:scale-110 sm:size-12">
+                            <IconPlayerPlayFilled size={16} />
+                          </span>
+                        </span>
+                      </span>
+                      <span className="mt-2.5 line-clamp-3 block text-sm font-semibold leading-snug text-chalk group-hover:text-flame sm:mt-3 sm:line-clamp-2 sm:text-base">
+                        {v.title}
+                      </span>
+                      <span className="mt-1 block text-xs text-chalk/70 sm:text-sm">{formatVideoDate(v.published)}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-8 text-center text-chalk/80">
+                Prefer to listen or join live?{" "}
+                {home.streams
+                  .filter((s) => s.name !== "YouTube replays")
+                  .map((s, i, list) => (
+                    <span key={s.name}>
+                      <a href={s.href} {...external} className="font-semibold text-chalk underline decoration-flame underline-offset-4 hover:text-flame">
+                        {s.name === "Mixlr" ? "Listen on Mixlr" : "Join on Zoom"}
+                      </a>
+                      {i < list.length - 1 ? " · " : ""}
                     </span>
-                    <span className="flex-1">
-                      <span className="block font-display text-xl sm:text-2xl">{s.name}</span>
-                      <span className="block text-sm text-chalk/75 sm:text-base">{s.detail}</span>
-                    </span>
-                    <IconArrowUpRight
-                      aria-hidden="true"
-                      size={20}
-                      stroke={2}
-                      className="shrink-0 text-chalk/50 transition-colors group-hover:text-flame sm:hidden"
-                    />
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
+                  ))}
+              </p>
+            </>
+          ) : (
+            <ul className="mx-auto mt-10 grid max-w-4xl gap-3 sm:grid-cols-3 sm:gap-4">
+              {home.streams.map((s) => {
+                const Icon = streamIcon(s.name);
+                return (
+                  <li key={s.name}>
+                    <a
+                      href={s.href}
+                      {...external}
+                      className="group flex h-full items-center gap-4 rounded-2xl border border-chalk/20 bg-slate-deep/50 p-4 backdrop-blur-sm transition-colors hover:border-flame sm:flex-col sm:items-start sm:p-5"
+                    >
+                      <span className="grid size-12 shrink-0 place-items-center rounded-full bg-flame text-slate-ink">
+                        <Icon aria-hidden="true" size={22} stroke={1.75} />
+                      </span>
+                      <span className="flex-1">
+                        <span className="block font-display text-xl sm:text-2xl">{s.name}</span>
+                        <span className="block text-sm text-chalk/75 sm:text-base">{s.detail}</span>
+                      </span>
+                      <IconArrowUpRight
+                        aria-hidden="true"
+                        size={20}
+                        stroke={2}
+                        className="shrink-0 text-chalk/50 transition-colors group-hover:text-flame sm:hidden"
+                      />
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
           <div className="mt-10 text-center">
             <Link href="/media" className="btn btn-fire">
-              Watch the replays
+              See all replays
             </Link>
           </div>
         </div>

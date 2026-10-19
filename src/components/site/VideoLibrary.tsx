@@ -2,15 +2,12 @@
 
 import { IconBrandYoutube, IconPlayerPlayFilled } from "@tabler/icons-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { formatVideoDate as formatDate, formatViews, videoThumb as thumb } from "@/lib/videoFormat";
 import type { Video } from "@/lib/youtube";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
-const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 const watchUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`;
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
-const formatViews = (n: number) => `${new Intl.NumberFormat("en", { notation: "compact" }).format(n)} views`;
 
 /**
  * The channel's latest videos, played on the site. The featured video shows a thumbnail
@@ -21,6 +18,15 @@ export function VideoLibrary({ videos }: { videos: Video[] }) {
   const [playing, setPlaying] = useState(false);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const current = videos.find((v) => v.id === currentId)!;
+
+  // Arriving from a video on the home page (/media#v-<id>): show that one, ready to play.
+  useEffect(() => {
+    const id = window.location.hash.match(/^#v-([\w-]{11})$/)?.[1];
+    if (!id || !videos.some((v) => v.id === id)) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-off sync from the URL on arrival
+    setCurrentId(id);
+    requestAnimationFrame(() => titleRef.current?.scrollIntoView({ block: "center" }));
+  }, [videos]);
 
   const choose = (id: string) => {
     setCurrentId(id);
