@@ -4,8 +4,8 @@ import "./globals.css";
 
 // Self-hosted (SIL Open Font License) so builds never depend on Google Fonts.
 // Fraunces for headings: a soft, slightly "wonky" variable serif (playful and storybook,
-// still reverent). Nunito for text: rounded and friendly. Chosen 19 Oct 2026 after the
-// client found Gloock + Hanken Grotesk too serious.
+// still reverent). Nunito for text: rounded and friendly. The client chose this pairing
+// (option A) on 19 Oct 2026, replacing Gloock + Hanken Grotesk as more playful.
 const fraunces = localFont({
   src: "../fonts/fraunces-latin-var.woff2",
   weight: "100 900",
