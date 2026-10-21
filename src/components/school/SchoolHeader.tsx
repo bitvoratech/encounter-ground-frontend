@@ -1,6 +1,7 @@
 "use client";
 
 import { IconArrowLeft, IconLayoutDashboard, IconLogout, IconMenu2, IconX } from "@tabler/icons-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAccount, useFullScreenMenu } from "@/components/layout/useFullScreenMenu";
@@ -9,13 +10,11 @@ import { useEnrolments } from "@/lib/learning";
 import { AccountMenu, accountLinks } from "./AccountMenu";
 import { Avatar } from "./Avatar";
 
+/** The school's logo (its wordmark, cut out of the ministry's artwork without the book). */
 function Wordmark() {
   return (
-    <Link href="/school" className="shrink-0 leading-tight" aria-label={`${school.name} home`}>
-      <span className="block font-display text-[1.375rem] text-slate-ink lg:text-2xl">{school.shortName}</span>
-      <span className="block text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-amber lg:text-xs">
-        of the Supernatural
-      </span>
+    <Link href="/school" className="shrink-0" aria-label={`${school.name} home`}>
+      <Image src="/brand/beth-el-wordmark.png" alt="" width={537} height={320} priority className="h-12 w-auto lg:h-14" />
     </Link>
   );
 }
