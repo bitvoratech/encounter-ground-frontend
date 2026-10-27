@@ -1,7 +1,6 @@
 import {
   IconArrowUp,
   IconBrandWhatsapp,
-  IconHeartHandshake,
   IconMail,
   IconPhone,
   IconUserCircle,
@@ -46,10 +45,6 @@ export function SiteFooter() {
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-3">
-            <Link href="/give" className="btn btn-fire">
-              <IconHeartHandshake aria-hidden="true" size={20} stroke={1.75} />
-              Give
-            </Link>
             <a href={home.joinUsUrl} {...external} className="btn btn-quiet text-chalk">
               Join us
             </a>
