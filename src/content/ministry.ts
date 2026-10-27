@@ -132,17 +132,3 @@ export const home = {
     { name: "Zoom", detail: "Join the live meeting", href: "https://us02web.zoom.us/j/8248076803?pwd=a0Q4WWcxTjVmOFE1THBNWVpBOTZPUT09" },
   ],
 };
-
-export type BankAccount = { bank: string; accountName: string; accountNumber: string; currency: string };
-
-// Giving. The old site's Donations page was a broken link, so there are no
-// details to carry over. Add the ministry's accounts here once confirmed;
-// online giving arrives with the Paystack integration.
-export const giving = {
-  bankAccounts: [] as BankAccount[],
-  uses: [
-    { title: "Prayer & streams", body: "Zoe Healing Stream, the Prayer Stretches and the live streams that carry us." },
-    { title: "YADA Conference", body: "A free conference every December, open to everyone who is hungry for God." },
-    { title: "Discipleship", body: "The discipleship classes and the Ministry School, so teaching reaches more people." },
-  ],
-};

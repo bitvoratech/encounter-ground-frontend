@@ -1,6 +1,6 @@
 "use client";
 
-import { IconChevronDown, IconHeartHandshake, IconMenu2, IconX } from "@tabler/icons-react";
+import { IconChevronDown, IconMenu2, IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -162,10 +162,6 @@ export function SiteHeader() {
               {account.label}
             </Link>
             <CartLink />
-            <Link href="/give" className="btn btn-fire min-h-11 px-5 py-2">
-            <IconHeartHandshake aria-hidden="true" size={18} stroke={2} className="-ml-1" />
-              Give
-            </Link>
             <button
               ref={menuButtonRef}
               type="button"
@@ -245,9 +241,6 @@ export function SiteHeader() {
 
         <div className="wrap shrink-0 border-t border-chalk/10 py-5">
           <div className="flex gap-3">
-            <Link href="/give" className="btn btn-fire flex-1">
-              Give
-            </Link>
             <Link href={account.href} className="btn btn-quiet flex-1 text-chalk">
               {account.label}
             </Link>

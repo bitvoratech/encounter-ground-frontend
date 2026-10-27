@@ -17,7 +17,6 @@ const nextConfig: NextConfig = {
       { source: "/events/list", destination: "/events", permanent: true },
       { source: "/contacts", destination: "/contact", permanent: true },
       { source: "/shop", destination: "/books", permanent: true },
-      { source: "/donations", destination: "/give", permanent: true },
       { source: "/category/self-test", destination: "/self-test", permanent: true },
       { source: "/influence-self-test", destination: "/self-test/seven-mountains-of-influence", permanent: true },
       // The old slug contains a non-breaking hyphen ("self‑test"), so match the prefix.

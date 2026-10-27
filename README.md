@@ -10,7 +10,7 @@ pnpm dev     # http://localhost:3000
 
 ## Structure
 
-- `src/app/(site)` public pages: home, about, events, media, self-tests, blog, give, contact
+- `src/app/(site)` public pages: home, about, events, media, self-tests, blog, contact
 - `src/app/(store)/books` bookstore (links to Amazon until checkout ships)
 - `src/app/(auth)` sign in, register, forgot/reset password; `src/app/auth/*` email-link and sign-out handlers
 - `src/app/(portal)/dashboard` member account page

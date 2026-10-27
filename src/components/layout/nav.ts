@@ -1,4 +1,4 @@
-// Primary navigation. Give and the account link sit beside the nav in the
+// Primary navigation. The account link sits beside the nav in the
 // header rather than in this list. An item with `children` is a dropdown.
 
 export type NavLink = { href: string; label: string };
