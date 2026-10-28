@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CurrencySwitcher } from "@/components/store/CurrencySwitcher";
 import { Price } from "@/components/store/Price";
+import { WishlistButton } from "@/components/store/WishlistButton";
 import { authorStoreUrl, books, samplePrices } from "@/content/books";
 
 export const metadata: Metadata = {
@@ -30,38 +31,43 @@ export default function BooksPage() {
       </header>
 
       <section aria-label="Books" className="border-t border-rule bg-chalk">
-        <ul className="wrap grid grid-cols-2 gap-x-4 gap-y-10 py-12 sm:gap-x-8 sm:gap-y-14 md:py-20 lg:grid-cols-3">
+        <ul className="wrap grid grid-cols-2 gap-x-4 gap-y-10 py-12 sm:grid-cols-3 sm:gap-x-6 md:grid-cols-4 md:py-16 lg:grid-cols-5">
           {books.map((book) => (
             <li key={book.slug} className="flex flex-col">
-              <Link href={`/books/${book.slug}`} className="group block" tabIndex={-1} aria-hidden="true">
-                <Image
-                  src={book.cover}
-                  alt=""
-                  width={683}
-                  height={1024}
-                  sizes="(min-width: 1024px) 30vw, 45vw"
-                  className="aspect-[2/3] w-full rounded-xl bg-limestone object-cover shadow-[0_18px_40px_-20px_rgb(29_38_48/0.55)] transition-transform duration-300 group-hover:-translate-y-1 sm:rounded-2xl"
-                />
-              </Link>
-              <p className="mt-4 text-xs font-semibold text-amber sm:mt-5 sm:text-sm">{book.audience}</p>
-              <h2 className="mt-1 text-lg leading-snug text-slate-ink sm:text-h3">
+              <div className="relative">
+                <Link href={`/books/${book.slug}`} className="group block" tabIndex={-1} aria-hidden="true">
+                  <Image
+                    src={book.cover}
+                    alt=""
+                    width={683}
+                    height={1024}
+                    sizes="(min-width: 1024px) 17vw, (min-width: 768px) 22vw, (min-width: 640px) 30vw, 45vw"
+                    className="aspect-[2/3] w-full rounded-xl bg-limestone object-cover shadow-[0_14px_30px_-18px_rgb(29_38_48/0.55)] transition-transform duration-300 group-hover:-translate-y-1"
+                  />
+                </Link>
+                <div className="absolute right-2 top-2">
+                  <WishlistButton slug={book.slug} title={book.title} />
+                </div>
+              </div>
+              <p className="mt-3 text-xs font-semibold text-amber">{book.audience}</p>
+              <h2 className="mt-1 text-base leading-snug text-slate-ink sm:text-lg">
                 <Link href={`/books/${book.slug}`} className="hover:underline hover:decoration-flame hover:underline-offset-4">
                   {book.title}
                 </Link>
               </h2>
-              {book.subtitle && <p className="mt-1.5 text-sm text-stone-muted sm:mt-2 sm:text-base">{book.subtitle}</p>}
-              <div className="mt-auto pt-4 sm:pt-5">
+              {book.subtitle && <p className="mt-1 line-clamp-2 text-xs text-stone-muted sm:text-sm">{book.subtitle}</p>}
+              <div className="mt-auto pt-3">
                 <p className="text-sm text-stone-muted">
-                  E-book <Price prices={book.prices} className="ml-1 text-base font-semibold text-slate-ink sm:text-lg" />
+                  E-book <Price prices={book.prices} className="ml-1 font-semibold text-slate-ink" />
                 </p>
                 <Link
                   href={`/books/${book.slug}`}
-                  className="btn btn-fire mt-3 w-full px-3 text-sm sm:w-auto sm:px-[1.4rem] sm:text-base"
+                  className="btn btn-fire mt-3 min-h-10 w-full px-3 py-2 text-sm"
                 >
                   View book
                   <span className="sr-only">: {book.title}{book.subtitle ? `, ${book.audience}` : ""}</span>
                 </Link>
-                <a href={book.amazonUrl} {...external} className="link mt-3 block text-sm text-stone-muted">
+                <a href={book.amazonUrl} {...external} className="link mt-2.5 block text-xs text-stone-muted sm:text-sm">
                   Paperback on Amazon
                   <span className="sr-only">: {book.title}</span>
                 </a>

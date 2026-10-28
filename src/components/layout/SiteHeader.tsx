@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CartLink } from "@/components/store/CartLink";
+import { WishlistLink } from "@/components/store/WishlistLink";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { contact } from "@/content/ministry";
 import { useFullScreenMenu, useSignedIn } from "./useFullScreenMenu";
@@ -161,6 +162,7 @@ export function SiteHeader() {
             >
               {account.label}
             </Link>
+            <WishlistLink />
             <CartLink />
             <button
               ref={menuButtonRef}
