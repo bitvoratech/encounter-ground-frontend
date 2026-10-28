@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Pages that need a signed-in member, and pages a signed-in member doesn't need.
-const MEMBERS_ONLY = ["/dashboard", "/reset-password", "/checkout", "/my-books", "/my-courses"];
+const MEMBERS_ONLY = ["/dashboard", "/reset-password", "/checkout", "/my-books", "/my-courses", "/admin"];
 const GUESTS_ONLY = ["/login", "/register", "/forgot-password"];
 
 const matches = (path: string, prefixes: string[]) =>
@@ -59,6 +59,7 @@ export const config = {
     "/checkout/:path*",
     "/my-books/:path*",
     "/my-courses/:path*",
+    "/admin/:path*",
     "/reset-password",
     "/login",
     "/register",

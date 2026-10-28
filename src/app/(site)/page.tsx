@@ -11,7 +11,8 @@ import { formatVideoDate, mediaVideoHref, videoThumb } from "@/lib/videoFormat";
 import { getLatestVideos } from "@/lib/youtube";
 import heroImage from "../../../public/images/home/hero-gates.png";
 import streamsImage from "../../../public/images/home/streams-gates.jpg";
-import founderImage from "../../../public/images/home/founder-toyin-bello.jpg";
+import founderImage from "../../../public/images/home/founder-beloved.jpg";
+import meetingImage from "../../../public/images/home/revival-meeting.jpg";
 import bethElImage from "../../../public/images/home/beth-el-institute.jpg";
 import booksImage from "../../../public/images/home/books-by-toyin-bello.jpg";
 
@@ -80,30 +81,32 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Who we are */}
-      <section aria-labelledby="who-heading">
-        <div className="wrap grid gap-10 py-16 md:grid-cols-[2fr_3fr] md:items-center md:gap-16 md:py-24">
-          <figure className="mx-auto w-full max-w-[16rem] sm:max-w-xs md:max-w-none">
-            <Image
-              src={founderImage}
-              alt="Toyin Bello,  of Encounter Ground"
-              placeholder="blur"
-              sizes="(min-width: 768px) 40vw, 16rem"
-              className="aspect-[4/5] w-full rounded-3xl object-cover object-top"
-            />
-            <figcaption className="mt-3 text-center text-sm text-stone-muted md:text-left">Toyin Bello</figcaption>
+      {/* Who we are: the one deep band near the top, with a studio portrait */}
+      <section aria-labelledby="who-heading" className="bg-slate-deep text-chalk">
+        <div className="wrap grid gap-12 py-16 md:grid-cols-[2fr_3fr] md:items-center md:gap-16 md:py-24">
+          <figure className="mx-auto w-full max-w-[17rem] sm:max-w-xs md:max-w-none">
+            <div className="photo-frame">
+              <Image
+                src={founderImage}
+                alt="Toyin Bello of Encounter Ground, in a T-shirt that reads “I am my Beloved’s, my Beloved is mine”"
+                placeholder="blur"
+                sizes="(min-width: 768px) 40vw, 17rem"
+                className="aspect-[4/5] w-full rounded-2xl object-cover object-top"
+              />
+            </div>
+            <figcaption className="mt-5 text-center text-sm text-chalk/70 md:text-left">Toyin Bello</figcaption>
           </figure>
           <div>
-            <p className="font-semibold text-amber">Who we are</p>
-            <h2 id="who-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
-              {home.whoWeAre.heading}
+            <p className="eyebrow eyebrow-light">Who we are</p>
+            <h2 id="who-heading" className="mt-4 text-[length:var(--text-h2)]">
+              A House of Dominion Through <em>Intimacy</em>
             </h2>
-            <div className="prose-eg measure mt-6 text-slate-ink/90 md:text-[1.125rem]">
+            <div className="prose-eg measure mt-6 text-chalk/85 md:text-[1.125rem]">
               {home.whoWeAre.body.map((p) => (
                 <p key={p.slice(0, 24)}>{p}</p>
               ))}
             </div>
-            <blockquote className="measure mt-8 border-l-4 border-flame pl-5 font-display text-xl leading-snug text-slate-ink md:text-2xl">
+            <blockquote className="measure mt-8 border-l-4 border-flame pl-5 font-display text-xl italic leading-snug text-chalk md:text-2xl">
               “{mandate}”
             </blockquote>
             <Link href="/about" className="btn btn-fire mt-8">
@@ -118,9 +121,9 @@ export default async function HomePage() {
         <div className="wrap py-16 md:py-24">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="font-semibold text-amber">Our vision &amp; mission</p>
-              <h2 id="pillars-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
-                The pillars of Encounter Ground
+              <p className="eyebrow">Our vision &amp; mission</p>
+              <h2 id="pillars-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+                The pillars of <em>Encounter Ground</em>
               </h2>
             </div>
             <Link href="/about" className="link self-start font-semibold text-slate-ink md:self-auto">
@@ -157,9 +160,9 @@ export default async function HomePage() {
             />
           </Link>
           <div>
-            <p className="font-semibold text-amber">From the bookshelf</p>
-            <h2 id="books-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
-              Books by Toyin Bello
+            <p className="eyebrow">From the bookshelf</p>
+            <h2 id="books-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+              Books by <em>Toyin Bello</em>
             </h2>
             <p className="mt-4 max-w-md text-stone-muted">
               Devotionals and journals on intimacy with God, prayer and identity, for
@@ -186,9 +189,9 @@ export default async function HomePage() {
         />
         <div className="wrap py-16 md:py-28">
           <div className="text-center">
-            <p className="font-semibold text-flame">{youtubeChannel.name}</p>
-            <h2 id="streams-heading" className="mx-auto mt-2 max-w-2xl text-[length:var(--text-h2)]">
-              Pray and worship with us, wherever you are
+            <p className="eyebrow eyebrow-light">{youtubeChannel.name}</p>
+            <h2 id="streams-heading" className="mx-auto mt-4 max-w-2xl text-[length:var(--text-h2)]">
+              Pray and worship with us, <em className="text-flame">wherever you are</em>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-chalk/80">The latest streams and teachings. Every stream is recorded, so you can catch up any time.</p>
           </div>
@@ -278,9 +281,9 @@ export default async function HomePage() {
         <div className="wrap py-16 md:py-24">
           <div className="grid gap-8 md:grid-cols-[1fr_2fr] md:gap-10">
             <div>
-              <p className="font-semibold text-amber">Our events</p>
-              <h2 id="rhythm-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
-                Where to meet us
+              <p className="eyebrow">Our events</p>
+              <h2 id="rhythm-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+                Where to <em>meet us</em>
               </h2>
               <p className="mt-4 max-w-xs text-stone-muted">
                 Prayer, healing and teaching run all year. Join any of them.
@@ -288,6 +291,15 @@ export default async function HomePage() {
               <Link href="/events" className="link mt-6 inline-block font-semibold text-slate-ink">
                 View all programmes
               </Link>
+              <div className="photo-frame mt-10 hidden md:block">
+                <Image
+                  src={meetingImage}
+                  alt="Toyin Bello leading an Encounter Ground revival meeting, arms open, with musicians behind her"
+                  placeholder="blur"
+                  sizes="30vw"
+                  className="aspect-[4/3] w-full rounded-2xl object-cover"
+                />
+              </div>
             </div>
             <ul className="divide-y divide-rule border-y border-rule">
               {programmes.map((p) => (
@@ -315,8 +327,8 @@ export default async function HomePage() {
       <section aria-labelledby="school-heading">
         <div className="wrap grid gap-10 py-16 md:grid-cols-[3fr_2fr] md:items-center md:gap-16 md:py-24">
           <div>
-            <p className="font-semibold text-amber">The ministry school</p>
-            <h2 id="school-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
+            <p className="eyebrow">The ministry school</p>
+            <h2 id="school-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
               {school.name}
             </h2>
             <p className="measure mt-6 text-slate-ink/90 md:text-[1.125rem]">{school.summary}</p>
@@ -358,9 +370,9 @@ export default async function HomePage() {
         <div className="wrap py-16 md:py-24">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="font-semibold text-amber">From our blog</p>
-              <h2 id="blog-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
-                Discover faith, grow in grace, behold His beauty
+              <p className="eyebrow">From our blog</p>
+              <h2 id="blog-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+                Discover faith, grow in grace, <em>behold His beauty</em>
               </h2>
             </div>
             <Link href="/blog" className="link self-start font-semibold text-slate-ink md:self-auto">

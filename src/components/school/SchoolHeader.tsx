@@ -1,13 +1,14 @@
 "use client";
 
-import { IconArrowLeft, IconLayoutDashboard, IconLogout, IconMenu2, IconX } from "@tabler/icons-react";
+import { IconArrowLeft, IconLogout, IconMenu2, IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAccount, useFullScreenMenu } from "@/components/layout/useFullScreenMenu";
 import { school, schoolNav } from "@/content/school";
-import { useEnrolments } from "@/lib/learning";
-import { AccountMenu, accountLinks } from "./AccountMenu";
+import { useLearning } from "@/lib/learning";
+import { useIsStaff } from "@/lib/staff";
+import { AccountMenu, accountLinks, adminLink, staffLinks } from "./AccountMenu";
 import { Avatar } from "./Avatar";
 
 /** The school's logo (its wordmark, cut out of the ministry's artwork without the book). */
@@ -28,11 +29,14 @@ export function SchoolHeader() {
   const pathname = usePathname();
   const { open, buttonRef, menuRef, openMenu, closeMenu } = useFullScreenMenu();
   const account = useAccount();
-  const enrolments = useEnrolments();
-  const enrolled = (enrolments?.length ?? 0) > 0;
+  const learning = useLearning();
+  const isStaff = useIsStaff();
+  const enrolled = learning.status === "ready" && learning.enrolments.length > 0;
   const signIn = `/login?next=${encodeURIComponent(pathname)}`;
   const isCurrent = (href: string) => (href === "/school" ? pathname === href : pathname === href || pathname.startsWith(`${href}/`));
-  const onDashboard = pathname === "/dashboard";
+  // The ministry team's way in is the admin dashboard, not a student one.
+  const home = isStaff ? adminLink : accountLinks[0];
+  const onDashboard = pathname === home.href;
 
   return (
     <>
@@ -78,21 +82,21 @@ export function SchoolHeader() {
             ) : (
               <>
                 <Link
-                  href="/dashboard"
+                  href={home.href}
                   aria-current={onDashboard ? "page" : undefined}
-                  className={`${enrolled ? "btn btn-fire" : "btn btn-quiet text-slate-ink"} hidden min-h-11 px-5 py-2 lg:inline-flex`}
+                  className={`${enrolled || isStaff ? "btn btn-fire" : "btn btn-quiet text-slate-ink"} hidden min-h-11 px-5 py-2 lg:inline-flex`}
                 >
-                  My dashboard
+                  {home.label}
                 </Link>
-                {enrolled ? (
+                {enrolled || isStaff ? (
                   // Phones: no room for the full button, so the dashboard keeps an icon of its own.
                   <Link
-                    href="/dashboard"
-                    aria-label="My dashboard"
+                    href={home.href}
+                    aria-label={home.label}
                     aria-current={onDashboard ? "page" : undefined}
                     className="grid size-11 place-items-center rounded-full bg-flame text-slate-ink lg:hidden"
                   >
-                    <IconLayoutDashboard aria-hidden="true" size={20} stroke={1.75} />
+                    <home.Icon aria-hidden="true" size={20} stroke={1.75} />
                   </Link>
                 ) : (
                   <Link href="/school/classes" className="btn btn-fire min-h-11 px-5 py-2">
@@ -169,7 +173,7 @@ export function SchoolHeader() {
                 </div>
               </div>
               <ul className="mt-3 grid gap-1">
-                {accountLinks.map(({ href, label, Icon }) => (
+                {(isStaff ? staffLinks : accountLinks).map(({ href, label, Icon }) => (
                   <li key={href}>
                     <Link
                       href={href}
@@ -190,7 +194,7 @@ export function SchoolHeader() {
           <div className="flex gap-3">
             {account ? (
               <>
-                {!enrolled && (
+                {!enrolled && !isStaff && (
                   <Link href="/school/classes" className="btn btn-fire flex-1">
                     Enrol
                   </Link>

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { connection } from "next/server";
+import { ClassesUnavailable } from "@/components/school/ClassesUnavailable";
 import { formatMinutes } from "@/components/school/lessonKinds";
-import { courseMinutes, courses, lessonCount } from "@/content/courses";
+import { getCourses } from "@/lib/courses";
+import type { CourseSummary } from "@/types/school";
 import { school, schoolClasses } from "@/content/school";
 
 export const metadata: Metadata = {
@@ -9,7 +12,17 @@ export const metadata: Metadata = {
   description: `The discipleship classes of ${school.name}: ${schoolClasses.map((c) => c.name).join(", ")}.`,
 };
 
-export default function SchoolClassesPage() {
+export default async function SchoolClassesPage() {
+  // Fetch at request time, so builds never depend on the API being reachable.
+  await connection();
+  let courses: CourseSummary[];
+  try {
+    courses = await getCourses();
+  } catch (err) {
+    console.error("Classes unavailable:", err);
+    return <ClassesUnavailable />;
+  }
+
   return (
     <>
       <header className="wrap pb-12 pt-14 md:pt-20">
@@ -35,7 +48,7 @@ export default function SchoolClassesPage() {
               <p className="mt-1 font-semibold text-amber">{c.meaning}</p>
               <p className="mt-4 flex-1 text-[1.125rem] text-slate-ink/90">{c.summary}</p>
               <p className="mt-6 text-sm text-stone-muted">
-                {c.modules.length} modules · {lessonCount(c)} lessons · about {formatMinutes(courseMinutes(c))}
+                {c.module_count} modules · {c.lesson_count} lessons · about {formatMinutes(c.minutes)}
               </p>
               <Link href={`/school/classes/${c.slug}`} className="btn btn-fire mt-5 self-start">
                 View class<span className="sr-only">: {c.name}</span>

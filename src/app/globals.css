@@ -55,6 +55,12 @@
   :where(h1, h2, h3, .font-display) {
     font-variation-settings: "SOFT" 100, "WONK" 1;
   }
+  /* An accent word in a heading: Fraunces italic in gold, e.g. "Through <em>Intimacy</em>". */
+  :where(h1, h2, h3) em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--color-amber-logo);
+  }
   ::selection { background: var(--color-flame); color: var(--color-slate-ink); }
   :focus-visible {
     outline: 3px solid var(--color-flame);
@@ -197,3 +203,40 @@
 .page-hero {
   border-image: linear-gradient(180deg, #f6ead0, var(--color-limestone)) fill 0 // 0 100vw;
 }
+
+/*
+  Section label: small gold capitals after a short gold rule, set above section headings.
+  Use .eyebrow-light on dark bands.
+*/
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-amber);
+}
+.eyebrow::before {
+  content: "";
+  width: 2rem;
+  height: 2px;
+  background: var(--color-amber-logo);
+}
+.eyebrow-light { color: var(--color-flame); }
+.eyebrow-light::before { background: var(--color-flame); }
+
+/* Gold corner brackets around a photo: wrap the image in .photo-frame. */
+.photo-frame { position: relative; }
+.photo-frame::before,
+.photo-frame::after {
+  content: "";
+  position: absolute;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 2px solid var(--color-flame);
+  pointer-events: none;
+}
+.photo-frame::before { top: -0.75rem; left: -0.75rem; border-right: 0; border-bottom: 0; }
+.photo-frame::after { bottom: -0.75rem; right: -0.75rem; border-left: 0; border-top: 0; }
