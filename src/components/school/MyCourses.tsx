@@ -2,20 +2,26 @@
 
 import { IconArrowRight, IconSchool } from "@tabler/icons-react";
 import Link from "next/link";
-import { findCourse, type Course } from "@/content/courses";
-import { courseProgress, useCompleted, useEnrolments } from "@/lib/learning";
+import { courseProgress } from "@/lib/courses";
+import { useLearning } from "@/lib/learning";
+import type { Course } from "@/types/school";
 import { ProgressBar } from "./ProgressBar";
 
 /** The classes this member is enrolled in, with progress and the lesson to continue from. */
-export function MyCourses() {
-  const enrolments = useEnrolments();
-  const done = useCompleted();
+export function MyCourses({ courses }: { courses: Course[] }) {
+  const learning = useLearning();
 
-  if (!enrolments || !done) {
+  if (learning.status === "error") {
+    return <p className="mt-10 font-semibold text-amber">Your classes can’t be loaded right now. Please refresh in a moment.</p>;
+  }
+  if (learning.status !== "ready") {
     return <div className="mt-10 h-48 rounded-3xl border border-rule bg-chalk/60" aria-hidden="true" />;
   }
 
-  const enrolled = enrolments.map(findCourse).filter((c): c is Course => !!c);
+  const enrolled = learning.enrolments.flatMap((e) => {
+    const course = courses.find((c) => c.slug === e.slug);
+    return course ? [{ course, completed: e.completed }] : [];
+  });
 
   if (enrolled.length === 0) {
     return (
@@ -36,8 +42,8 @@ export function MyCourses() {
 
   return (
     <ul className="mt-10 grid gap-5 md:grid-cols-2">
-      {enrolled.map((course) => {
-        const p = courseProgress(course, done);
+      {enrolled.map(({ course, completed }) => {
+        const p = courseProgress(course, completed);
         return (
           <li key={course.slug} className="flex flex-col rounded-3xl border border-rule bg-chalk p-6 md:p-8">
             <p className="text-sm font-semibold text-amber">{course.meaning}</p>

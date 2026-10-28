@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAccount, useFullScreenMenu } from "@/components/layout/useFullScreenMenu";
 import { school, schoolNav } from "@/content/school";
-import { useEnrolments } from "@/lib/learning";
+import { useLearning } from "@/lib/learning";
 import { AccountMenu, accountLinks } from "./AccountMenu";
 import { Avatar } from "./Avatar";
 
@@ -28,8 +28,8 @@ export function SchoolHeader() {
   const pathname = usePathname();
   const { open, buttonRef, menuRef, openMenu, closeMenu } = useFullScreenMenu();
   const account = useAccount();
-  const enrolments = useEnrolments();
-  const enrolled = (enrolments?.length ?? 0) > 0;
+  const learning = useLearning();
+  const enrolled = learning.status === "ready" && learning.enrolments.length > 0;
   const signIn = `/login?next=${encodeURIComponent(pathname)}`;
   const isCurrent = (href: string) => (href === "/school" ? pathname === href : pathname === href || pathname.startsWith(`${href}/`));
   const onDashboard = pathname === "/dashboard";

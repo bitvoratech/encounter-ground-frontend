@@ -14,8 +14,9 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Account } from "@/components/layout/useFullScreenMenu";
 import { findBook, type Book } from "@/content/books";
-import { courseLessons, courses, findCourse, sampleCourses, type Course } from "@/content/courses";
-import { courseProgress, useCompleted, useEnrolments } from "@/lib/learning";
+import { courseLessons, courseProgress } from "@/lib/courses";
+import { useLearning } from "@/lib/learning";
+import type { Course } from "@/types/school";
 import { useLibrary } from "@/lib/library";
 import { Avatar } from "./Avatar";
 import { ProgressBar } from "./ProgressBar";
@@ -26,16 +27,23 @@ const cardTitle = "font-display text-2xl leading-tight text-slate-ink";
 /**
  * The student dashboard, in the order learning platforms recommend: carry on where you left
  * off first, then what is waiting (checkpoints and final checks), then courses, books and the
- * rest. Learning data lives in this browser until the backend.
+ * rest. Classes and progress come from the API; e-books are a browser sample until payments.
  */
-export function DashboardHome({ account, passwordUpdated }: { account: Account; passwordUpdated: boolean }) {
-  const enrolments = useEnrolments();
-  const done = useCompleted();
+export function DashboardHome({
+  account,
+  courses,
+  passwordUpdated,
+}: {
+  account: Account;
+  courses: Course[];
+  passwordUpdated: boolean;
+}) {
+  const learning = useLearning();
   const library = useLibrary();
   const firstName = account.name.split(" ")[0];
   const today = new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
 
-  if (!enrolments || !done || !library) {
+  if (learning.status === "loading" || learning.status === "signed-out" || !library) {
     return (
       <div aria-hidden="true" className="grid gap-6">
         <div className="h-24 rounded-3xl bg-chalk/70" />
@@ -44,14 +52,22 @@ export function DashboardHome({ account, passwordUpdated }: { account: Account; 
     );
   }
 
-  const myCourses = enrolments.map(findCourse).filter((c): c is Course => !!c);
+  const enrolments = learning.status === "ready" ? learning.enrolments : [];
+  const mine = enrolments.flatMap((e) => {
+    const course = courses.find((c) => c.slug === e.slug);
+    return course ? [{ course, completed: e.completed }] : [];
+  });
+  const myCourses = mine.map((m) => m.course);
   const books = library.map(findBook).filter((b): b is Book => !!b);
-  const allLessons = myCourses.flatMap((c) => courseLessons(c).map((l) => ({ ...l, course: c })));
-  const lessonsDone = allLessons.filter((l) => done.includes(l.id)).length;
-  const checkpointsDone = allLessons.filter((l) => l.lesson.kind === "checkpoint" && done.includes(l.id)).length;
-  const waiting = allLessons.filter((l) => (l.lesson.kind === "checkpoint" || l.lesson.kind === "quiz") && !done.includes(l.id));
+  const allLessons = mine.flatMap(({ course, completed }) =>
+    courseLessons(course).map((l) => ({ ...l, course, done: completed.includes(l.lesson.slug) })),
+  );
+  const lessonsDone = allLessons.filter((l) => l.done).length;
+  const checkpointsDone = allLessons.filter((l) => l.lesson.kind === "checkpoint" && l.done).length;
+  const waiting = allLessons.filter((l) => (l.lesson.kind === "checkpoint" || l.lesson.kind === "quiz") && !l.done);
   // Carry on with the first class that isn't finished.
-  const current = myCourses.map((c) => ({ course: c, p: courseProgress(c, done) })).find((x) => !x.p.complete);
+  const current = mine.map((m) => ({ course: m.course, p: courseProgress(m.course, m.completed) })).find((x) => !x.p.complete);
+  const firstClass = courses[0];
 
   const stats = [
     { label: "Classes", value: myCourses.length, Icon: IconSchool },
@@ -75,9 +91,10 @@ export function DashboardHome({ account, passwordUpdated }: { account: Account; 
           Your password has been updated.
         </p>
       )}
-      {sampleCourses && (
-        <p className="text-sm text-stone-muted">Test mode: classes, progress and books are saved in this browser only.</p>
+      {learning.status === "error" && (
+        <p role="alert" className="font-semibold text-amber">Your classes can’t be loaded right now. Please refresh in a moment.</p>
       )}
+      <p className="text-sm text-stone-muted">Test mode: e-books from sample purchases are saved in this browser only.</p>
 
       {/* At a glance */}
       <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -130,13 +147,15 @@ export function DashboardHome({ account, passwordUpdated }: { account: Account; 
               {myCourses.length ? "Every class complete" : "Start your first class"}
             </h2>
             <p className="mt-3 font-display text-[clamp(1.75rem,1.4rem+1.4vw,2.5rem)] leading-tight">
-              {myCourses.length ? "Well done. Ready for the next one?" : `${courses[0]!.name}: ${courses[0]!.summary.split(":")[0]}`}
+              {myCourses.length || !firstClass ? "Well done. Ready for the next one?" : `${firstClass.name}: ${firstClass.summary?.split(":")[0] ?? firstClass.meaning ?? ""}`}
             </p>
             <p className="mt-2 max-w-lg text-chalk/75">
-              {myCourses.length ? "Browse the classes to keep growing." : "New to the school? Begin with Halak. The first lesson is a free preview."}
+              {myCourses.length || !firstClass
+                ? "Browse the classes to keep growing."
+                : `New to the school? Begin with ${firstClass.name}. The first lesson is a free preview.`}
             </p>
-            <Link href={myCourses.length ? "/school/classes" : `/school/classes/${courses[0]!.slug}`} className="btn btn-fire mt-6">
-              {myCourses.length ? "Browse the classes" : "Start with Halak"}
+            <Link href={myCourses.length || !firstClass ? "/school/classes" : `/school/classes/${firstClass.slug}`} className="btn btn-fire mt-6">
+              {myCourses.length || !firstClass ? "Browse the classes" : `Start with ${firstClass.name}`}
               <IconArrowRight aria-hidden="true" size={18} stroke={2} />
             </Link>
           </section>
@@ -161,7 +180,7 @@ export function DashboardHome({ account, passwordUpdated }: { account: Account; 
                 {waiting.slice(0, 4).map((w) => {
                   const Icon = w.lesson.kind === "quiz" ? IconListCheck : IconFlag;
                   return (
-                    <li key={w.id}>
+                    <li key={`${w.course.slug}/${w.lesson.slug}`}>
                       <Link
                         href={`/school/classes/${w.course.slug}/${w.lesson.slug}`}
                         className="flex items-center gap-3 rounded-2xl border border-rule bg-limestone p-3 transition-colors hover:border-slate"
@@ -206,7 +225,7 @@ export function DashboardHome({ account, passwordUpdated }: { account: Account; 
           ) : (
             <ul className="mt-5 grid gap-5">
               {myCourses.map((c) => {
-                const p = courseProgress(c, done);
+                const p = courseProgress(c, mine.find((m) => m.course === c)!.completed);
                 return (
                   <li key={c.slug} className="grid gap-3 sm:grid-cols-[10rem_1fr] sm:items-center">
                     <Link href={`/school/classes/${c.slug}`} className="font-display text-xl text-slate-ink hover:underline hover:decoration-flame hover:underline-offset-4">

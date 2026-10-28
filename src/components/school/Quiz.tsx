@@ -2,37 +2,56 @@
 
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { useRef, useState } from "react";
-import type { QuizQuestion } from "@/content/courses";
-import { setLessonComplete, useCompleted } from "@/lib/learning";
+import { submitQuiz } from "@/lib/learning";
+import type { QuizQuestion, QuizResult } from "@/types/school";
 
-/** The final check: answer, see what was right and why, retry until everything is right. */
-export function Quiz({ lessonId, questions }: { lessonId: string; questions: QuizQuestion[] }) {
-  const passed = useCompleted()?.includes(lessonId) ?? false;
+/**
+ * The final check, marked by the server: answer, see what was right and why, and retry until
+ * everything is right. Passing completes the lesson.
+ */
+export function Quiz({
+  courseSlug,
+  lessonSlug,
+  questions,
+  passed,
+}: {
+  courseSlug: string;
+  lessonSlug: string;
+  questions: QuizQuestion[];
+  passed: boolean;
+}) {
   const [answers, setAnswers] = useState<(number | null)[]>(() => questions.map(() => null));
-  const [checked, setChecked] = useState(false);
+  const [result, setResult] = useState<QuizResult | null>(null);
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
-  const score = answers.filter((a, i) => a === questions[i]!.answer).length;
   const allAnswered = answers.every((a) => a !== null);
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        if (!allAnswered) return;
-        setChecked(true);
-        if (score === questions.length) setLessonComplete(lessonId, true);
-        requestAnimationFrame(() => resultRef.current?.focus());
+        if (!allAnswered || pending) return;
+        setPending(true);
+        setError("");
+        try {
+          setResult(await submitQuiz(courseSlug, lessonSlug, answers as number[]));
+          requestAnimationFrame(() => resultRef.current?.focus());
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Your answers didn’t send. Please try again.");
+        } finally {
+          setPending(false);
+        }
       }}
       className="grid gap-6"
     >
-      {passed && !checked && (
+      {passed && !result && (
         <p role="status" className="rounded-2xl bg-flame/15 px-4 py-3 font-semibold text-amber">
           You’ve passed this final check. You can take it again any time.
         </p>
       )}
       {questions.map((q, qi) => {
-        const chosen = answers[qi];
-        const right = chosen === q.answer;
+        const feedback = result?.results[qi];
         return (
           <fieldset key={q.question} className="rounded-2xl border border-rule bg-chalk p-5 md:p-6">
             {/* Floated so the legend sits inside the card instead of across its border */}
@@ -48,10 +67,10 @@ export function Quiz({ lessonId, questions }: { lessonId: string; questions: Qui
                   <input
                     type="radio"
                     name={`q${qi}`}
-                    checked={chosen === oi}
+                    checked={answers[qi] === oi}
                     onChange={() => {
                       setAnswers((a) => a.map((v, i) => (i === qi ? oi : v)));
-                      setChecked(false);
+                      setResult(null);
                     }}
                     className="size-5 accent-slate"
                   />
@@ -59,16 +78,16 @@ export function Quiz({ lessonId, questions }: { lessonId: string; questions: Qui
                 </label>
               ))}
             </div>
-            {checked && (
-              <p className={`mt-4 flex items-start gap-2 text-sm ${right ? "text-slate-ink" : "text-amber"}`}>
-                {right ? (
+            {feedback && (
+              <p className={`mt-4 flex items-start gap-2 text-sm ${feedback.correct ? "text-slate-ink" : "text-amber"}`}>
+                {feedback.correct ? (
                   <IconCheck aria-hidden="true" size={18} stroke={2.5} className="mt-0.5 shrink-0 text-amber-logo" />
                 ) : (
                   <IconX aria-hidden="true" size={18} stroke={2.5} className="mt-0.5 shrink-0" />
                 )}
                 <span>
-                  <span className="font-semibold">{right ? "Right. " : "Not quite. "}</span>
-                  {q.why}
+                  <span className="font-semibold">{feedback.correct ? "Right. " : "Not quite. "}</span>
+                  {feedback.explanation}
                 </span>
               </p>
             )}
@@ -77,16 +96,21 @@ export function Quiz({ lessonId, questions }: { lessonId: string; questions: Qui
       })}
 
       <div ref={resultRef} tabIndex={-1} role="status" className="outline-none">
-        {checked && (
+        {result && (
           <p className="font-display text-2xl text-slate-ink">
-            {score === questions.length
-              ? `All ${questions.length} right. Final check passed.`
-              : `${score} of ${questions.length} right. Look at the notes above and try again.`}
+            {result.passed
+              ? `All ${result.total} right. Final check passed.`
+              : `${result.score} of ${result.total} right. Look at the notes above and try again.`}
           </p>
         )}
       </div>
-      <button type="submit" disabled={!allAnswered} className="btn btn-fire justify-self-start disabled:opacity-60">
-        {checked && score !== questions.length ? "Check again" : "Check my answers"}
+      {error && (
+        <p role="alert" className="font-semibold text-amber">
+          {error}
+        </p>
+      )}
+      <button type="submit" disabled={!allAnswered || pending} className="btn btn-fire justify-self-start disabled:opacity-60">
+        {pending ? "Checking…" : result && !result.passed ? "Check again" : "Check my answers"}
       </button>
     </form>
   );

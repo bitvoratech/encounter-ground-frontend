@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { DashboardHome } from "@/components/school/DashboardHome";
+import { getAllCourses } from "@/lib/courses";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "My dashboard", robots: { index: false } };
@@ -20,5 +22,12 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
     avatarUrl: (meta.avatar_url as string | undefined) ?? null,
   };
 
-  return <DashboardHome account={account} passwordUpdated={password === "updated"} />;
+  // If the classes can't be loaded the dashboard still shows, without them.
+  await connection();
+  const courses = await getAllCourses().catch((err) => {
+    console.error("Classes unavailable:", err);
+    return [];
+  });
+
+  return <DashboardHome account={account} courses={courses} passwordUpdated={password === "updated"} />;
 }
