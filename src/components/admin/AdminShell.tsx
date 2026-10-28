@@ -7,7 +7,6 @@ import {
   IconLogout,
   IconMail,
   IconMenu2,
-  IconSchool,
   IconUsers,
   IconX,
 } from "@tabler/icons-react";
@@ -85,10 +84,6 @@ function Account({ profile }: { profile: Profile }) {
       <Link href="/" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-chalk/75 hover:bg-chalk/5 hover:text-chalk">
         <IconArrowUpRight aria-hidden="true" size={18} stroke={1.75} />
         View the website
-      </Link>
-      <Link href="/dashboard" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-chalk/75 hover:bg-chalk/5 hover:text-chalk">
-        <IconSchool aria-hidden="true" size={18} stroke={1.75} />
-        My student dashboard
       </Link>
       <form action="/auth/signout" method="post">
         <button type="submit" className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-chalk/75 hover:bg-chalk/5 hover:text-chalk">

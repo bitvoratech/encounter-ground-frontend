@@ -9,6 +9,7 @@ import { CartLink } from "@/components/store/CartLink";
 import { WishlistLink } from "@/components/store/WishlistLink";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { contact } from "@/content/ministry";
+import { useIsStaff } from "@/lib/staff";
 import { useFullScreenMenu, useSignedIn } from "./useFullScreenMenu";
 import { isGroup, nav, type NavGroup, type NavItem } from "./nav";
 
@@ -102,9 +103,10 @@ export function SiteHeader() {
   const isActive = useIsActive();
   const { open, buttonRef: menuButtonRef, menuRef, openMenu, closeMenu } = useFullScreenMenu();
   const signedIn = useSignedIn();
+  const isStaff = useIsStaff();
 
   const account = signedIn
-    ? { href: "/dashboard", label: "My account" }
+    ? { href: isStaff ? "/admin" : "/dashboard", label: isStaff ? "Admin" : "My account" }
     : { href: "/login", label: "Sign in" };
 
   // Top-level menu entries are numbered from Home (01), and the number also staggers their entrance.

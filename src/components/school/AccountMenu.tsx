@@ -14,14 +14,15 @@ export const accountLinks = [
   { href: "/my-books", label: "My books", Icon: IconBooks },
 ] as const;
 
-/** For editors and admins: the way into the admin dashboard. */
+/** For editors and admins, in place of the member's links: they work from the admin dashboard. */
 export const adminLink = { href: "/admin", label: "Admin dashboard", Icon: IconShieldCheck } as const;
+export const staffLinks = [adminLink] as const;
 
 /** The avatar at the end of the header: opens the member's account links and sign out. */
 export function AccountMenu({ account }: { account: Account }) {
   const pathname = usePathname();
   const isStaff = useIsStaff();
-  const links = isStaff ? [...accountLinks, adminLink] : accountLinks;
+  const links = isStaff ? staffLinks : accountLinks;
   // Belongs to the page it was opened on, so navigating closes it.
   const [openOn, setOpenOn] = useState<string | null>(null);
   const open = openOn === pathname;

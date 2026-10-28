@@ -33,6 +33,16 @@ export const getStaff = cache(async (): Promise<StaffCheck> => {
   }
 });
 
+/** Where someone lands after signing in: the admin dashboard for the ministry team, else their own. */
+export async function homeFor(token: string) {
+  try {
+    const profile = await api<Profile>("/me", { headers: { Authorization: `Bearer ${token}` } });
+    return profile.role === "member" ? "/dashboard" : "/admin";
+  } catch {
+    return "/dashboard";
+  }
+}
+
 /** GET an /admin endpoint as the signed-in staff member. Errors reach the admin error page. */
 export function adminGet<T>(token: string, path: string) {
   return api<T>(`/admin${path}`, { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" });
