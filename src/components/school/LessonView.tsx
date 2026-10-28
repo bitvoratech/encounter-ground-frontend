@@ -151,6 +151,7 @@ export function LessonView({ course, lessonSlug }: { course: Course; lessonSlug:
             lessonSlug={lesson.slug}
             prompt={lesson.prompt ?? "What has God been showing you in this module?"}
             submitted={isDone}
+            reply={enrolment?.replies.find((r) => r.lesson === lesson.slug) ?? null}
           />
         ) : (
           <Quiz courseSlug={courseSlug} lessonSlug={lesson.slug} questions={course.quiz} passed={isDone} />

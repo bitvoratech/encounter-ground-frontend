@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { accountLinks } from "./AccountMenu";
+import { useIsStaff } from "@/lib/staff";
+import { accountLinks, adminLink } from "./AccountMenu";
 
 /** The member area's own navigation: a sidebar on wide screens, a row of tabs on phones. */
 export function PortalNav() {
   const pathname = usePathname();
+  const isStaff = useIsStaff();
   return (
     <nav aria-label="My account" className="min-w-0 lg:sticky lg:top-28 lg:self-start">
       <ul className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 lg:mx-0 lg:grid lg:gap-1 lg:overflow-visible lg:px-0">
-        {accountLinks.map(({ href, label, Icon }) => (
+        {(isStaff ? [...accountLinks, adminLink] : accountLinks).map(({ href, label, Icon }) => (
           <li key={href} className="shrink-0">
             <Link
               href={href}

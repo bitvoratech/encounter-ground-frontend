@@ -7,6 +7,7 @@ import {
   IconClipboardCheck,
   IconFlag,
   IconListCheck,
+  IconMessageCircle,
   IconSchool,
   IconSparkles,
 } from "@tabler/icons-react";
@@ -55,7 +56,7 @@ export function DashboardHome({
   const enrolments = learning.status === "ready" ? learning.enrolments : [];
   const mine = enrolments.flatMap((e) => {
     const course = courses.find((c) => c.slug === e.slug);
-    return course ? [{ course, completed: e.completed }] : [];
+    return course ? [{ course, completed: e.completed, replies: e.replies }] : [];
   });
   const myCourses = mine.map((m) => m.course);
   const books = library.map(findBook).filter((b): b is Book => !!b);
@@ -63,6 +64,14 @@ export function DashboardHome({
     courseLessons(course).map((l) => ({ ...l, course, done: completed.includes(l.lesson.slug) })),
   );
   const lessonsDone = allLessons.filter((l) => l.done).length;
+  const replies = mine
+    .flatMap(({ course, replies }) =>
+      replies.flatMap((r) => {
+        const lesson = courseLessons(course).find((l) => l.lesson.slug === r.lesson)?.lesson;
+        return lesson ? [{ ...r, course, lesson }] : [];
+      }),
+    )
+    .sort((a, b) => b.reviewed_at.localeCompare(a.reviewed_at));
   const checkpointsDone = allLessons.filter((l) => l.lesson.kind === "checkpoint" && l.done).length;
   const waiting = allLessons.filter((l) => (l.lesson.kind === "checkpoint" || l.lesson.kind === "quiz") && !l.done);
   // Carry on with the first class that isn't finished.
@@ -158,6 +167,31 @@ export function DashboardHome({
               {myCourses.length || !firstClass ? "Browse the classes" : `Start with ${firstClass.name}`}
               <IconArrowRight aria-hidden="true" size={18} stroke={2} />
             </Link>
+          </section>
+        )}
+
+        {/* Teachers' replies to checkpoints */}
+        {replies.length > 0 && (
+          <section aria-labelledby="replies-heading" className={card}>
+            <div className="flex items-center gap-2">
+              <IconMessageCircle aria-hidden="true" size={22} stroke={1.75} className="text-amber" />
+              <h2 id="replies-heading" className={cardTitle}>
+                From your teachers
+              </h2>
+            </div>
+            <ul className="mt-4 grid gap-3">
+              {replies.slice(0, 3).map((r) => (
+                <li key={`${r.course.slug}/${r.lesson.slug}`} className="rounded-2xl bg-flame/10 p-4">
+                  <p className="whitespace-pre-line text-slate-ink">{r.feedback}</p>
+                  <Link
+                    href={`/school/classes/${r.course.slug}/${r.lesson.slug}`}
+                    className="mt-2 block text-sm font-semibold text-amber underline-offset-4 hover:underline"
+                  >
+                    {r.course.name} · {r.lesson.title.replace("Checkpoint: ", "")}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
 

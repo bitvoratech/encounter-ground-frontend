@@ -1,23 +1,27 @@
 "use client";
 
-import { IconCircleCheck } from "@tabler/icons-react";
+import { IconCircleCheck, IconMessageCircle } from "@tabler/icons-react";
 import { useId, useRef, useState } from "react";
 import { submitCheckpoint } from "@/lib/learning";
+import type { TeacherReply } from "@/types/school";
 
 /**
  * A written checkpoint at the end of a module, saved for a teacher to read (after GOMYCODE's
- * checkpoints). Submitting completes the lesson; writing it again replaces the earlier text.
+ * checkpoints). Submitting completes the lesson; writing it again replaces the earlier text
+ * (and its reply, so a teacher reads the new one).
  */
 export function Checkpoint({
   courseSlug,
   lessonSlug,
   prompt,
   submitted,
+  reply,
 }: {
   courseSlug: string;
   lessonSlug: string;
   prompt: string;
   submitted: boolean;
+  reply: TeacherReply | null;
 }) {
   const id = useId();
   const [editing, setEditing] = useState(false);
@@ -32,7 +36,17 @@ export function Checkpoint({
         <IconCircleCheck aria-hidden="true" size={26} stroke={1.75} className="shrink-0 text-amber" />
         <div>
           <p className="font-semibold text-slate-ink">Checkpoint submitted</p>
-          <p className="mt-1 text-stone-muted">A teacher will read it and may reply on your dashboard.</p>
+          {reply ? (
+            <div className="mt-3 rounded-2xl bg-flame/10 p-4">
+              <p className="flex items-center gap-2 text-sm font-semibold text-amber">
+                <IconMessageCircle aria-hidden="true" size={18} stroke={1.75} />
+                Your teacher replied
+              </p>
+              <p className="mt-1 whitespace-pre-line text-slate-ink">{reply.feedback}</p>
+            </div>
+          ) : (
+            <p className="mt-1 text-stone-muted">A teacher will read it and may reply here and on your dashboard.</p>
+          )}
           <button
             type="button"
             onClick={() => setEditing(true)}
@@ -73,6 +87,7 @@ export function Checkpoint({
       </label>
       <p id={`${id}-hint`} className="mt-2 text-sm text-stone-muted">
         There are no wrong answers. A teacher reads every checkpoint.
+        {reply && " Sending it again replaces your earlier answer and your teacher’s reply."}
       </p>
       <textarea
         id={id}

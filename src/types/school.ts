@@ -33,8 +33,12 @@ export type CourseSummary = CourseBase & { module_count: number; lesson_count: n
 
 export type Course = CourseBase & { modules: CourseModule[]; quiz: QuizQuestion[] };
 
-/** A class the member is enrolled in, with the slugs of the lessons they've finished. */
-export type Enrolment = { slug: string; enrolled_at: string; completed: string[] };
+/** A teacher's reply to one of the member's checkpoints. */
+export type TeacherReply = { lesson: string; feedback: string; reviewed_at: string };
+
+/** A class the member is enrolled in, with the slugs of the lessons they've finished and
+ * teachers' replies to their checkpoints, newest first. */
+export type Enrolment = { slug: string; enrolled_at: string; completed: string[]; replies: TeacherReply[] };
 
 export type QuizResult = {
   score: number;

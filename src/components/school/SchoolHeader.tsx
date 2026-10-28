@@ -7,7 +7,8 @@ import { usePathname } from "next/navigation";
 import { useAccount, useFullScreenMenu } from "@/components/layout/useFullScreenMenu";
 import { school, schoolNav } from "@/content/school";
 import { useLearning } from "@/lib/learning";
-import { AccountMenu, accountLinks } from "./AccountMenu";
+import { useIsStaff } from "@/lib/staff";
+import { AccountMenu, accountLinks, adminLink } from "./AccountMenu";
 import { Avatar } from "./Avatar";
 
 /** The school's logo (its wordmark, cut out of the ministry's artwork without the book). */
@@ -29,6 +30,7 @@ export function SchoolHeader() {
   const { open, buttonRef, menuRef, openMenu, closeMenu } = useFullScreenMenu();
   const account = useAccount();
   const learning = useLearning();
+  const isStaff = useIsStaff();
   const enrolled = learning.status === "ready" && learning.enrolments.length > 0;
   const signIn = `/login?next=${encodeURIComponent(pathname)}`;
   const isCurrent = (href: string) => (href === "/school" ? pathname === href : pathname === href || pathname.startsWith(`${href}/`));
@@ -169,7 +171,7 @@ export function SchoolHeader() {
                 </div>
               </div>
               <ul className="mt-3 grid gap-1">
-                {accountLinks.map(({ href, label, Icon }) => (
+                {(isStaff ? [...accountLinks, adminLink] : accountLinks).map(({ href, label, Icon }) => (
                   <li key={href}>
                     <Link
                       href={href}
