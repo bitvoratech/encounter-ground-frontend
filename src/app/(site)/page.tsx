@@ -104,12 +104,11 @@ export default async function HomePage() {
           <div>
             <p className="eyebrow eyebrow-light">Who we are</p>
             <h2 id="who-heading" className="mt-4 text-[length:var(--text-h2)]">
-              A House of Dominion Through <em>Intimacy</em>
+              {sectionCopy.about.headline}
             </h2>
             <div className="prose-eg measure mt-6 text-chalk/85 md:text-[1.125rem]">
-              {home.whoWeAre.body.map((p) => (
-                <p key={p.slice(0, 24)}>{p}</p>
-              ))}
+              <p>{sectionCopy.about.body}</p>
+              <p>{sectionCopy.home.short}</p>
             </div>
             <blockquote className="measure mt-8 border-l-4 border-flame pl-5 font-display text-xl italic leading-snug text-chalk md:text-2xl">
               “{mandate}”

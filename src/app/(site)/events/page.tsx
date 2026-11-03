@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { YadaBand } from "@/components/site/YadaBand";
 import Image from "next/image";
 import { programmes } from "@/content/ministry";
+import { sectionCopy } from "@/content/siteCopy";
 import meetingImage from "../../../../public/images/home/revival-meeting.jpg";
 import zoeImage from "../../../../public/images/home/zoe-healing-stream.jpg";
 
