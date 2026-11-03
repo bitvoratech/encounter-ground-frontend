@@ -93,21 +93,9 @@ export const yada = {
 // Home page sections carried over from the former WordPress site (encounterground.org).
 export const home = {
   tagline: "Dominion in Intimacy",
-  welcome:
-    "Let us discover faith together as we grow in intimacy through our fellowship with the Spirit of God! Join us in this spiritual journey, growing in the grace and knowledge of our Lord Jesus Christ.",
   // TODO: replace with on-site registration once member accounts ship.
   joinUsUrl:
     "https://docs.google.com/forms/d/e/1FAIpQLScAXJFIqkya7AkuC0X5mHlw9oz1aKj93E97rCyAc5XLgufk7A/viewform",
-  whoWeAre: {
-    heading: "A House of Dominion Through Intimacy",
-    // The old site gave two different founding years (2001 and 2021), so the
-    // year is left out until the ministry confirms it.
-    body: [
-      "Encounter Ground is a vibrant faith community dedicated to spreading the teachings of the Bible through passionate prayer, prophetic ministry, and uplifting worship. Founded through a simple act of obedience, our doors, both physical and virtual, are open to all.",
-      "We are a family, growing together in the Spirit, known for our love for God’s Word, our devotion to dwelling in His presence, and our desire to behold His beauty daily.",
-      "We believe the most incredible adventure of every believer begins with a loving, interactive relationship with the Holy Spirit.",
-    ],
-  },
   pillars: [
     {
       title: "Dwelling Place for His Presence",

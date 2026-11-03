@@ -2,21 +2,20 @@ import type { Metadata } from "next";
 import { ContactForm } from "@/components/site/ContactForm";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { contact } from "@/content/ministry";
+import { sectionCopy } from "@/content/siteCopy";
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: "Send a message, email, call or follow Encounter Ground.",
+  title: "Contact & Connect",
+  description: sectionCopy.contact.short,
 };
 
 export default function ContactPage() {
   return (
     <>
       <header className="page-hero wrap pb-12 pt-14 md:pt-20">
-        <h1 className="text-[length:var(--text-h1)] text-slate-ink">Get in touch</h1>
-        <p className="mt-5 max-w-[34rem] text-lede leading-relaxed text-stone-muted">
-          For prayer requests, programme questions or anything else, send us a
-          message, an email or give us a call.
-        </p>
+        <p className="font-semibold text-amber">Contact &amp; Connect</p>
+        <h1 className="mt-2 max-w-3xl text-[length:var(--text-h1)] text-slate-ink">{sectionCopy.contact.headline}</h1>
+        <p className="mt-5 max-w-[38rem] text-lede leading-relaxed text-stone-muted">{sectionCopy.contact.body}</p>
       </header>
 
       <section aria-labelledby="message-heading" className="border-t border-rule">

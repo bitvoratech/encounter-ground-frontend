@@ -5,14 +5,14 @@ import Link from "next/link";
 import { streamIcon } from "@/components/site/streamIcons";
 import { VideoLibrary } from "@/components/site/VideoLibrary";
 import { contact, home, programmes, youtubeChannel } from "@/content/ministry";
+import { sectionCopy } from "@/content/siteCopy";
 import { getLatestVideos } from "@/lib/youtube";
 import streamsImage from "../../../../public/images/home/streams-gates.jpg";
 import egTvLogo from "../../../../public/images/home/eg-tv-logo.jpg";
 
 export const metadata: Metadata = {
-  title: "Media",
-  description:
-    "Watch replays on YouTube, listen on Mixlr, or join the live meeting on Zoom.",
+  title: "Watch & Listen",
+  description: sectionCopy.watch.short,
 };
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
@@ -38,14 +38,9 @@ export default async function MediaPage() {
           className="absolute inset-0 -z-10 bg-gradient-to-b from-slate-deep/70 via-slate-deep/45 to-slate-deep/80"
         />
         <div className="wrap pb-20 pt-16 md:pb-28 md:pt-24">
-          <p className="font-semibold text-flame">Media</p>
-          <h1 className="mt-2 max-w-3xl text-[length:var(--text-h1)]">
-            Catch up on our replays
-          </h1>
-          <p className="mt-5 max-w-[34rem] text-lede leading-relaxed text-chalk/90">
-            Every stream is recorded. Watch the replays right here, listen on Mixlr,
-            or join the next meeting live on Zoom.
-          </p>
+          <p className="font-semibold text-flame">Watch &amp; Listen</p>
+          <h1 className="mt-2 max-w-3xl text-[length:var(--text-h1)]">{sectionCopy.watch.headline}</h1>
+          <p className="mt-5 max-w-[38rem] text-lede leading-relaxed text-chalk/90">{sectionCopy.watch.body}</p>
         </div>
       </header>
 

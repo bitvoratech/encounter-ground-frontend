@@ -8,14 +8,20 @@ export type NavItem = NavLink | NavGroup;
 export const isGroup = (item: NavItem): item is NavGroup => "children" in item;
 
 export const nav: NavItem[] = [
-  { href: "/about", label: "Who we are" },
-  { href: "/events", label: "Programmes" },
-  { href: "/events/yada-intimacy-conference-2026", label: "YADA 2026" },
+  { href: "/about", label: "About us" },
   {
-    label: "Media",
+    label: "Gatherings",
     children: [
-      { href: "/media", label: "Streams & replays" },
-      { href: "/books", label: "Bookstore" },
+      { href: "/events", label: "Gatherings & Events" },
+      { href: "/events/yada-intimacy-conference-2026", label: "YADA 2026" },
+    ],
+  },
+  { href: "/school", label: "Beth-El" },
+  {
+    label: "Watch & Listen",
+    children: [
+      { href: "/media", label: "Watch & Listen" },
+      { href: "/books", label: "Books & Publications" },
       { href: "/self-test", label: "Self-tests" },
       { href: "/blog", label: "Blog" },
     ],

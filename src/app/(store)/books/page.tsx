@@ -5,11 +5,11 @@ import { CurrencySwitcher } from "@/components/store/CurrencySwitcher";
 import { Price } from "@/components/store/Price";
 import { WishlistButton } from "@/components/store/WishlistButton";
 import { authorStoreUrl, books, samplePrices } from "@/content/books";
+import { sectionCopy } from "@/content/siteCopy";
 
 export const metadata: Metadata = {
-  title: "Bookstore",
-  description:
-    "E-books by Toyin Bello on intimacy with God, prayer and identity, for adults, pre-teens and teenagers. Read on any device.",
+  title: "Books & Publications",
+  description: sectionCopy.books.short,
 };
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
@@ -18,12 +18,10 @@ export default function BooksPage() {
   return (
     <>
       <header className="page-hero wrap pb-12 pt-14 md:pt-20">
-        <p className="font-semibold text-amber">Bookstore</p>
-        <h1 className="mt-2 text-[length:var(--text-h1)] text-slate-ink">Books by Toyin Bello</h1>
-        <p className="mt-5 max-w-[36rem] text-lede leading-relaxed text-stone-muted">
-          Devotionals and journals on intimacy with God, prayer and identity, for
-          adults, pre-teens and teenagers. Buy the e-book and read it here, on any device.
-        </p>
+        <p className="font-semibold text-amber">Books &amp; Publications</p>
+        <h1 className="mt-2 max-w-3xl text-[length:var(--text-h1)] text-slate-ink">{sectionCopy.books.headline}</h1>
+        <p className="mt-5 max-w-[38rem] text-lede leading-relaxed text-stone-muted">{sectionCopy.books.body}</p>
+        <p className="mt-4 max-w-[38rem] text-stone-muted">Books by Toyin Bello. Buy the e-book and read it here, on any device.</p>
         <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
           <CurrencySwitcher />
           {samplePrices && <p className="text-sm text-stone-muted">Sample prices: final prices to come.</p>}

@@ -6,9 +6,8 @@ import meetingImage from "../../../../public/images/home/revival-meeting.jpg";
 import zoeImage from "../../../../public/images/home/zoe-healing-stream.jpg";
 
 export const metadata: Metadata = {
-  title: "Programmes",
-  description:
-    "Zoe Healing Stream, the 10 Hours and 24 Hours Prayer Stretch, and the YADA Intimacy Conference.",
+  title: "Gatherings & Events",
+  description: sectionCopy.gatherings.short,
 };
 
 export default function EventsPage() {
@@ -16,26 +15,10 @@ export default function EventsPage() {
 
   return (
     <>
-      <header className="page-hero wrap grid gap-10 pb-14 pt-14 md:grid-cols-[1fr_1.1fr] md:items-center md:pb-20 md:pt-20">
-        <div>
-          <p className="eyebrow">Our events</p>
-          <h1 className="mt-4 text-[length:var(--text-h1)] text-slate-ink">
-            Come and <em>encounter</em> Him
-          </h1>
-          <p className="mt-5 max-w-[34rem] text-lede leading-relaxed text-stone-muted">
-            Regular meetings for prayer and healing, and one conference each December.
-          </p>
-        </div>
-        <div className="photo-frame">
-          <Image
-            src={meetingImage}
-            alt="Toyin Bello leading an Encounter Ground revival meeting, arms open, with musicians behind her"
-            placeholder="blur"
-            priority
-            sizes="(min-width: 768px) 50vw, 100vw"
-            className="aspect-[4/3] w-full rounded-2xl object-cover"
-          />
-        </div>
+      <header className="page-hero wrap pb-12 pt-14 md:pt-20">
+        <p className="font-semibold text-amber">Gatherings &amp; Events</p>
+        <h1 className="mt-2 max-w-3xl text-[length:var(--text-h1)] text-slate-ink">{sectionCopy.gatherings.headline}</h1>
+        <p className="mt-5 max-w-[38rem] text-lede leading-relaxed text-stone-muted">{sectionCopy.gatherings.body}</p>
       </header>
 
       <YadaBand />
