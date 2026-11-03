@@ -2,9 +2,12 @@
 
 import { IconArrowLeft, IconArrowRight, IconCircleCheck, IconDownload, IconFileText, IconHeadphones, IconLock, IconPlayerPlay } from "@tabler/icons-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
 import { findLesson } from "@/lib/courses";
 import { enrolmentFor, setLessonComplete, useLearning } from "@/lib/learning";
+import { authHeader } from "@/lib/supabase/client";
+import { videoEmbedUrl } from "@/lib/videoEmbed";
 import type { Course } from "@/types/school";
 import { Checkpoint } from "./Checkpoint";
 import { EnrolButton } from "./EnrolButton";
@@ -12,6 +15,49 @@ import { formatMinutes, lessonKinds } from "./lessonKinds";
 import { Quiz } from "./Quiz";
 
 const SAMPLE = "Sample lesson: the ministry will add the teaching here.";
+
+type Content = { body: string | null; video_url: string | null; file_url: string | null };
+
+/** A lesson's content (teaching, video link, signed file link), once the member may open it. */
+function useLessonContent(courseSlug: string, lessonSlug: string, open: boolean) {
+  const [state, setState] = useState<{ key: string; content: Content | null; failed: boolean } | null>(null);
+  const key = `${courseSlug}/${lessonSlug}`;
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const content = await api<Content>(`/courses/${encodeURIComponent(courseSlug)}/lessons/${encodeURIComponent(lessonSlug)}`, {
+          headers: await authHeader(),
+        });
+        if (!cancelled) setState({ key, content, failed: false });
+      } catch {
+        if (!cancelled) setState({ key, content: null, failed: true });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [courseSlug, lessonSlug, key, open]);
+  return state?.key === key ? state : null;
+}
+
+/** Written teaching: paragraphs split on blank lines, line breaks kept. */
+function Teaching({ body }: { body: string }) {
+  return (
+    <div className="prose-eg measure rounded-3xl border border-rule bg-chalk p-6 text-slate-ink/90 md:p-8">
+      {body
+        .split(/\n\s*\n/)
+        .map((p) => p.trim())
+        .filter(Boolean)
+        .map((p, i) => (
+          <p key={i} className="whitespace-pre-line">
+            {p}
+          </p>
+        ))}
+    </div>
+  );
+}
 
 /** "Mark as complete" for video, audio, reading and study-guide lessons. */
 function MarkComplete({ courseSlug, lessonSlug, done }: { courseSlug: string; lessonSlug: string; done: boolean }) {
@@ -60,6 +106,17 @@ export function LessonView({ course, lessonSlug }: { course: Course; lessonSlug:
   const href = (slug: string) => `/school/classes/${courseSlug}/${slug}`;
   const loading = learning.status === "loading";
   const locked = !loading && !enrolled && !lesson.preview;
+  const loaded = useLessonContent(courseSlug, lesson.slug, !loading && !locked && lesson.kind !== "checkpoint" && lesson.kind !== "quiz");
+  const content = loaded?.content ?? null;
+  const embed = content?.video_url ? videoEmbedUrl(content.video_url) : null;
+  const hasContent = !!(content?.body || embed || content?.file_url);
+  // Notes under a video, audio or PDF lesson.
+  const notes =
+    content?.body && lesson.kind !== "text" ? (
+      <div className="mt-6">
+        <Teaching body={content.body} />
+      </div>
+    ) : null;
 
   return (
     <article>
@@ -98,6 +155,52 @@ export function LessonView({ course, lessonSlug }: { course: Course; lessonSlug:
             </div>
             <EnrolButton course={course} />
           </div>
+        ) : lesson.kind === "video" && embed ? (
+          <>
+            <div className="aspect-video overflow-hidden rounded-3xl bg-slate-deep">
+              <iframe
+                src={embed}
+                title={lesson.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+                className="size-full"
+              />
+            </div>
+            {notes}
+          </>
+        ) : lesson.kind === "audio" && content?.file_url ? (
+          <>
+            <figure className="rounded-3xl border border-rule bg-chalk p-6">
+              <figcaption className="mb-3 flex items-center gap-3 font-semibold text-slate-ink">
+                <IconHeadphones aria-hidden="true" size={22} stroke={1.75} className="text-amber" />
+                {lesson.title}
+              </figcaption>
+              <audio controls preload="metadata" controlsList="nodownload" src={content.file_url} className="w-full" />
+            </figure>
+            {notes}
+          </>
+        ) : lesson.kind === "pdf" && content?.file_url ? (
+          <>
+            <div className="flex flex-wrap items-center gap-5 rounded-3xl border border-rule bg-chalk p-6">
+              <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-flame/20 text-amber">
+                <IconFileText aria-hidden="true" size={28} stroke={1.75} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-slate-ink">{lesson.title}</p>
+                <p className="text-sm text-stone-muted">PDF study guide</p>
+              </div>
+              <a href={content.file_url} target="_blank" rel="noopener noreferrer" className="btn btn-fire">
+                <IconDownload aria-hidden="true" size={18} stroke={1.75} />
+                Open the guide
+              </a>
+            </div>
+            {notes}
+          </>
+        ) : lesson.kind === "text" && content?.body ? (
+          <Teaching body={content.body} />
+        ) : !loaded && lesson.kind !== "checkpoint" && lesson.kind !== "quiz" ? (
+          <div className="aspect-video rounded-3xl bg-chalk/70" aria-hidden="true" />
         ) : lesson.kind === "video" ? (
           <figure>
             <div className="relative grid aspect-video place-items-center overflow-hidden rounded-3xl bg-slate-deep text-chalk">
@@ -181,7 +284,14 @@ export function LessonView({ course, lessonSlug }: { course: Course; lessonSlug:
           </nav>
         </div>
       )}
-      <p className="mt-8 text-sm text-stone-muted">Sample class outline: the ministry will supply the real lessons.</p>
+      {loaded?.failed && (
+        <p role="alert" className="mt-4 text-sm font-semibold text-amber">
+          This lesson’s content couldn’t be loaded. Please refresh the page.
+        </p>
+      )}
+      {loaded && !loaded.failed && !hasContent && lesson.kind !== "checkpoint" && lesson.kind !== "quiz" && (
+        <p className="mt-8 text-sm text-stone-muted">Sample class outline: the ministry will supply the real lessons.</p>
+      )}
     </article>
   );
 }
