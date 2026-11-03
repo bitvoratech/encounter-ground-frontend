@@ -100,7 +100,7 @@ export function BookForm({ book }: { book?: AdminBook }) {
       className="grid gap-6"
     >
       <section aria-labelledby="book-details" className={`${card} grid gap-5`}>
-        <h2 id="book-details" className="font-display text-xl text-slate-ink">
+        <h2 id="book-details" className="font-sans text-lg font-bold text-slate-ink">
           Details
         </h2>
         <TextField
@@ -156,7 +156,7 @@ export function BookForm({ book }: { book?: AdminBook }) {
       </section>
 
       <section aria-labelledby="book-cover" className={`${card} grid gap-4`}>
-        <h2 id="book-cover" className="font-display text-xl text-slate-ink">
+        <h2 id="book-cover" className="font-sans text-lg font-bold text-slate-ink">
           Cover
         </h2>
         <div className="flex flex-wrap items-start gap-5">
@@ -217,7 +217,7 @@ export function BookForm({ book }: { book?: AdminBook }) {
 
       <section aria-labelledby="book-prices" className={`${card} grid gap-4`}>
         <div>
-          <h2 id="book-prices" className="font-display text-xl text-slate-ink">
+          <h2 id="book-prices" className="font-sans text-lg font-bold text-slate-ink">
             E-book prices
           </h2>
           <p className="mt-1 text-sm text-stone-muted">
@@ -241,7 +241,7 @@ export function BookForm({ book }: { book?: AdminBook }) {
       </section>
 
       <section aria-labelledby="book-shop" className={`${card} grid gap-5 sm:grid-cols-2`}>
-        <h2 id="book-shop" className="font-display text-xl text-slate-ink sm:col-span-2">
+        <h2 id="book-shop" className="font-sans text-lg font-bold text-slate-ink sm:col-span-2">
           On the shop
         </h2>
         <SelectField label="Status" value={status} onChange={setStatus} options={statusOptions} />

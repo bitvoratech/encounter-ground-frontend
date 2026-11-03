@@ -23,7 +23,7 @@ export function BookReaderPages({ book }: { book: AdminBook }) {
   return (
     <section aria-labelledby="reader-pages" className={`${card} grid gap-4`}>
       <div>
-        <h2 id="reader-pages" className="font-display text-xl text-slate-ink">
+        <h2 id="reader-pages" className="font-sans text-lg font-bold text-slate-ink">
           Book file for the reader
         </h2>
         <p className="mt-1 max-w-2xl text-sm text-stone-muted">

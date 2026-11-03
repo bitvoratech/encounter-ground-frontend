@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { BookForm } from "@/components/admin/BookForm";
 import { BookOwners } from "@/components/admin/BookOwners";
 import { BookReaderPages } from "@/components/admin/BookReaderPages";
@@ -18,25 +17,20 @@ export default async function EditBookPage({ params, searchParams }: PageProps<"
 
   return (
     <>
-      <Link href="/admin/books" className="text-sm font-semibold text-stone-muted hover:text-slate-ink">
-        ← Books
-      </Link>
-      <div className="mt-3">
-        <PageHeader title={book.title}>
-          {saved ? "Book added. " : ""}
-          {book.status === "published" ? (
-            <>
-              On the shop at{" "}
-              <a href={`/books/${book.slug}`} className="link text-slate-ink">
-                /books/{book.slug}
-              </a>
-              .
-            </>
-          ) : (
-            "Hidden from the website until you publish it."
-          )}
-        </PageHeader>
-      </div>
+      <PageHeader title={book.title} back={{ href: "/admin/books", label: "Books" }}>
+        {saved ? "Book added. " : ""}
+        {book.status === "published" ? (
+          <>
+            On the shop at{" "}
+            <a href={`/books/${book.slug}`} className="link text-slate-ink">
+              /books/{book.slug}
+            </a>
+            .
+          </>
+        ) : (
+          "Hidden from the website until you publish it."
+        )}
+      </PageHeader>
       <div className="grid gap-6">
         <BookForm book={book} />
         <BookReaderPages book={book} />

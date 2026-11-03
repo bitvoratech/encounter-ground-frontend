@@ -28,7 +28,7 @@ export function QuizEditor({ courseId, quiz, hasQuizLesson }: { courseId: string
   return (
     <section aria-labelledby="final-check" className={`${card} grid gap-5`}>
       <div>
-        <h2 id="final-check" className="font-display text-2xl text-slate-ink">
+        <h2 id="final-check" className="font-sans text-xl font-bold text-slate-ink">
           Final check
         </h2>
         <p className="mt-1 max-w-2xl text-stone-muted">

@@ -8,7 +8,7 @@ import type { PublishStatus } from "@/types/admin";
 
 /** A field's box, without spacing. */
 export const fieldBase =
-  "block w-full rounded-xl border border-rule bg-limestone px-3 py-2.5 text-slate-ink placeholder:text-stone focus:border-slate";
+  "block w-full rounded-lg border border-rule bg-white px-3 py-2.5 text-slate-ink shadow-[inset_0_1px_1px_rgb(29_38_48/0.04)] transition-colors placeholder:text-stone hover:border-stone focus:border-slate";
 
 export const fieldClass = `mt-2 ${fieldBase}`;
 
@@ -128,8 +128,13 @@ export const statusLabel: Record<PublishStatus, string> = { draft: "Draft", publ
 
 export function StatusBadge({ status }: { status: PublishStatus }) {
   const tone =
-    status === "published" ? "bg-flame/20 text-amber" : status === "draft" ? "bg-limestone text-slate" : "bg-rule text-stone-muted";
-  return <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${tone}`}>{statusLabel[status]}</span>;
+    status === "published" ? "bg-flame/20 text-amber" : status === "draft" ? "bg-slate/10 text-slate" : "bg-rule text-stone-muted";
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${tone}`}>
+      <span aria-hidden="true" className={`size-1.5 rounded-full ${status === "published" ? "bg-amber-logo" : "bg-current opacity-60"}`} />
+      {statusLabel[status]}
+    </span>
+  );
 }
 
 /** "Walking it out!" → "walking-it-out", for web addresses. */

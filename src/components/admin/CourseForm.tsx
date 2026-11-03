@@ -68,7 +68,7 @@ export function CourseForm({ course }: { course?: AdminCourse }) {
       className={`${card} grid gap-5`}
       aria-labelledby="class-details"
     >
-      <h2 id="class-details" className="font-display text-xl text-slate-ink">
+      <h2 id="class-details" className="font-sans text-lg font-bold text-slate-ink">
         Class details
       </h2>
       <div className="grid gap-5 sm:grid-cols-2">

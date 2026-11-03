@@ -113,7 +113,7 @@ export function LessonForm({ courseId, moduleId, lesson }: { courseId: string; m
 
       {kind !== "quiz" && (
         <section aria-labelledby="lesson-content" className={`${card} grid gap-5`}>
-          <h2 id="lesson-content" className="font-display text-xl text-slate-ink">
+          <h2 id="lesson-content" className="font-sans text-lg font-bold text-slate-ink">
             Content
           </h2>
 

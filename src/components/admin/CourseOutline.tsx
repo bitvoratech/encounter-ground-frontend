@@ -72,7 +72,7 @@ export function CourseOutline({ course }: { course: AdminCourse }) {
   return (
     <section aria-labelledby="class-outline" className="grid gap-4">
       <div>
-        <h2 id="class-outline" className="font-display text-2xl text-slate-ink">
+        <h2 id="class-outline" className="font-sans text-xl font-bold text-slate-ink">
           Modules and lessons
         </h2>
         <p className="mt-1 text-stone-muted">
@@ -190,7 +190,7 @@ function ModuleHeader({
     <div className="flex flex-wrap items-start gap-3">
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold uppercase tracking-[0.12em] text-amber">Module {index + 1}</p>
-        <h3 className="font-display text-xl text-slate-ink">{module.title}</h3>
+        <h3 className="font-sans text-lg font-bold text-slate-ink">{module.title}</h3>
         {module.summary && <p className="mt-1 text-sm text-stone-muted">{module.summary}</p>}
         {error && (
           <p role="alert" className="mt-1 text-sm font-semibold text-amber">

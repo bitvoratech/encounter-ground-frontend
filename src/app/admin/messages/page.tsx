@@ -44,7 +44,7 @@ export default async function AdminMessagesPage({ searchParams }: PageProps<"/ad
                 <article aria-labelledby={`msg-${m.id}`} className={`${card} grid gap-4`}>
                   <header className="flex flex-wrap items-start justify-between gap-x-6 gap-y-1">
                     <div className="min-w-0">
-                      <h2 id={`msg-${m.id}`} className="font-display text-xl text-slate-ink">
+                      <h2 id={`msg-${m.id}`} className="font-sans text-lg font-bold text-slate-ink">
                         {m.subject}
                       </h2>
                       <p className="text-sm text-stone-muted">From {m.full_name}</p>
