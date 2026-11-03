@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { mission, story, values, vision } from "@/content/ministry";
+import { cta, sectionCopy } from "@/content/siteCopy";
 import denimImage from "../../../../public/images/home/founder-denim.jpg";
 import creamImage from "../../../../public/images/home/founder-cream.jpg";
 
