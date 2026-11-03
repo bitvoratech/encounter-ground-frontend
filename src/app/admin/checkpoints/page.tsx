@@ -45,7 +45,7 @@ export default async function AdminCheckpointsPage({ searchParams }: PageProps<"
                 <article aria-labelledby={`cp-${c.id}`} className={`${card} grid gap-4`}>
                   <header className="flex flex-wrap items-start justify-between gap-x-6 gap-y-1">
                     <div className="min-w-0">
-                      <h2 id={`cp-${c.id}`} className="font-display text-xl text-slate-ink">
+                      <h2 id={`cp-${c.id}`} className="font-sans text-lg font-bold text-slate-ink">
                         {name}
                       </h2>
                       <p className="text-sm text-stone-muted">

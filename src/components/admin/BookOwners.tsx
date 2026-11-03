@@ -18,7 +18,7 @@ export function BookOwners({ bookId, title, owners }: { bookId: string; title: s
   return (
     <section aria-labelledby="book-owners" className={`${card} grid gap-4`}>
       <div>
-        <h2 id="book-owners" className="font-display text-xl text-slate-ink">
+        <h2 id="book-owners" className="font-sans text-lg font-bold text-slate-ink">
           Who has this book
         </h2>
         <p className="mt-1 text-sm text-stone-muted">

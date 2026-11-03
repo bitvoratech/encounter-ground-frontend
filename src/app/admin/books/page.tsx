@@ -1,8 +1,8 @@
-import { IconPhoto, IconPlus } from "@tabler/icons-react";
+import { IconChevronRight, IconPhoto, IconPlus } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { StatusBadge } from "@/components/admin/fields";
-import { card, EmptyState, PageHeader } from "@/components/admin/ui";
+import { EmptyState, PageHeader, panel } from "@/components/admin/ui";
 import { adminGet, getStaff } from "@/lib/admin";
 import { formatPrice } from "@/lib/currency";
 import type { AdminBook } from "@/types/admin";
@@ -18,27 +18,29 @@ export default async function AdminBooksPage() {
 
   return (
     <>
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <PageHeader title="Books">
-          The e-books on the shop. Drafts and archived books are hidden from the website.
-        </PageHeader>
-        <Link href="/admin/books/new" className="btn btn-fire min-h-11 px-5 py-2">
-          <IconPlus aria-hidden="true" size={18} stroke={2} />
-          Add a book
-        </Link>
-      </div>
+      <PageHeader
+        title="Books"
+        actions={
+          <Link href="/admin/books/new" className="btn btn-fire px-4 py-2">
+            <IconPlus aria-hidden="true" size={18} stroke={2} />
+            Add a book
+          </Link>
+        }
+      >
+        The e-books on the shop. Drafts and archived books are hidden from the website.
+      </PageHeader>
 
       {books.length === 0 ? (
         <EmptyState title="No books yet">Add the first book to put it on the shop.</EmptyState>
       ) : (
-        <ul className="grid gap-4">
+        <ul className={`${panel} divide-y divide-rule/80`}>
           {books.map((b) => (
             <li key={b.id}>
               <Link
                 href={`/admin/books/${b.id}`}
-                className={`${card} flex items-center gap-4 transition-colors hover:border-slate md:gap-5`}
+                className="group flex items-center gap-4 px-4 py-3.5 transition-colors first:rounded-t-2xl hover:bg-limestone/60 md:gap-5 md:px-6"
               >
-                <span className="grid aspect-[2/3] w-14 shrink-0 place-items-center overflow-hidden rounded-lg bg-limestone">
+                <span className="grid aspect-[2/3] w-12 shrink-0 place-items-center overflow-hidden rounded-lg bg-limestone">
                   {b.cover_image_url ? (
                     // eslint-disable-next-line @next/next/no-img-element -- uploaded covers live on Supabase Storage
                     <img src={b.cover_image_url} alt="" className="size-full object-cover" />
@@ -48,7 +50,7 @@ export default async function AdminBooksPage() {
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                    <span className="font-display text-xl text-slate-ink">{b.title}</span>
+                    <span className="text-lg font-bold text-slate-ink">{b.title}</span>
                     <StatusBadge status={b.status} />
                   </span>
                   {(b.subtitle || b.audience) && (
@@ -61,9 +63,11 @@ export default async function AdminBooksPage() {
                       .join(" · ") || "No price yet"}
                   </span>
                 </span>
-                <span className="hidden shrink-0 text-right text-sm text-stone-muted sm:block">
-                  {b.owners === 1 ? "1 owner" : `${b.owners} owners`}
+                <span className="hidden shrink-0 text-right sm:block">
+                  <span className="block text-lg font-bold tabular-nums text-slate-ink">{b.owners}</span>
+                  <span className="block text-xs text-stone-muted">{b.owners === 1 ? "owner" : "owners"}</span>
                 </span>
+                <IconChevronRight aria-hidden="true" size={18} stroke={2} className="shrink-0 text-stone transition-transform group-hover:translate-x-0.5" />
               </Link>
             </li>
           ))}

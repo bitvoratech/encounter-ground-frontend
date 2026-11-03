@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LessonForm } from "@/components/admin/LessonForm";
 import { PageHeader } from "@/components/admin/ui";
@@ -18,14 +17,9 @@ export default async function NewLessonPage({ params, searchParams }: PageProps<
 
   return (
     <>
-      <Link href={`/admin/classes/${course.id}`} className="text-sm font-semibold text-stone-muted hover:text-slate-ink">
-        ← {course.title}
-      </Link>
-      <div className="mt-3">
-        <PageHeader title="Add a lesson">
-          To module {index + 1}: {course.modules[index]!.title}. It goes at the end of the module.
-        </PageHeader>
-      </div>
+      <PageHeader title="Add a lesson" back={{ href: `/admin/classes/${course.id}`, label: course.title }}>
+        To module {index + 1}: {course.modules[index]!.title}. It goes at the end of the module.
+      </PageHeader>
       <LessonForm courseId={course.id} moduleId={course.modules[index]!.id} />
     </>
   );

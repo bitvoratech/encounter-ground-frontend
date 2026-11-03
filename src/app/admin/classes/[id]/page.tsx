@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { CourseForm } from "@/components/admin/CourseForm";
 import { CourseOutline } from "@/components/admin/CourseOutline";
 import { QuizEditor } from "@/components/admin/QuizEditor";
@@ -18,24 +17,19 @@ export default async function EditClassPage({ params }: PageProps<"/admin/classe
 
   return (
     <>
-      <Link href="/admin/classes" className="text-sm font-semibold text-stone-muted hover:text-slate-ink">
-        ← Classes
-      </Link>
-      <div className="mt-3">
-        <PageHeader title={course.title}>
-          {course.status === "published" ? (
-            <>
-              On the website at{" "}
-              <a href={`/school/classes/${course.slug}`} className="link text-slate-ink">
-                /school/classes/{course.slug}
-              </a>
-              . {course.enrolments === 1 ? "1 student has" : `${course.enrolments} students have`} enrolled.
-            </>
-          ) : (
-            "Hidden from the website until you publish it."
-          )}
-        </PageHeader>
-      </div>
+      <PageHeader title={course.title} back={{ href: "/admin/classes", label: "Classes" }}>
+        {course.status === "published" ? (
+          <>
+            On the website at{" "}
+            <a href={`/school/classes/${course.slug}`} className="link text-slate-ink">
+              /school/classes/{course.slug}
+            </a>
+            . {course.enrolments === 1 ? "1 student has" : `${course.enrolments} students have`} enrolled.
+          </>
+        ) : (
+          "Hidden from the website until you publish it."
+        )}
+      </PageHeader>
       <div className="grid gap-10">
         <CourseForm course={course} />
         <CourseOutline course={course} />

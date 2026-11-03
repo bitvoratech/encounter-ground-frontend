@@ -2,7 +2,7 @@ import { IconSearch } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { RoleSelect } from "@/components/admin/RoleSelect";
-import { card, EmptyState, PageHeader } from "@/components/admin/ui";
+import { EmptyState, PageHeader, panel } from "@/components/admin/ui";
 import { Avatar } from "@/components/school/Avatar";
 import { adminGet, getStaff } from "@/lib/admin";
 import type { Member } from "@/types/admin";
@@ -41,9 +41,9 @@ export default async function AdminMembersPage({ searchParams }: PageProps<"/adm
           type="search"
           defaultValue={search}
           placeholder="Name or email"
-          className="min-h-12 min-w-0 flex-1 rounded-full border border-rule bg-chalk px-5 text-slate-ink"
+          className="min-h-10 min-w-0 flex-1 rounded-xl border border-rule bg-white px-4 text-slate-ink shadow-[0_1px_2px_rgb(29_38_48/0.04)] focus:border-slate"
         />
-        <button type="submit" className="btn btn-fire px-5">
+        <button type="submit" className="btn btn-fire px-4">
           <IconSearch aria-hidden="true" size={18} stroke={2} />
           Search
         </button>
@@ -57,14 +57,14 @@ export default async function AdminMembersPage({ searchParams }: PageProps<"/adm
           </Link>
         </EmptyState>
       ) : (
-        <section aria-label={search ? `Members matching “${search}”` : "All members"} className={`${card} p-0 md:p-0`}>
-          <div aria-hidden="true" className="hidden grid-cols-[minmax(0,1fr)_8rem_5rem_9.5rem] gap-4 border-b border-rule px-6 py-3 text-sm font-semibold text-stone-muted md:grid">
+        <section aria-label={search ? `Members matching “${search}”` : "All members"} className={panel}>
+          <div aria-hidden="true" className="hidden grid-cols-[minmax(0,1fr)_8rem_5rem_9.5rem] gap-4 rounded-t-2xl border-b border-rule/80 bg-limestone/60 px-6 py-3 text-xs font-bold uppercase tracking-wider text-stone-muted md:grid">
             <span>Member</span>
             <span>Joined</span>
             <span className="text-right">Classes</span>
             <span>Role</span>
           </div>
-          <ul className="divide-y divide-rule">
+          <ul className="divide-y divide-rule/80">
             {members.map((m) => {
               const name = m.full_name || m.email || "Member";
               const self = m.id === staff.profile.id;
