@@ -2,11 +2,13 @@
 
 import {
   IconArrowUpRight,
+  IconBook2,
   IconClipboardCheck,
   IconLayoutDashboard,
   IconLogout,
   IconMail,
   IconMenu2,
+  IconSchool,
   IconUsers,
   IconX,
 } from "@tabler/icons-react";
@@ -23,6 +25,8 @@ const links = [
   { href: "/admin", label: "Overview", Icon: IconLayoutDashboard, count: null, adminOnly: false },
   { href: "/admin/checkpoints", label: "Checkpoints", Icon: IconClipboardCheck, count: "checkpoints", adminOnly: false },
   { href: "/admin/messages", label: "Messages", Icon: IconMail, count: "messages", adminOnly: false },
+  { href: "/admin/classes", label: "Classes", Icon: IconSchool, count: null, adminOnly: false },
+  { href: "/admin/books", label: "Books", Icon: IconBook2, count: null, adminOnly: false },
   { href: "/admin/members", label: "Members", Icon: IconUsers, count: null, adminOnly: true },
 ] as const;
 

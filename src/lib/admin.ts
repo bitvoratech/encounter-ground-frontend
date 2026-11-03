@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import type { Overview, Profile } from "@/types/admin";
-import { api } from "./api";
+import { api, ApiError } from "./api";
 import { createClient } from "./supabase/server";
 
 // The admin dashboard, server side. The proxy has already refreshed the session cookie; the
@@ -50,3 +50,13 @@ export function adminGet<T>(token: string, path: string) {
 
 /** The overview, shared by the sidebar's counts and the overview page within one request. */
 export const getOverview = cache((token: string) => adminGet<Overview>(token, "/overview"));
+
+/** GET one item (a book, a class); a missing or malformed id shows the 404 page. */
+export async function adminGetOne<T>(token: string, path: string) {
+  try {
+    return await adminGet<T>(token, path);
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) notFound();
+    throw err;
+  }
+}
