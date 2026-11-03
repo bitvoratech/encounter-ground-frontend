@@ -4,13 +4,13 @@ import { IconBook, IconCheck, IconShoppingBag } from "@tabler/icons-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { addToCart, removeFromCart, useCart } from "@/lib/cart";
-import { useLibrary } from "@/lib/library";
+import { useOwns } from "@/lib/library";
 
 /** Add an e-book to the cart; once it is in, offer the way to the cart instead. A book
  * the visitor already owns offers reading instead of buying. */
 export function AddToCartButton({ slug, title }: { slug: string; title: string }) {
   const cart = useCart();
-  const owned = useLibrary()?.includes(slug) ?? false;
+  const owned = useOwns(slug);
   const inCart = cart?.includes(slug) ?? false;
   const [message, setMessage] = useState("");
   // Which control should take focus after the swap: the visitor's button disappears.
@@ -30,9 +30,9 @@ export function AddToCartButton({ slug, title }: { slug: string; title: string }
           <IconCheck aria-hidden="true" size={20} stroke={2} className="text-amber" />
           In your library
         </p>
-        <Link href="/my-books" className="btn btn-fire">
+        <Link href={`/read/${slug}`} className="btn btn-fire">
           <IconBook aria-hidden="true" size={20} stroke={1.75} />
-          Read in My books
+          Read it now
         </Link>
       </div>
     );

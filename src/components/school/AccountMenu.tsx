@@ -1,6 +1,6 @@
 "use client";
 
-import { IconBooks, IconLayoutDashboard, IconLogout, IconSchool, IconShieldCheck } from "@tabler/icons-react";
+import { IconBooks, IconUserCircle, IconLayoutDashboard, IconLogout, IconSchool, IconShieldCheck } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -12,6 +12,7 @@ export const accountLinks = [
   { href: "/dashboard", label: "My dashboard", Icon: IconLayoutDashboard },
   { href: "/my-courses", label: "My courses", Icon: IconSchool },
   { href: "/my-books", label: "My books", Icon: IconBooks },
+  { href: "/account", label: "My account", Icon: IconUserCircle },
 ] as const;
 
 /** For editors and admins, in place of the member's links: they work from the admin dashboard. */

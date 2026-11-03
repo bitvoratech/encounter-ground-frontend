@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { contact } from "@/content/ministry";
+import { getSiteContent } from "@/lib/siteContent";
 import { enrolSteps, school } from "@/content/school";
 
 export const metadata: Metadata = {
@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   description: `How to join ${school.name} and follow your classes from your Encounter Ground dashboard.`,
 };
 
-export default function SchoolEnrolPage() {
+export default async function SchoolEnrolPage() {
+  const { contact } = await getSiteContent();
   return (
     <>
       <header className="wrap pb-12 pt-14 md:pt-20">

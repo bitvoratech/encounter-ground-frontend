@@ -8,7 +8,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { SocialIcon } from "@/components/ui/SocialIcon";
-import { contact, home } from "@/content/ministry";
+import { getSiteContent, whatsappOf } from "@/lib/siteContent";
 import { cta, signatureStatements } from "@/content/siteCopy";
 import { isGroup, nav, type NavLink } from "./nav";
 
@@ -29,8 +29,9 @@ function Column({ title, children }: { title: string; children: React.ReactNode 
 
 const linkClass = "inline-flex items-center gap-2.5 text-chalk/80 transition-colors hover:text-flame";
 
-export function SiteFooter() {
-  const whatsapp = contact.socials.find((s) => s.name === "WhatsApp channel")!;
+export async function SiteFooter() {
+  const { contact, home } = await getSiteContent();
+  const whatsapp = whatsappOf(contact);
 
   return (
     <footer className="mt-auto bg-slate-deep text-chalk/85">

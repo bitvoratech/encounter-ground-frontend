@@ -1,16 +1,17 @@
 "use client";
 
 import { IconAlertTriangle, IconBrandPaypal, IconBuildingBank, IconCreditCard, IconLoader2, IconLock } from "@tabler/icons-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useId, useRef, useState } from "react";
-import { findBook, samplePrices, type Book } from "@/content/books";
+import { findBook, type Book } from "@/lib/books";
 import { useCart } from "@/lib/cart";
+import { useBooks } from "@/lib/catalogue";
 import { formatPrice } from "@/lib/currency";
 import { methodDetails, paymentMethods, paymentsAreSimulated, placeOrder, type PaymentMethod } from "@/lib/store";
 import { useCurrency } from "@/lib/useCurrency";
 import { CurrencySwitcher } from "./CurrencySwitcher";
+import { BookCover } from "./BookCover";
 import { Price } from "./Price";
 
 const methodIcons: Record<PaymentMethod, typeof IconCreditCard> = {
@@ -22,6 +23,7 @@ const methodIcons: Record<PaymentMethod, typeof IconCreditCard> = {
 export function CheckoutView({ email: accountEmail, simulateFailure }: { email: string; simulateFailure: boolean }) {
   const router = useRouter();
   const cart = useCart();
+  const catalogue = useBooks();
   const currency = useCurrency();
   const emailId = useId();
   const [email, setEmail] = useState(accountEmail);
@@ -30,13 +32,14 @@ export function CheckoutView({ email: accountEmail, simulateFailure }: { email: 
   const [error, setError] = useState("");
   const errorRef = useRef<HTMLDivElement>(null);
 
-  const items = (cart ?? []).map(findBook).filter((b): b is Book => !!b);
+  const items = (cart ?? []).map((slug) => findBook(catalogue, slug)).filter((b): b is Book => !!b);
+  const unpriced = currency ? items.filter((b) => b.prices[currency] === undefined) : [];
   const available = currency ? paymentMethods[currency] : [];
   // A choice from another currency falls back to that currency's first method.
   const method = chosen && available.includes(chosen) ? chosen : available[0];
-  const total = currency ? items.reduce((sum, b) => sum + b.prices[currency], 0) : 0;
+  const total = currency ? items.reduce((sum, b) => sum + (b.prices[currency] ?? 0), 0) : 0;
 
-  if (!cart || !currency) {
+  if (!cart || !currency || !catalogue) {
     return <div className="mt-10 h-64 rounded-3xl border border-rule bg-chalk/60" aria-hidden="true" />;
   }
 
@@ -67,7 +70,7 @@ export function CheckoutView({ email: accountEmail, simulateFailure }: { email: 
     if (!currency || !method || state === "paying") return;
     setState("paying");
     setError("");
-    const result = await placeOrder({ slugs: items.map((b) => b.slug), currency, method, email: email.trim(), simulateFailure });
+    const result = await placeOrder({ books: items, currency, method, email: email.trim(), simulateFailure });
     if (result.ok) {
       setState("done");
       router.push(`/checkout/complete?ref=${result.order.reference}`);
@@ -150,7 +153,13 @@ export function CheckoutView({ email: accountEmail, simulateFailure }: { email: 
         </fieldset>
 
         <div>
-          <button type="submit" disabled={paying || !method} className="btn btn-fire w-full text-lg">
+          {unpriced.length > 0 && (
+            <p role="alert" className="mb-3 text-sm font-semibold text-amber">
+              {unpriced.map((b) => b.title).join(", ")} {unpriced.length === 1 ? "isn’t" : "aren’t"} sold in {currency}. Choose another
+              currency or remove {unpriced.length === 1 ? "it" : "them"} from your cart.
+            </p>
+          )}
+          <button type="submit" disabled={paying || !method || unpriced.length > 0} className="btn btn-fire w-full text-lg">
             {paying ? (
               <>
                 <IconLoader2 aria-hidden="true" size={20} className="animate-spin" />
@@ -181,14 +190,7 @@ export function CheckoutView({ email: accountEmail, simulateFailure }: { email: 
         <ul className="mt-5 grid gap-4">
           {items.map((book) => (
             <li key={book.slug} className="flex items-center gap-4">
-              <Image
-                src={book.cover}
-                alt=""
-                width={683}
-                height={1024}
-                sizes="3.5rem"
-                className="aspect-[2/3] w-14 shrink-0 rounded-md bg-limestone object-cover"
-              />
+              <BookCover cover={book.cover} alt="" sizes="3.5rem" className="w-14 shrink-0 rounded-md bg-limestone" />
               <span className="min-w-0 flex-1">
                 <span className="block font-semibold leading-snug text-slate-ink">{book.title}</span>
                 <span className="block text-sm text-stone-muted">E-book · {book.audience}</span>
@@ -201,7 +203,6 @@ export function CheckoutView({ email: accountEmail, simulateFailure }: { email: 
           <dt className="font-semibold text-slate-ink">Total</dt>
           <dd className="font-display text-[2rem] leading-none text-slate-ink tabular-nums">{formatPrice(total, currency)}</dd>
         </dl>
-        {samplePrices && <p className="mt-2 text-right text-sm text-stone-muted">Sample prices: final prices to come.</p>}
         <p className="mt-6 border-t border-rule pt-5 text-sm text-stone-muted">
           Your e-books appear in My books as soon as payment is confirmed, ready to read on any device.
         </p>

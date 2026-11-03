@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { CurrencySwitcher } from "@/components/store/CurrencySwitcher";
 import { Price } from "@/components/store/Price";
 import { WishlistButton } from "@/components/store/WishlistButton";
-import { authorStoreUrl, books, samplePrices } from "@/content/books";
+import { BookCover } from "@/components/store/BookCover";
+import { authorStoreUrl } from "@/content/books";
+import { loadBooks } from "@/lib/books";
 import { sectionCopy } from "@/content/siteCopy";
 
 export const metadata: Metadata = {
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
-export default function BooksPage() {
+export default async function BooksPage() {
+  const books = await loadBooks();
   return (
     <>
       <header className="page-hero wrap pb-12 pt-14 md:pt-20">
@@ -24,30 +26,31 @@ export default function BooksPage() {
         <p className="mt-4 max-w-[38rem] text-stone-muted">Books by Toyin Bello. Buy the e-book and read it here, on any device.</p>
         <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
           <CurrencySwitcher />
-          {samplePrices && <p className="text-sm text-stone-muted">Sample prices: final prices to come.</p>}
         </div>
       </header>
 
       <section aria-label="Books" className="border-t border-rule bg-chalk">
+        {books === "unavailable" ? (
+          <p role="alert" className="wrap py-16 font-semibold text-amber">
+            The bookstore can’t be loaded right now. Please refresh in a moment.
+          </p>
+        ) : (
         <ul className="wrap grid grid-cols-2 gap-x-4 gap-y-10 py-12 sm:grid-cols-3 sm:gap-x-6 md:grid-cols-4 md:py-16 lg:grid-cols-5">
           {books.map((book) => (
             <li key={book.slug} className="flex flex-col">
               <div className="relative">
                 <Link href={`/books/${book.slug}`} className="group block" tabIndex={-1} aria-hidden="true">
-                  <Image
-                    src={book.cover}
-                    alt=""
-                    width={683}
-                    height={1024}
+                  <BookCover
+                    cover={book.cover}
                     sizes="(min-width: 1024px) 17vw, (min-width: 768px) 22vw, (min-width: 640px) 30vw, 45vw"
-                    className="aspect-[2/3] w-full rounded-xl bg-limestone object-cover shadow-[0_14px_30px_-18px_rgb(29_38_48/0.55)] transition-transform duration-300 group-hover:-translate-y-1"
+                    className="w-full rounded-xl shadow-[0_14px_30px_-18px_rgb(29_38_48/0.55)] transition-transform duration-300 group-hover:-translate-y-1"
                   />
                 </Link>
                 <div className="absolute right-2 top-2">
                   <WishlistButton slug={book.slug} title={book.title} />
                 </div>
               </div>
-              <p className="mt-3 text-xs font-semibold text-amber">{book.audience}</p>
+              {book.audience && <p className="mt-3 text-xs font-semibold text-amber">{book.audience}</p>}
               <h2 className="mt-1 text-base leading-snug text-slate-ink sm:text-lg">
                 <Link href={`/books/${book.slug}`} className="hover:underline hover:decoration-flame hover:underline-offset-4">
                   {book.title}
@@ -65,14 +68,17 @@ export default function BooksPage() {
                   View book
                   <span className="sr-only">: {book.title}{book.subtitle ? `, ${book.audience}` : ""}</span>
                 </Link>
-                <a href={book.amazonUrl} {...external} className="link mt-2.5 block text-xs text-stone-muted sm:text-sm">
-                  Paperback on Amazon
-                  <span className="sr-only">: {book.title}</span>
-                </a>
+                {book.amazonUrl && (
+                  <a href={book.amazonUrl} {...external} className="link mt-2.5 block text-xs text-stone-muted sm:text-sm">
+                    Paperback on Amazon
+                    <span className="sr-only">: {book.title}</span>
+                  </a>
+                )}
               </div>
             </li>
           ))}
         </ul>
+        )}
       </section>
 
       <section aria-labelledby="how-heading">

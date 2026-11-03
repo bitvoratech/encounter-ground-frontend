@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/site/ContactForm";
 import { SocialIcon } from "@/components/ui/SocialIcon";
-import { contact } from "@/content/ministry";
+import { getSiteContent } from "@/lib/siteContent";
 import { sectionCopy } from "@/content/siteCopy";
 
 export const metadata: Metadata = {
@@ -9,7 +9,8 @@ export const metadata: Metadata = {
   description: sectionCopy.contact.short,
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const { contact } = await getSiteContent();
   return (
     <>
       <header className="page-hero wrap pb-12 pt-14 md:pt-20">

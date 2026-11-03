@@ -1,14 +1,15 @@
 "use client";
 
 import { IconDeviceLaptop, IconShoppingBag, IconTrash } from "@tabler/icons-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { findBook, samplePrices, type Book } from "@/content/books";
+import { findBook, type Book } from "@/lib/books";
 import { removeFromCart, useCart } from "@/lib/cart";
+import { useBooks } from "@/lib/catalogue";
 import { formatPrice } from "@/lib/currency";
 import { useCurrency } from "@/lib/useCurrency";
 import { CurrencySwitcher } from "./CurrencySwitcher";
+import { BookCover } from "./BookCover";
 import { Price } from "./Price";
 
 /** The cart page. The status line sits outside the part that swaps between empty and full,
@@ -27,11 +28,12 @@ export function CartView() {
 
 function CartBody({ onMessage }: { onMessage: (message: string) => void }) {
   const cart = useCart();
+  const catalogue = useBooks();
   const currency = useCurrency();
   const headingRef = useRef<HTMLHeadingElement>(null);
 
-  const items = (cart ?? []).map(findBook).filter((b): b is Book => !!b);
-  const total = currency ? items.reduce((sum, b) => sum + b.prices[currency], 0) : null;
+  const items = (cart ?? []).map((slug) => findBook(catalogue, slug)).filter((b): b is Book => !!b);
+  const total = currency ? items.reduce((sum, b) => sum + (b.prices[currency] ?? 0), 0) : null;
 
   const heading = (
     <h1 ref={headingRef} tabIndex={-1} className="text-[length:var(--text-h1)] text-slate-ink outline-none">
@@ -40,7 +42,7 @@ function CartBody({ onMessage }: { onMessage: (message: string) => void }) {
   );
 
   // Server render and hydration: the cart is only known in the browser.
-  if (!cart) {
+  if (!cart || !catalogue) {
     return (
       <div className="page-hero wrap pb-24 pt-14 md:pt-20">
         {heading}
@@ -83,14 +85,7 @@ function CartBody({ onMessage }: { onMessage: (message: string) => void }) {
           {items.map((book) => (
             <li key={book.slug} className="flex gap-4 p-4 sm:gap-6 sm:p-6">
               <Link href={`/books/${book.slug}`} tabIndex={-1} aria-hidden="true" className="shrink-0">
-                <Image
-                  src={book.cover}
-                  alt=""
-                  width={683}
-                  height={1024}
-                  sizes="6rem"
-                  className="aspect-[2/3] w-20 rounded-lg bg-limestone object-cover shadow-[0_10px_24px_-14px_rgb(29_38_48/0.6)] sm:w-24"
-                />
+                <BookCover cover={book.cover} alt="" sizes="6rem" className="w-20 rounded-lg shadow-[0_10px_24px_-14px_rgb(29_38_48/0.6)] sm:w-24" />
               </Link>
               <div className="flex min-w-0 flex-1 flex-col">
                 <p className="text-xs font-semibold text-amber sm:text-sm">{book.audience}</p>
@@ -131,7 +126,6 @@ function CartBody({ onMessage }: { onMessage: (message: string) => void }) {
               {currency && total !== null ? formatPrice(total, currency) : " "}
             </dd>
           </dl>
-          {samplePrices && <p className="mt-2 text-right text-sm text-stone-muted">Sample prices: final prices to come.</p>}
 
           <Link href="/checkout" className="btn btn-fire mt-6 w-full">
             Checkout

@@ -1,10 +1,11 @@
 "use client";
 
 import { IconCircleCheck } from "@tabler/icons-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
-import { findBook, type Book } from "@/content/books";
+import { findBook, type Book } from "@/lib/books";
+import { useBooks } from "@/lib/catalogue";
+import { BookCover } from "@/components/store/BookCover";
 import { formatPrice } from "@/lib/currency";
 import { methodDetails, paymentsAreSimulated, readLastOrder } from "@/lib/store";
 
@@ -18,8 +19,9 @@ export function OrderComplete({ reference }: { reference: string }) {
     () => JSON.stringify(readLastOrder(reference)),
     () => undefined,
   );
+  const catalogue = useBooks();
   const order = raw ? (JSON.parse(raw) as ReturnType<typeof readLastOrder>) : null;
-  const books = (order?.slugs ?? []).map(findBook).filter((b): b is Book => !!b);
+  const books = (order?.slugs ?? []).map((slug) => findBook(catalogue, slug)).filter((b): b is Book => !!b);
 
   return (
     <div className="page-hero wrap pb-24 pt-14 md:pt-20">
@@ -29,7 +31,9 @@ export function OrderComplete({ reference }: { reference: string }) {
         </span>
         <h1 className="mt-6 text-[length:var(--text-h1)] text-slate-ink">Thank you</h1>
         <p className="mt-4 text-lede text-stone-muted">
-          {books.length > 1 ? "Your e-books are" : "Your e-book is"} ready to read in My books.
+          {paymentsAreSimulated
+            ? "Test mode: payments aren’t connected yet, so nothing was charged and no book was added to My books."
+            : `${books.length > 1 ? "Your e-books are" : "Your e-book is"} ready to read in My books.`}
         </p>
         <p className="mt-3 text-sm text-stone-muted">
           Order <span className="font-semibold text-slate-ink">{reference}</span>
@@ -44,20 +48,13 @@ export function OrderComplete({ reference }: { reference: string }) {
           <ul className="mt-5 grid gap-4">
             {books.map((book) => (
               <li key={book.slug} className="flex items-center gap-4">
-                <Image
-                  src={book.cover}
-                  alt=""
-                  width={683}
-                  height={1024}
-                  sizes="3.5rem"
-                  className="aspect-[2/3] w-14 shrink-0 rounded-md bg-limestone object-cover"
-                />
+                <BookCover cover={book.cover} alt="" sizes="3.5rem" className="w-14 shrink-0 rounded-md bg-limestone" />
                 <span className="min-w-0 flex-1">
                   <span className="block font-semibold leading-snug text-slate-ink">{book.title}</span>
                   <span className="block text-sm text-stone-muted">E-book · {book.audience}</span>
                 </span>
                 <span className="text-sm font-semibold tabular-nums text-slate-ink">
-                  {formatPrice(book.prices[order.currency], order.currency)}
+                  {formatPrice(book.prices[order.currency] ?? 0, order.currency)}
                 </span>
               </li>
             ))}

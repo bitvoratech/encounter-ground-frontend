@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { CartLink } from "@/components/store/CartLink";
 import { WishlistLink } from "@/components/store/WishlistLink";
 import { SocialIcon } from "@/components/ui/SocialIcon";
-import { contact } from "@/content/ministry";
+import type { Social } from "@/lib/siteContent";
 import { useIsStaff } from "@/lib/staff";
 import { useFullScreenMenu, useSignedIn } from "./useFullScreenMenu";
 import { isGroup, nav, type NavGroup, type NavItem } from "./nav";
@@ -99,7 +99,7 @@ function NavDropdown({ group }: { group: NavGroup }) {
   );
 }
 
-export function SiteHeader() {
+export function SiteHeader({ socials }: { socials: Social[] }) {
   const isActive = useIsActive();
   const { open, buttonRef: menuButtonRef, menuRef, openMenu, closeMenu } = useFullScreenMenu();
   const signedIn = useSignedIn();
@@ -258,7 +258,7 @@ export function SiteHeader() {
               </Link>
             )}
             <ul className="flex gap-2" aria-label="Encounter Ground on social media">
-              {contact.socials.map((s) => (
+              {socials.map((s) => (
                 <li key={s.name}>
                   <a
                     href={s.href}

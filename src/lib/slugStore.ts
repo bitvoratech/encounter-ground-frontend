@@ -2,6 +2,9 @@
 
 import { useSyncExternalStore } from "react";
 
+/** A web address slug, as the API uses for books: "who-i-am-becoming-girls". */
+export const isBookSlug = (s: string) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(s) && s.length <= 80;
+
 /**
  * A list of ids kept in the browser (localStorage, or memory when storage is blocked), shared
  * across tabs and components. Ids that fail `isValid` (say, a book no longer sold) and

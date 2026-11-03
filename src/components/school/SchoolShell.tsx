@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { contact } from "@/content/ministry";
+import { getSiteContent } from "@/lib/siteContent";
 import { school } from "@/content/school";
 import { SchoolHeader } from "./SchoolHeader";
 
 /** Header, main landmark and footer for the school and the student dashboard, kept apart from the main site. */
-export function SchoolShell({ children }: { children: React.ReactNode }) {
+export async function SchoolShell({ children }: { children: React.ReactNode }) {
+  const { contact } = await getSiteContent();
   return (
     <>
       <SchoolHeader />

@@ -4,6 +4,7 @@ import {
   IconArrowUpRight,
   IconBook2,
   IconClipboardCheck,
+  IconFileText,
   IconLayoutDashboard,
   IconLogout,
   IconMail,
@@ -27,6 +28,7 @@ const links = [
   { href: "/admin/messages", label: "Messages", Icon: IconMail, count: "messages", adminOnly: false },
   { href: "/admin/classes", label: "Classes", Icon: IconSchool, count: null, adminOnly: false },
   { href: "/admin/books", label: "Books", Icon: IconBook2, count: null, adminOnly: false },
+  { href: "/admin/content", label: "Site content", Icon: IconFileText, count: null, adminOnly: false },
   { href: "/admin/members", label: "Members", Icon: IconUsers, count: null, adminOnly: true },
 ] as const;
 
