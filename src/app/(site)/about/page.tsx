@@ -1,24 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { mission, story, values, vision } from "@/content/ministry";
+import { cta, sectionCopy } from "@/content/siteCopy";
 
 export const metadata: Metadata = {
-  title: "Who we are",
-  description:
-    "How Encounter Ground began, and the vision, mission and values that guide the ministry.",
+  title: "About us",
+  description: sectionCopy.about.short,
 };
 
 export default function AboutPage() {
   return (
     <>
       <header className="page-hero wrap pb-12 pt-14 md:pb-16 md:pt-20">
-        <h1 className="max-w-3xl text-[length:var(--text-h1)] text-slate-ink">
-          Every person has a scroll written by God
+        <p className="font-semibold text-amber">About us</p>
+        <h1 className="mt-2 max-w-3xl text-[length:var(--text-h1)] text-slate-ink">
+          {sectionCopy.about.headline}
         </h1>
-        <p className="mt-6 max-w-[34rem] text-lede leading-relaxed text-stone-muted">
-          Encounter Ground began with one person’s hunger for God, and a mandate
-          to help others seek Him and find Him.
-        </p>
+        <p className="mt-6 max-w-[38rem] text-lede leading-relaxed text-stone-muted">{sectionCopy.about.body}</p>
+        <p className="mt-4 max-w-[38rem] text-lede leading-relaxed text-stone-muted">{sectionCopy.about.short}</p>
       </header>
 
       <section aria-labelledby="story-heading" className="border-t border-rule">
@@ -67,10 +66,10 @@ export default function AboutPage() {
           </ul>
           <div className="mt-14 flex flex-wrap gap-3">
             <Link href="/events" className="btn btn-fire">
-              Join a programme
+              {cta.gatherings}
             </Link>
             <Link href="/contact" className="btn btn-quiet text-slate-ink">
-              Get in touch
+              {cta.contact}
             </Link>
           </div>
         </div>

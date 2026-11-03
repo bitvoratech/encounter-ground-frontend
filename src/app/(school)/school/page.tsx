@@ -17,7 +17,8 @@ export default function SchoolPage() {
         <div>
           <p className="font-semibold text-amber">The ministry school</p>
           <h1 className="mt-2 text-[length:var(--text-h1)] text-slate-ink">{school.name}</h1>
-          <p className="mt-6 max-w-[34rem] text-lede leading-relaxed text-stone-muted">{school.summary}</p>
+          <p className="mt-6 max-w-[34rem] font-display text-[1.5rem] leading-snug text-slate-ink">{school.headline}</p>
+          <p className="mt-4 max-w-[34rem] text-lede leading-relaxed text-stone-muted">{school.summary}</p>
           <div className="mt-10 flex flex-wrap gap-3">
             <Link href="/school/enrol" className="btn btn-fire">
               Enrol
