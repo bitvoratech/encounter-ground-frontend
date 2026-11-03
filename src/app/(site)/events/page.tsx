@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { YadaBand } from "@/components/site/YadaBand";
+import Image from "next/image";
 import { programmes } from "@/content/ministry";
-import { sectionCopy } from "@/content/siteCopy";
+import meetingImage from "../../../../public/images/home/revival-meeting.jpg";
+import zoeImage from "../../../../public/images/home/zoe-healing-stream.jpg";
 
 export const metadata: Metadata = {
   title: "Gatherings & Events",
@@ -38,6 +40,28 @@ export default function EventsPage() {
           <p className="mt-6 text-stone-muted">
             Meeting times are shared on the WhatsApp channel ahead of each programme.
           </p>
+        </div>
+      </section>
+
+      <section aria-labelledby="zoe-heading" className="border-t border-rule bg-chalk">
+        <div className="wrap grid gap-10 py-16 md:grid-cols-[1.2fr_1fr] md:items-center md:py-24">
+          <Image
+            src={zoeImage}
+            alt="Zoe Healing Streams flyer: strictly for people trusting God for healing, every Wednesday from 8:00 to 10:00 am West Central Africa time, hosted by Toyin Bello"
+            placeholder="blur"
+            sizes="(min-width: 768px) 55vw, 100vw"
+            className="w-full rounded-2xl shadow-[0_24px_50px_-28px_rgb(29_38_48/0.6)]"
+          />
+          <div>
+            <p className="eyebrow">Every Wednesday</p>
+            <h2 id="zoe-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+              Zoe <em>Healing</em> Stream
+            </h2>
+            <p className="mt-5 max-w-md text-[1.125rem] text-slate-ink/90">
+              Two hours of prayer for everyone trusting God for healing, hosted by Toyin Bello.
+            </p>
+            <p className="mt-3 font-semibold text-slate-ink">8:00 to 10:00 am, West Africa time</p>
+          </div>
         </div>
       </section>
     </>

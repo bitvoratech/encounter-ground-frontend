@@ -2,18 +2,16 @@ import { IconArrowLeft, IconCheck, IconClock, IconDeviceLaptop, IconFlag, IconLa
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
+import { ClassesUnavailable } from "@/components/school/ClassesUnavailable";
 import { CourseOutline } from "@/components/school/CourseOutline";
 import { EnrolButton } from "@/components/school/EnrolButton";
 import { formatMinutes } from "@/components/school/lessonKinds";
-import { courseMinutes, courses, findCourse, lessonCount, sampleCourses } from "@/content/courses";
-
-export function generateStaticParams() {
-  return courses.map((c) => ({ slug: c.slug }));
-}
+import { courseLessons, loadCourse } from "@/lib/courses";
 
 export async function generateMetadata({ params }: PageProps<"/school/classes/[slug]">): Promise<Metadata> {
-  const course = findCourse((await params).slug);
-  return course ? { title: course.name, description: course.summary } : {};
+  const course = await loadCourse((await params).slug);
+  return typeof course === "object" ? { title: course.name, description: course.summary ?? undefined } : {};
 }
 
 const steps = [
@@ -23,12 +21,17 @@ const steps = [
 ];
 
 export default async function CoursePage({ params }: PageProps<"/school/classes/[slug]">) {
-  const course = findCourse((await params).slug);
-  if (!course) notFound();
+  // Fetch at request time, so builds never depend on the API being reachable.
+  await connection();
+  const course = await loadCourse((await params).slug);
+  if (course === "unavailable") return <ClassesUnavailable />;
+  if (course === "missing") notFound();
+  const lessons = courseLessons(course);
+  const minutes = lessons.reduce((sum, l) => sum + l.lesson.minutes, 0);
 
   const facts = [
-    { Icon: IconLayoutList, text: `${course.modules.length} modules · ${lessonCount(course)} lessons` },
-    { Icon: IconClock, text: `About ${formatMinutes(courseMinutes(course))} of teaching` },
+    { Icon: IconLayoutList, text: `${course.modules.length} modules · ${lessons.length} lessons` },
+    { Icon: IconClock, text: `About ${formatMinutes(minutes)} of teaching` },
     { Icon: IconDeviceLaptop, text: "Online, at your own pace" },
     { Icon: IconFlag, text: "A checkpoint after every module" },
   ];
@@ -50,7 +53,7 @@ export default async function CoursePage({ params }: PageProps<"/school/classes/
           <p className="mt-4 text-sm text-stone-muted">Course fee: to be confirmed by the ministry.</p>
 
           <div className="mt-8 flex flex-wrap items-start gap-x-6 gap-y-4">
-            <EnrolButton courseSlug={course.slug} />
+            <EnrolButton course={course} />
             <a href="#outline" className="link mt-3 font-semibold text-slate-ink">
               See the outline
             </a>
@@ -106,10 +109,10 @@ export default async function CoursePage({ params }: PageProps<"/school/classes/
             <h2 id="outline-heading" className="text-[length:var(--text-h2)] text-slate-ink">
               Class outline
             </h2>
-            {sampleCourses && <p className="text-sm text-stone-muted">Sample outline: the ministry will supply the real lessons.</p>}
+            <p className="text-sm text-stone-muted">Sample outline: the ministry will supply the real lessons.</p>
           </div>
           <div className="mt-8 max-w-3xl">
-            <CourseOutline courseSlug={course.slug} />
+            <CourseOutline course={course} />
           </div>
         </div>
       </section>

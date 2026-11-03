@@ -1,31 +1,55 @@
 "use client";
 
-import { IconCircleCheck } from "@tabler/icons-react";
+import { IconCircleCheck, IconMessageCircle } from "@tabler/icons-react";
 import { useId, useRef, useState } from "react";
-import { setLessonComplete, useCompleted } from "@/lib/learning";
+import { submitCheckpoint } from "@/lib/learning";
+import type { TeacherReply } from "@/types/school";
 
 /**
- * A written checkpoint at the end of a module, reviewed by a teacher (after GOMYCODE's
- * checkpoints). Submitting completes the lesson. With the backend, the text is saved for the
- * teacher; for now only the "submitted" state is kept.
+ * A written checkpoint at the end of a module, saved for a teacher to read (after GOMYCODE's
+ * checkpoints). Submitting completes the lesson; writing it again replaces the earlier text
+ * (and its reply, so a teacher reads the new one).
  */
-export function Checkpoint({ lessonId, prompt }: { lessonId: string; prompt: string }) {
+export function Checkpoint({
+  courseSlug,
+  lessonSlug,
+  prompt,
+  submitted,
+  reply,
+}: {
+  courseSlug: string;
+  lessonSlug: string;
+  prompt: string;
+  submitted: boolean;
+  reply: TeacherReply | null;
+}) {
   const id = useId();
-  const submitted = useCompleted()?.includes(lessonId) ?? false;
+  const [editing, setEditing] = useState(false);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
   const statusRef = useRef<HTMLDivElement>(null);
 
-  if (submitted) {
+  if (submitted && !editing) {
     return (
       <div ref={statusRef} tabIndex={-1} role="status" className="flex items-start gap-3 rounded-2xl border border-rule bg-chalk p-6 outline-none">
         <IconCircleCheck aria-hidden="true" size={26} stroke={1.75} className="shrink-0 text-amber" />
         <div>
           <p className="font-semibold text-slate-ink">Checkpoint submitted</p>
-          <p className="mt-1 text-stone-muted">A teacher will read it and may reply on your dashboard.</p>
+          {reply ? (
+            <div className="mt-3 rounded-2xl bg-flame/10 p-4">
+              <p className="flex items-center gap-2 text-sm font-semibold text-amber">
+                <IconMessageCircle aria-hidden="true" size={18} stroke={1.75} />
+                Your teacher replied
+              </p>
+              <p className="mt-1 whitespace-pre-line text-slate-ink">{reply.feedback}</p>
+            </div>
+          ) : (
+            <p className="mt-1 text-stone-muted">A teacher will read it and may reply here and on your dashboard.</p>
+          )}
           <button
             type="button"
-            onClick={() => setLessonComplete(lessonId, false)}
+            onClick={() => setEditing(true)}
             className="mt-3 text-sm font-semibold text-stone-muted underline-offset-4 hover:text-slate-ink hover:underline"
           >
             Write it again
@@ -37,15 +61,24 @@ export function Checkpoint({ lessonId, prompt }: { lessonId: string; prompt: str
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         if (text.trim().length < 20) {
           setError("Write at least a couple of sentences before you submit.");
           return;
         }
         setError("");
-        setLessonComplete(lessonId, true);
-        requestAnimationFrame(() => statusRef.current?.focus());
+        setPending(true);
+        try {
+          await submitCheckpoint(courseSlug, lessonSlug, text.trim());
+          setEditing(false);
+          setText("");
+          requestAnimationFrame(() => statusRef.current?.focus());
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Your checkpoint didn’t send. Please try again.");
+        } finally {
+          setPending(false);
+        }
       }}
       className="rounded-2xl border border-rule bg-chalk p-6"
     >
@@ -54,12 +87,15 @@ export function Checkpoint({ lessonId, prompt }: { lessonId: string; prompt: str
       </label>
       <p id={`${id}-hint`} className="mt-2 text-sm text-stone-muted">
         There are no wrong answers. A teacher reads every checkpoint.
+        {reply && " Sending it again replaces your earlier answer and your teacher’s reply."}
       </p>
       <textarea
         id={id}
         rows={6}
+        maxLength={5000}
         value={text}
         onChange={(e) => setText(e.target.value)}
+        disabled={pending}
         aria-describedby={`${id}-hint${error ? ` ${id}-error` : ""}`}
         aria-invalid={!!error}
         className="mt-4 w-full rounded-xl border border-rule bg-limestone p-4 text-slate-ink"
@@ -69,8 +105,8 @@ export function Checkpoint({ lessonId, prompt }: { lessonId: string; prompt: str
           {error}
         </p>
       )}
-      <button type="submit" className="btn btn-fire mt-4">
-        Submit checkpoint
+      <button type="submit" disabled={pending} className="btn btn-fire mt-4">
+        {pending ? "Sending…" : "Submit checkpoint"}
       </button>
     </form>
   );

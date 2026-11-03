@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { homeFor } from "@/lib/admin";
 import { safeNext } from "@/lib/safe-next";
 import { createClient } from "@/lib/supabase/server";
 
@@ -18,7 +19,7 @@ export async function signIn(_prev: AuthState, form: FormData): Promise<AuthStat
   if (!email || !password) return { error: "Enter your email and password.", values };
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
     return {
       error:
@@ -28,7 +29,8 @@ export async function signIn(_prev: AuthState, form: FormData): Promise<AuthStat
       values,
     };
   }
-  redirect(safeNext(form.get("next")));
+  // A page they were sent from comes first; otherwise the ministry team goes to the admin dashboard.
+  redirect(safeNext(form.get("next"), await homeFor(data.session.access_token)));
 }
 
 export async function signUp(_prev: AuthState, form: FormData): Promise<AuthState> {

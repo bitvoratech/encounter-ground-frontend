@@ -1,10 +1,11 @@
 "use client";
 
-import { IconBooks, IconLayoutDashboard, IconLogout, IconSchool } from "@tabler/icons-react";
+import { IconBooks, IconLayoutDashboard, IconLogout, IconSchool, IconShieldCheck } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { Account } from "@/components/layout/useFullScreenMenu";
+import { useIsStaff } from "@/lib/staff";
 import { Avatar } from "./Avatar";
 
 export const accountLinks = [
@@ -13,9 +14,15 @@ export const accountLinks = [
   { href: "/my-books", label: "My books", Icon: IconBooks },
 ] as const;
 
+/** For editors and admins, in place of the member's links: they work from the admin dashboard. */
+export const adminLink = { href: "/admin", label: "Admin dashboard", Icon: IconShieldCheck } as const;
+export const staffLinks = [adminLink] as const;
+
 /** The avatar at the end of the header: opens the member's account links and sign out. */
 export function AccountMenu({ account }: { account: Account }) {
   const pathname = usePathname();
+  const isStaff = useIsStaff();
+  const links = isStaff ? staffLinks : accountLinks;
   // Belongs to the page it was opened on, so navigating closes it.
   const [openOn, setOpenOn] = useState<string | null>(null);
   const open = openOn === pathname;
@@ -68,7 +75,7 @@ export function AccountMenu({ account }: { account: Account }) {
           </div>
         </div>
         <ul className="py-2">
-          {accountLinks.map(({ href, label, Icon }) => (
+          {links.map(({ href, label, Icon }) => (
             <li key={href}>
               <Link
                 href={href}

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { mission, story, values, vision } from "@/content/ministry";
-import { cta, sectionCopy } from "@/content/siteCopy";
+import denimImage from "../../../../public/images/home/founder-denim.jpg";
+import creamImage from "../../../../public/images/home/founder-cream.jpg";
 
 export const metadata: Metadata = {
   title: "About us",
@@ -22,9 +24,19 @@ export default function AboutPage() {
 
       <section aria-labelledby="story-heading" className="border-t border-rule">
         <div className="wrap grid gap-10 py-14 md:grid-cols-[1fr_2fr] md:py-20">
-          <h2 id="story-heading" className="text-[length:var(--text-h2)] text-slate-ink">
-            Our story
-          </h2>
+          <div>
+            <p className="eyebrow">How it began</p>
+            <h2 id="story-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+              Our <em>story</em>
+            </h2>
+            <Image
+              src={creamImage}
+              alt="Toyin Bello in a long cream dress"
+              placeholder="blur"
+              sizes="(min-width: 768px) 28vw, 0px"
+              className="mt-10 hidden aspect-[3/4] w-full max-w-xs rounded-2xl object-cover object-top md:block"
+            />
+          </div>
           <div className="prose-eg measure text-[1.125rem] text-slate-ink/90">
             {story.map((p) => (
               <p key={p.slice(0, 24)}>{p}</p>

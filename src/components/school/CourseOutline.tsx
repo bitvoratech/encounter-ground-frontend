@@ -2,8 +2,8 @@
 
 import { IconChevronDown, IconCircleCheckFilled, IconLock } from "@tabler/icons-react";
 import Link from "next/link";
-import { findCourse } from "@/content/courses";
-import { useCompleted, useEnrolments } from "@/lib/learning";
+import { enrolmentFor, useLearning } from "@/lib/learning";
+import type { Course } from "@/types/school";
 import { formatMinutes, lessonKinds } from "./lessonKinds";
 
 /**
@@ -11,25 +11,25 @@ import { formatMinutes, lessonKinds } from "./lessonKinds";
  * when the student is enrolled or the lesson is a free preview.
  */
 export function CourseOutline({
-  courseSlug,
+  course,
   currentLesson,
   compact = false,
 }: {
-  courseSlug: string;
+  course: Course;
   /** On a lesson page: highlight it and open its module. */
   currentLesson?: string;
   compact?: boolean;
 }) {
-  const course = findCourse(courseSlug)!;
-  const enrolled = useEnrolments()?.includes(courseSlug) ?? false;
-  const done = useCompleted() ?? [];
+  const courseSlug = course.slug;
+  const enrolment = enrolmentFor(useLearning(), courseSlug);
+  const enrolled = !!enrolment;
+  const done = enrolment?.completed ?? [];
 
   return (
     <ol className={compact ? "grid gap-2" : "grid gap-3"}>
       {course.modules.map((module, m) => {
-        const ids = module.lessons.map((l) => `${courseSlug}/${l.slug}`);
-        const finished = ids.filter((id) => done.includes(id)).length;
-        const minutes = module.lessons.reduce((sum, l) => sum + (l.minutes ?? 0), 0);
+        const finished = module.lessons.filter((l) => done.includes(l.slug)).length;
+        const minutes = module.lessons.reduce((sum, l) => sum + l.minutes, 0);
         const open = currentLesson ? module.lessons.some((l) => l.slug === currentLesson) : m === 0;
 
         return (
@@ -56,8 +56,7 @@ export function CourseOutline({
               </summary>
               <ul className="border-t border-rule">
                 {module.lessons.map((lesson) => {
-                  const id = `${courseSlug}/${lesson.slug}`;
-                  const isDone = done.includes(id);
+                  const isDone = done.includes(lesson.slug);
                   const open = enrolled || lesson.preview;
                   const current = lesson.slug === currentLesson;
                   const { Icon, label } = lessonKinds[lesson.kind];

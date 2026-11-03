@@ -2,8 +2,10 @@
 
 import { IconArrowLeft, IconArrowRight, IconCircleCheck, IconDownload, IconFileText, IconHeadphones, IconLock, IconPlayerPlay } from "@tabler/icons-react";
 import Link from "next/link";
-import { findCourse, findLesson, sampleCourses } from "@/content/courses";
-import { setLessonComplete, useCompleted, useEnrolments } from "@/lib/learning";
+import { useState } from "react";
+import { findLesson } from "@/lib/courses";
+import { enrolmentFor, setLessonComplete, useLearning } from "@/lib/learning";
+import type { Course } from "@/types/school";
 import { Checkpoint } from "./Checkpoint";
 import { EnrolButton } from "./EnrolButton";
 import { formatMinutes, lessonKinds } from "./lessonKinds";
@@ -11,17 +13,52 @@ import { Quiz } from "./Quiz";
 
 const SAMPLE = "Sample lesson: the ministry will add the teaching here.";
 
-export function LessonView({ courseSlug, lessonSlug }: { courseSlug: string; lessonSlug: string }) {
-  const course = findCourse(courseSlug)!;
+/** "Mark as complete" for video, audio, reading and study-guide lessons. */
+function MarkComplete({ courseSlug, lessonSlug, done }: { courseSlug: string; lessonSlug: string; done: boolean }) {
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
+  return (
+    <div>
+      <button
+        type="button"
+        aria-pressed={done}
+        disabled={pending}
+        onClick={async () => {
+          setPending(true);
+          setError("");
+          try {
+            await setLessonComplete(courseSlug, lessonSlug, !done);
+          } catch (err) {
+            setError(err instanceof Error ? err.message : "That didn’t save. Please try again.");
+          } finally {
+            setPending(false);
+          }
+        }}
+        className={done ? "btn btn-quiet text-slate-ink" : "btn btn-fire"}
+      >
+        <IconCircleCheck aria-hidden="true" size={20} stroke={1.75} />
+        {pending ? "Saving…" : done ? "Completed" : "Mark as complete"}
+      </button>
+      {error && (
+        <p role="alert" className="mt-2 text-sm font-semibold text-amber">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export function LessonView({ course, lessonSlug }: { course: Course; lessonSlug: string }) {
+  const courseSlug = course.slug;
   const found = findLesson(course, lessonSlug)!;
-  const { lesson, module, moduleIndex, id, prev, next, index, total } = found;
-  const enrolments = useEnrolments();
-  const completed = useCompleted();
-  const enrolled = enrolments?.includes(courseSlug) ?? false;
-  const isDone = completed?.includes(id) ?? false;
+  const { lesson, module, moduleIndex, prev, next, index, total } = found;
+  const learning = useLearning();
+  const enrolment = enrolmentFor(learning, courseSlug);
+  const enrolled = !!enrolment;
+  const isDone = enrolment?.completed.includes(lesson.slug) ?? false;
   const { label, Icon } = lessonKinds[lesson.kind];
   const href = (slug: string) => `/school/classes/${courseSlug}/${slug}`;
-  const loading = enrolments === null || completed === null;
+  const loading = learning.status === "loading";
   const locked = !loading && !enrolled && !lesson.preview;
 
   return (
@@ -38,7 +75,7 @@ export function LessonView({ courseSlug, lessonSlug }: { courseSlug: string; les
           <Icon aria-hidden="true" size={18} stroke={1.75} className="text-amber" />
           {label}
         </span>
-        {lesson.minutes && <span>{formatMinutes(lesson.minutes)}</span>}
+        {lesson.minutes > 0 && <span>{formatMinutes(lesson.minutes)}</span>}
         <span>
           Lesson {index + 1} of {total}
         </span>
@@ -59,7 +96,7 @@ export function LessonView({ courseSlug, lessonSlug }: { courseSlug: string; les
                 The first lesson of every class is a free preview. Enrol in {course.name} to open the rest.
               </p>
             </div>
-            <EnrolButton courseSlug={courseSlug} />
+            <EnrolButton course={course} />
           </div>
         ) : lesson.kind === "video" ? (
           <figure>
@@ -109,24 +146,22 @@ export function LessonView({ courseSlug, lessonSlug }: { courseSlug: string; les
             </p>
           </div>
         ) : lesson.kind === "checkpoint" ? (
-          <Checkpoint lessonId={id} prompt={lesson.prompt ?? "What has God been showing you in this module?"} />
+          <Checkpoint
+            courseSlug={courseSlug}
+            lessonSlug={lesson.slug}
+            prompt={lesson.prompt ?? "What has God been showing you in this module?"}
+            submitted={isDone}
+            reply={enrolment?.replies.find((r) => r.lesson === lesson.slug) ?? null}
+          />
         ) : (
-          <Quiz lessonId={id} questions={course.quiz} />
+          <Quiz courseSlug={courseSlug} lessonSlug={lesson.slug} questions={course.quiz} passed={isDone} />
         )}
       </div>
 
       {!loading && !locked && (
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-rule pt-6">
           {enrolled && (lesson.kind === "video" || lesson.kind === "audio" || lesson.kind === "text" || lesson.kind === "pdf") ? (
-            <button
-              type="button"
-              aria-pressed={isDone}
-              onClick={() => setLessonComplete(id, !isDone)}
-              className={isDone ? "btn btn-quiet text-slate-ink" : "btn btn-fire"}
-            >
-              <IconCircleCheck aria-hidden="true" size={20} stroke={1.75} />
-              {isDone ? "Completed" : "Mark as complete"}
-            </button>
+            <MarkComplete courseSlug={courseSlug} lessonSlug={lesson.slug} done={isDone} />
           ) : (
             <span />
           )}
@@ -146,7 +181,7 @@ export function LessonView({ courseSlug, lessonSlug }: { courseSlug: string; les
           </nav>
         </div>
       )}
-      {sampleCourses && <p className="mt-8 text-sm text-stone-muted">Sample class outline: the ministry will supply the real lessons.</p>}
+      <p className="mt-8 text-sm text-stone-muted">Sample class outline: the ministry will supply the real lessons.</p>
     </article>
   );
 }

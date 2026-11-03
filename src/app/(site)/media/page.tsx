@@ -8,6 +8,7 @@ import { contact, home, programmes, youtubeChannel } from "@/content/ministry";
 import { sectionCopy } from "@/content/siteCopy";
 import { getLatestVideos } from "@/lib/youtube";
 import streamsImage from "../../../../public/images/home/streams-gates.jpg";
+import egTvLogo from "../../../../public/images/home/eg-tv-logo.jpg";
 
 export const metadata: Metadata = {
   title: "Watch & Listen",
@@ -46,11 +47,20 @@ export default async function MediaPage() {
       <section aria-labelledby="videos-heading" className="border-b border-rule">
         <div className="wrap py-14 md:py-20">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="font-semibold text-amber">{youtubeChannel.name}</p>
-              <h2 id="videos-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
-                Latest streams and teachings
-              </h2>
+            <div className="flex items-center gap-5">
+              <Image
+                src={egTvLogo}
+                alt=""
+                placeholder="blur"
+                sizes="6rem"
+                className="hidden size-24 shrink-0 rounded-2xl object-cover sm:block"
+              />
+              <div>
+                <p className="eyebrow">{youtubeChannel.name}</p>
+                <h2 id="videos-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+                  Latest streams and <em>teachings</em>
+                </h2>
+              </div>
             </div>
             <div className="flex flex-wrap gap-3">
               <a href={youtubeChannel.subscribeUrl} {...external} className="btn btn-fire">

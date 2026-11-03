@@ -1,5 +1,5 @@
 import { IconAlignLeft, IconFileText, IconFlag, IconHeadphones, IconListCheck, IconPlayerPlay } from "@tabler/icons-react";
-import type { LessonKind } from "@/content/courses";
+import type { LessonKind } from "@/types/school";
 
 export const lessonKinds: Record<LessonKind, { label: string; Icon: typeof IconPlayerPlay }> = {
   video: { label: "Video", Icon: IconPlayerPlay },

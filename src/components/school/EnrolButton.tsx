@@ -3,34 +3,36 @@
 import { IconArrowRight } from "@tabler/icons-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useSignedIn } from "@/components/layout/useFullScreenMenu";
-import { findCourse } from "@/content/courses";
-import { courseProgress, enrol, useCompleted, useEnrolments } from "@/lib/learning";
+import { courseProgress } from "@/lib/courses";
+import { enrol, enrolmentFor, useLearning } from "@/lib/learning";
+import type { Course } from "@/types/school";
 import { ProgressBar } from "./ProgressBar";
 
 /**
  * Enrol, or carry on. Signed out: sign in first and come back here. Enrolled: progress and
  * the next lesson to open.
  */
-export function EnrolButton({ courseSlug }: { courseSlug: string }) {
-  const course = findCourse(courseSlug)!;
-  const signedIn = useSignedIn();
-  const enrolled = useEnrolments()?.includes(courseSlug) ?? false;
-  const done = useCompleted();
+export function EnrolButton({ course }: { course: Course }) {
+  const learning = useLearning();
+  const enrolment = enrolmentFor(learning, course.slug);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
   const [justEnrolled, setJustEnrolled] = useState(false);
   const continueRef = useRef<HTMLAnchorElement>(null);
-  const progress = courseProgress(course, done);
-  const lessonHref = (slug: string) => `/school/classes/${courseSlug}/${slug}`;
+  const progress = courseProgress(course, enrolment?.completed ?? []);
+  const lessonHref = (slug: string) => `/school/classes/${course.slug}/${slug}`;
 
   // The Enrol button is replaced by "Start", so move focus there.
   useEffect(() => {
-    if (justEnrolled && enrolled) continueRef.current?.focus();
-  }, [justEnrolled, enrolled]);
+    if (justEnrolled && enrolment) continueRef.current?.focus();
+  }, [justEnrolled, enrolment]);
 
   let body: React.ReactNode;
-  if (signedIn === null || done === null) {
+  if (learning.status === "loading") {
     body = <span className="btn btn-fire pointer-events-none opacity-60">Loading…</span>;
-  } else if (enrolled) {
+  } else if (learning.status === "error") {
+    body = <p className="font-semibold text-amber">Your classes can’t be loaded right now. Please refresh in a moment.</p>;
+  } else if (enrolment) {
     body = (
       <div className="grid w-full max-w-md gap-4">
         <ProgressBar finished={progress.finished} total={progress.total} />
@@ -43,9 +45,9 @@ export function EnrolButton({ courseSlug }: { courseSlug: string }) {
         )}
       </div>
     );
-  } else if (!signedIn) {
+  } else if (learning.status === "signed-out") {
     body = (
-      <Link href={`/login?next=${encodeURIComponent(`/school/classes/${courseSlug}`)}`} className="btn btn-fire">
+      <Link href={`/login?next=${encodeURIComponent(`/school/classes/${course.slug}`)}`} className="btn btn-fire">
         Sign in to enrol
       </Link>
     );
@@ -53,13 +55,22 @@ export function EnrolButton({ courseSlug }: { courseSlug: string }) {
     body = (
       <button
         type="button"
-        onClick={() => {
-          enrol(courseSlug);
-          setJustEnrolled(true);
+        disabled={pending}
+        onClick={async () => {
+          setPending(true);
+          setError("");
+          try {
+            await enrol(course.slug);
+            setJustEnrolled(true);
+          } catch (err) {
+            setError(err instanceof Error ? err.message : "Enrolling didn’t work. Please try again.");
+          } finally {
+            setPending(false);
+          }
         }}
         className="btn btn-fire"
       >
-        Enrol in {course.name}
+        {pending ? "Enrolling…" : `Enrol in ${course.name}`}
       </button>
     );
   }
@@ -67,8 +78,13 @@ export function EnrolButton({ courseSlug }: { courseSlug: string }) {
   return (
     <div>
       {body}
+      {error && (
+        <p role="alert" className="mt-3 text-sm font-semibold text-amber">
+          {error}
+        </p>
+      )}
       <p role="status" className="sr-only">
-        {justEnrolled && enrolled ? `You’re enrolled in ${course.name}.` : ""}
+        {justEnrolled && enrolment ? `You’re enrolled in ${course.name}.` : ""}
       </p>
     </div>
   );

@@ -1,39 +1,81 @@
 "use client";
 
-import { courseLessons, findCourse, isLessonId, type Course } from "@/content/courses";
-import { createSlugStore } from "./slugStore";
+import { useSyncExternalStore } from "react";
+import type { Enrolment, QuizResult } from "@/types/school";
+import { api } from "./api";
+import { authHeader, createClient } from "./supabase/client";
 
-// STAND-IN until the school backend: enrolments, finished lessons and submitted checkpoints
-// live in this browser only. With the backend they come from the enrollments and
-// lesson_progress tables, and lesson content is only served to enrolled students.
+// The member's Beth-El classes and progress, from the API (/me/courses). One shared store,
+// loaded once and refreshed on sign-in, sign-out and after every change, so the header,
+// class pages, lessons and dashboard all agree.
 
-const enrolments = createSlugStore("eg-enrolments-sample-v1", (slug) => !!findCourse(slug));
-const completed = createSlugStore("eg-progress-sample-v1", isLessonId);
+export type Learning =
+  | { status: "loading" }
+  | { status: "signed-out" }
+  | { status: "error" }
+  | { status: "ready"; enrolments: Enrolment[] };
 
-export const useEnrolments = enrolments.useSlugs;
-export const useCompleted = completed.useSlugs;
+const LOADING: Learning = { status: "loading" };
+let state: Learning = LOADING;
+const listeners = new Set<() => void>();
+let started = false;
 
-export function enrol(courseSlug: string) {
-  const current = enrolments.read();
-  if (findCourse(courseSlug) && !current.includes(courseSlug)) enrolments.write([...current, courseSlug]);
+function set(next: Learning) {
+  state = next;
+  listeners.forEach((l) => l());
 }
 
-export function setLessonComplete(lessonId: string, done: boolean) {
-  const current = completed.read();
-  if (done && !current.includes(lessonId)) completed.write([...current, lessonId]);
-  if (!done) completed.write(current.filter((id) => id !== lessonId));
+async function load() {
+  const headers = await authHeader();
+  if (!headers.Authorization) return set({ status: "signed-out" });
+  try {
+    set({ status: "ready", enrolments: await api<Enrolment[]>("/me/courses", { headers }) });
+  } catch {
+    set({ status: "error" });
+  }
 }
 
-/** Progress through a course, and the lesson to continue from. */
-export function courseProgress(course: Course, done: string[] | null) {
-  const lessons = courseLessons(course);
-  const finished = lessons.filter((l) => done?.includes(l.id)).length;
-  const next = lessons.find((l) => !done?.includes(l.id)) ?? lessons[0]!;
-  return {
-    finished,
-    total: lessons.length,
-    percent: Math.round((finished / lessons.length) * 100),
-    next,
-    complete: finished === lessons.length,
-  };
+function subscribe(onChange: () => void) {
+  listeners.add(onChange);
+  if (!started) {
+    started = true;
+    // Fires once with the current session, then on every sign-in or sign-out.
+    createClient().auth.onAuthStateChange((event) => {
+      if (event === "INITIAL_SESSION" || event === "SIGNED_IN" || event === "SIGNED_OUT") void load();
+    });
+  }
+  return () => listeners.delete(onChange);
 }
+
+export function useLearning(): Learning {
+  return useSyncExternalStore(subscribe, () => state, () => LOADING);
+}
+
+/** The member's enrolment in a class, or null (also null while loading or signed out). */
+export function enrolmentFor(learning: Learning, slug: string) {
+  return learning.status === "ready" ? (learning.enrolments.find((e) => e.slug === slug) ?? null) : null;
+}
+
+async function send<T>(path: string, method: string, body?: unknown) {
+  const result = await api<T>(path, {
+    method,
+    headers: await authHeader(),
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  await load();
+  return result;
+}
+
+const lessonPath = (course: string, lesson: string) =>
+  `/me/courses/${encodeURIComponent(course)}/lessons/${encodeURIComponent(lesson)}`;
+
+export const enrol = (course: string) => send(`/me/courses/${encodeURIComponent(course)}/enrol`, "POST");
+
+export const setLessonComplete = (course: string, lesson: string, done: boolean) =>
+  send(`${lessonPath(course, lesson)}/complete`, "PUT", { done });
+
+export const submitCheckpoint = (course: string, lesson: string, body: string) =>
+  send(`${lessonPath(course, lesson)}/checkpoint`, "POST", { body });
+
+export const submitQuiz = (course: string, lesson: string, answers: number[]) =>
+  send<QuizResult>(`${lessonPath(course, lesson)}/quiz`, "POST", { answers });

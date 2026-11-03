@@ -5,6 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/store/AddToCartButton";
 import { CurrencySwitcher } from "@/components/store/CurrencySwitcher";
+import { WishlistButton } from "@/components/store/WishlistButton";
 import { Price } from "@/components/store/Price";
 import { books, findBook, samplePrices } from "@/content/books";
 
@@ -38,15 +39,15 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
           Bookstore
         </Link>
 
-        <div className="mt-8 grid gap-10 md:grid-cols-[2fr_3fr] md:items-start md:gap-16">
+        <div className="mt-8 grid gap-10 md:grid-cols-[minmax(0,18rem)_1fr] md:items-start md:gap-16">
           <Image
             src={book.cover}
             alt={`Cover of ${book.title}`}
             width={683}
             height={1024}
             priority
-            sizes="(min-width: 768px) 35vw, 16rem"
-            className="mx-auto aspect-[2/3] w-full max-w-[16rem] rounded-2xl bg-limestone object-cover shadow-[0_30px_60px_-28px_rgb(29_38_48/0.6)] sm:max-w-xs md:sticky md:top-28 md:max-w-none"
+            sizes="(min-width: 768px) 18rem, 15rem"
+            className="mx-auto aspect-[2/3] w-full max-w-[13rem] rounded-2xl bg-limestone object-cover shadow-[0_30px_60px_-28px_rgb(29_38_48/0.6)] sm:max-w-[15rem] md:sticky md:top-28 md:max-w-none"
           />
 
           <div>
@@ -72,7 +73,10 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
                 Read it here on your phone, tablet or computer. It stays in My books, in your account.
               </p>
               <div className="mt-6">
-                <AddToCartButton slug={book.slug} title={book.title} />
+                <div className="flex flex-wrap items-start gap-3">
+                  <AddToCartButton slug={book.slug} title={book.title} />
+                  <WishlistButton slug={book.slug} title={book.title} variant="labelled" />
+                </div>
               </div>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-rule pt-6">
                 <a href={book.amazonUrl} {...external} className="btn btn-quiet text-slate-ink">
@@ -121,7 +125,7 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
               All books
             </Link>
           </div>
-          <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-8 lg:grid-cols-4">
+          <ul className="mt-10 grid max-w-4xl grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-4 sm:gap-x-6">
             {more.map((b) => (
               <li key={b.slug}>
                 <Link href={`/books/${b.slug}`} className="group block">
@@ -130,7 +134,7 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
                     alt=""
                     width={683}
                     height={1024}
-                    sizes="(min-width: 1024px) 22vw, 45vw"
+                    sizes="(min-width: 640px) 14rem, 45vw"
                     className="aspect-[2/3] w-full rounded-xl bg-limestone object-cover shadow-[0_18px_40px_-20px_rgb(29_38_48/0.55)] transition-transform duration-300 group-hover:-translate-y-1"
                   />
                   <p className="mt-4 text-xs font-semibold text-amber sm:text-sm">{b.audience}</p>

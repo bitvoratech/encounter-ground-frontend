@@ -7,8 +7,11 @@ import "./globals.css";
 // still reverent). Nunito for text: rounded and friendly. The client chose this pairing
 // (option A) on 19 Oct 2026, replacing Gloock + Hanken Grotesk as more playful.
 const fraunces = localFont({
-  src: "../fonts/fraunces-latin-var.woff2",
-  weight: "100 900",
+  src: [
+    { path: "../fonts/fraunces-latin-var.woff2", weight: "100 900", style: "normal" },
+    // For the italic accent words in headings (<em> inside h1–h3).
+    { path: "../fonts/fraunces-latin-var-italic.woff2", weight: "100 900", style: "italic" },
+  ],
   variable: "--font-fraunces",
   display: "swap",
 });
