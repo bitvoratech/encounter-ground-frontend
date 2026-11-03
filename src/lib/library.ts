@@ -1,16 +1,66 @@
 "use client";
 
-import { findBook } from "@/content/books";
-import { createSlugStore } from "./slugStore";
+import { useSyncExternalStore } from "react";
+import { api } from "./api";
+import { authHeader, createClient } from "./supabase/client";
 
-// The e-books someone owns. STAND-IN until the backend: a sample checkout adds books here,
-// in this browser only. With the backend, ownership comes from GET /me/books (user_books),
-// granted by the server only after a payment is verified.
+// The e-books the signed-in member owns ("My books"), from GET /me/books. Purchases add
+// them once payments are live; until then the team can give a book from the admin.
 
-const store = createSlugStore("eg-library-sample-v1", (slug) => !!findBook(slug));
+export type OwnedBook = {
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  author: string | null;
+  audience: string | null;
+  cover_image_url: string | null;
+  page_count: number | null;
+  /** The reader's pages have been made from the PDF. */
+  pages_ready: boolean;
+  last_page: number;
+  last_read_at: string | null;
+  granted_at: string;
+};
 
-export const useLibrary = store.useSlugs;
+export type Library = { status: "loading" } | { status: "signed-out" } | { status: "error" } | { status: "ready"; books: OwnedBook[] };
 
-export function addToLibrary(slugs: string[]) {
-  store.write([...new Set([...store.read(), ...slugs])]);
+const LOADING: Library = { status: "loading" };
+let state: Library = LOADING;
+let started = false;
+const listeners = new Set<() => void>();
+
+function set(next: Library) {
+  state = next;
+  listeners.forEach((l) => l());
+}
+
+async function load() {
+  const headers = await authHeader();
+  if (!headers.Authorization) return set({ status: "signed-out" });
+  try {
+    set({ status: "ready", books: await api<OwnedBook[]>("/me/books", { headers, cache: "no-store" }) });
+  } catch {
+    set({ status: "error" });
+  }
+}
+
+function subscribe(onChange: () => void) {
+  listeners.add(onChange);
+  if (!started) {
+    started = true;
+    createClient().auth.onAuthStateChange((event) => {
+      if (event === "INITIAL_SESSION" || event === "SIGNED_IN" || event === "SIGNED_OUT") void load();
+    });
+  }
+  return () => listeners.delete(onChange);
+}
+
+export function useLibrary(): Library {
+  return useSyncExternalStore(subscribe, () => state, () => LOADING);
+}
+
+/** Whether the member owns a book; false while loading or signed out. */
+export function useOwns(slug: string) {
+  const library = useLibrary();
+  return library.status === "ready" && library.books.some((b) => b.slug === slug);
 }

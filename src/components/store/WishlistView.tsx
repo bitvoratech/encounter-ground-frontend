@@ -1,12 +1,13 @@
 "use client";
 
 import { IconHeart, IconTrash } from "@tabler/icons-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { findBook, type Book } from "@/content/books";
+import { findBook, type Book } from "@/lib/books";
+import { useBooks } from "@/lib/catalogue";
 import { removeFromWishlist, useWishlist } from "@/lib/wishlist";
 import { AddToCartButton } from "./AddToCartButton";
+import { BookCover } from "./BookCover";
 import { Price } from "./Price";
 
 export function WishlistView() {
@@ -23,8 +24,9 @@ export function WishlistView() {
 
 function WishlistBody({ onMessage }: { onMessage: (m: string) => void }) {
   const wishlist = useWishlist();
+  const catalogue = useBooks();
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const books = (wishlist ?? []).map(findBook).filter((b): b is Book => !!b);
+  const books = (wishlist ?? []).map((slug) => findBook(catalogue, slug)).filter((b): b is Book => !!b);
 
   const heading = (
     <h1 ref={headingRef} tabIndex={-1} className="text-[length:var(--text-h1)] text-slate-ink outline-none">
@@ -32,7 +34,7 @@ function WishlistBody({ onMessage }: { onMessage: (m: string) => void }) {
     </h1>
   );
 
-  if (!wishlist) {
+  if (!wishlist || !catalogue) {
     return (
       <div className="page-hero wrap pb-24 pt-14 md:pt-20">
         {heading}
@@ -71,14 +73,7 @@ function WishlistBody({ onMessage }: { onMessage: (m: string) => void }) {
         {books.map((book) => (
           <li key={book.slug} className="flex gap-4 rounded-3xl border border-rule bg-chalk p-4 sm:gap-6 sm:p-6">
             <Link href={`/books/${book.slug}`} tabIndex={-1} aria-hidden="true" className="shrink-0">
-              <Image
-                src={book.cover}
-                alt=""
-                width={683}
-                height={1024}
-                sizes="6rem"
-                className="aspect-[2/3] w-20 rounded-lg bg-limestone object-cover shadow-[0_10px_24px_-14px_rgb(29_38_48/0.6)] sm:w-24"
-              />
+              <BookCover cover={book.cover} alt="" sizes="6rem" className="w-20 rounded-lg shadow-[0_10px_24px_-14px_rgb(29_38_48/0.6)] sm:w-24" />
             </Link>
             <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">

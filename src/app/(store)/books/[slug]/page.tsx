@@ -1,35 +1,38 @@
 import { IconArrowLeft, IconDeviceLaptop } from "@tabler/icons-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/store/AddToCartButton";
 import { CurrencySwitcher } from "@/components/store/CurrencySwitcher";
 import { WishlistButton } from "@/components/store/WishlistButton";
 import { Price } from "@/components/store/Price";
-import { books, findBook, samplePrices } from "@/content/books";
+import { BookCover } from "@/components/store/BookCover";
+import { loadBook, loadBooks, type Book } from "@/lib/books";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
-export function generateStaticParams() {
-  return books.map((b) => ({ slug: b.slug }));
-}
-
 export async function generateMetadata({ params }: PageProps<"/books/[slug]">): Promise<Metadata> {
-  const book = findBook((await params).slug);
-  if (!book) return {};
-  // Two editions share a title, so tell them apart by who they are for.
-  const shared = books.some((b) => b.slug !== book.slug && b.title === book.title);
+  const book = await loadBook((await params).slug);
+  if (typeof book === "string") return {};
   return {
-    title: shared ? `${book.title} (${book.audience})` : book.title,
+    // Two editions share a title ("Who I Am Becoming"), so tell them apart by who they are for.
+    title: book.audience && book.subtitle ? `${book.title} (${book.audience})` : book.title,
     description: book.description ?? book.subtitle ?? `${book.title}, an e-book by Toyin Bello. Read it on any device.`,
   };
 }
 
 export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
-  const book = findBook((await params).slug);
-  if (!book) notFound();
-  const more = books.filter((b) => b.slug !== book.slug).slice(0, 4);
+  const { slug } = await params;
+  const [book, all] = await Promise.all([loadBook(slug), loadBooks()]);
+  if (book === "missing") notFound();
+  if (book === "unavailable")
+    return (
+      <div className="page-hero wrap pb-24 pt-14 md:pt-20">
+        <h1 className="text-[length:var(--text-h2)] text-slate-ink">This book can’t be loaded right now</h1>
+        <p className="mt-3 text-stone-muted">Please refresh in a moment.</p>
+      </div>
+    );
+  const more: Book[] = all === "unavailable" ? [] : all.filter((b) => b.slug !== book.slug).slice(0, 4);
 
   return (
     <>
@@ -40,21 +43,19 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
         </Link>
 
         <div className="mt-8 grid gap-10 md:grid-cols-[minmax(0,18rem)_1fr] md:items-start md:gap-16">
-          <Image
-            src={book.cover}
+          <BookCover
+            cover={book.cover}
             alt={`Cover of ${book.title}`}
-            width={683}
-            height={1024}
             priority
             sizes="(min-width: 768px) 18rem, 15rem"
-            className="mx-auto aspect-[2/3] w-full max-w-[13rem] rounded-2xl bg-limestone object-cover shadow-[0_30px_60px_-28px_rgb(29_38_48/0.6)] sm:max-w-[15rem] md:sticky md:top-28 md:max-w-none"
+            className="mx-auto w-full max-w-[13rem] rounded-2xl shadow-[0_30px_60px_-28px_rgb(29_38_48/0.6)] sm:max-w-[15rem] md:sticky md:top-28 md:max-w-none"
           />
 
           <div>
-            <p className="font-semibold text-amber">{book.audience}</p>
+            {book.audience && <p className="font-semibold text-amber">{book.audience}</p>}
             <h1 className="mt-2 text-[length:var(--text-h1)] text-slate-ink">{book.title}</h1>
             {book.subtitle && <p className="mt-4 max-w-xl text-lede leading-relaxed text-stone-muted">{book.subtitle}</p>}
-            <p className="mt-4 text-stone-muted">by Toyin Bello</p>
+            <p className="mt-4 text-stone-muted">by {book.author}</p>
 
             {/* Buying panel */}
             <section aria-labelledby="buy-heading" className="mt-10 rounded-3xl border border-rule bg-chalk p-6 md:p-8">
@@ -79,10 +80,11 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
                 </div>
               </div>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-rule pt-6">
-                <a href={book.amazonUrl} {...external} className="btn btn-quiet text-slate-ink">
-                  Paperback on Amazon
-                </a>
-                {samplePrices && <p className="text-sm text-stone-muted">Sample price: final prices to come.</p>}
+                {book.amazonUrl && (
+                  <a href={book.amazonUrl} {...external} className="btn btn-quiet text-slate-ink">
+                    Paperback on Amazon
+                  </a>
+                )}
               </div>
             </section>
 
@@ -91,7 +93,13 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
                 <h2 id="about-heading" className="text-h3 text-slate-ink">
                   About this book
                 </h2>
-                <p className="prose-eg measure mt-4 text-slate-ink/90">{book.description}</p>
+                <div className="prose-eg measure mt-4 text-slate-ink/90">
+                  {book.description.split(/\n\s*\n/).map((p, i) => (
+                    <p key={i} className="whitespace-pre-line">
+                      {p}
+                    </p>
+                  ))}
+                </div>
               </section>
             )}
 
@@ -100,11 +108,13 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
                 <dt className="text-sm text-stone-muted">Format</dt>
                 <dd className="mt-1 font-semibold text-slate-ink">E-book, read online</dd>
               </div>
-              <div>
-                <dt className="text-sm text-stone-muted">For</dt>
-                <dd className="mt-1 font-semibold text-slate-ink">{book.audience}</dd>
-              </div>
-              {book.pageCount && (
+              {book.audience && (
+                <div>
+                  <dt className="text-sm text-stone-muted">For</dt>
+                  <dd className="mt-1 font-semibold text-slate-ink">{book.audience}</dd>
+                </div>
+              )}
+              {!!book.pageCount && (
                 <div>
                   <dt className="text-sm text-stone-muted">Pages</dt>
                   <dd className="mt-1 font-semibold text-slate-ink">{book.pageCount}</dd>
@@ -115,6 +125,7 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
         </div>
       </article>
 
+      {more.length > 0 && (
       <section aria-labelledby="more-heading" className="border-t border-rule bg-chalk">
         <div className="wrap py-14 md:py-20">
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -129,15 +140,12 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
             {more.map((b) => (
               <li key={b.slug}>
                 <Link href={`/books/${b.slug}`} className="group block">
-                  <Image
-                    src={b.cover}
-                    alt=""
-                    width={683}
-                    height={1024}
+                  <BookCover
+                    cover={b.cover}
                     sizes="(min-width: 640px) 14rem, 45vw"
-                    className="aspect-[2/3] w-full rounded-xl bg-limestone object-cover shadow-[0_18px_40px_-20px_rgb(29_38_48/0.55)] transition-transform duration-300 group-hover:-translate-y-1"
+                    className="w-full rounded-xl shadow-[0_18px_40px_-20px_rgb(29_38_48/0.55)] transition-transform duration-300 group-hover:-translate-y-1"
                   />
-                  <p className="mt-4 text-xs font-semibold text-amber sm:text-sm">{b.audience}</p>
+                  {b.audience && <p className="mt-4 text-xs font-semibold text-amber sm:text-sm">{b.audience}</p>}
                   <p className="mt-1 font-display text-lg leading-snug text-slate-ink group-hover:underline group-hover:decoration-flame group-hover:underline-offset-4 sm:text-xl">
                     {b.title}
                   </p>
@@ -148,6 +156,7 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
           </ul>
         </div>
       </section>
+      )}
     </>
   );
 }

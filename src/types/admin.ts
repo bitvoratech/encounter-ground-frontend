@@ -7,6 +7,7 @@ export type Profile = {
   id: string;
   email: string | null;
   full_name: string | null;
+  phone?: string | null;
   avatar_url: string | null;
   role: Role;
 };
@@ -79,6 +80,8 @@ export type AdminBook = {
   cover_image_url: string | null;
   amazon_url: string | null;
   page_count: number | null;
+  /** The reader's page images have been made from the PDF. */
+  pages_ready: boolean;
   sort_order: number;
   status: PublishStatus;
   updated_at: string;
@@ -137,4 +140,16 @@ export type AdminCourse = {
   enrolments: number;
   modules: AdminModule[];
   quiz: AdminQuizQuestion[];
+};
+
+/** Someone who owns a book (GET /admin/books/:id/owners). */
+export type BookOwner = {
+  id: string;
+  full_name: string | null;
+  email: string | null;
+  granted_at: string;
+  last_page: number;
+  last_read_at: string | null;
+  /** Bought (with an order) rather than given by the team. */
+  purchased: boolean;
 };

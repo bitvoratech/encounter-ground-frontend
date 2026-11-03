@@ -1,12 +1,11 @@
 "use client";
 
-import { findBook } from "@/content/books";
-import { createSlugStore } from "./slugStore";
+import { createSlugStore, isBookSlug } from "./slugStore";
 
 // Books saved for later. Kept in the browser so it works before signing in, like the cart.
 // With the backend it moves to the member's account so it follows them across devices.
 
-const store = createSlugStore("eg-wishlist-v1", (slug) => !!findBook(slug));
+const store = createSlugStore("eg-wishlist-v1", isBookSlug);
 
 export const useWishlist = store.useSlugs;
 

@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { getSiteContent } from "@/lib/siteContent";
 
-export default function NotFound() {
+export default async function NotFound() {
+  const { contact } = await getSiteContent();
   return (
     <>
-    <SiteHeader />
+    <SiteHeader socials={contact.socials} />
     <main id="main" className="flex-1">
     <section className="wrap py-24 md:py-32">
       <h1 className="text-[length:var(--text-h1)] text-slate-ink">This page isn’t here</h1>

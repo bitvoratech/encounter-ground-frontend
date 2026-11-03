@@ -115,3 +115,20 @@ export async function uploadLessonFile(file: File) {
   await upload("lesson-files", path, file);
   return path;
 }
+
+// ---------------------------------------------------------------------------
+// Book pages for the reader, and who owns a book
+// ---------------------------------------------------------------------------
+
+export const setBookPages = (id: string, folder: string, pages: { file: string; width: number; height: number }[]) =>
+  send<{ page_count: number }>(`/books/${id}/pages`, { folder, pages });
+
+export const giveBook = (id: string, email: string) => send(`/books/${id}/owners`, { email }, "POST");
+export const takeBackBook = (id: string, userId: string) => send(`/books/${id}/owners/${userId}`, undefined, "DELETE");
+
+// ---------------------------------------------------------------------------
+// Website content
+// ---------------------------------------------------------------------------
+
+export const saveSiteContent = (key: "contact" | "yada" | "home", value: Record<string, string>) =>
+  send(`/site-content/${key}`, value);

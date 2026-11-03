@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { contact, yada } from "@/content/ministry";
+import { getSiteContent, whatsappOf } from "@/lib/siteContent";
 
-export const metadata: Metadata = {
-  title: "YADA Intimacy Conference 2026",
-  description: yada.about[0],
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { yada } = await getSiteContent();
+  return { title: "YADA Intimacy Conference 2026", description: yada.about[0] };
+}
 
-export default function YadaPage() {
-  const whatsapp = contact.socials.find((s) => s.name === "WhatsApp channel")!;
+export default async function YadaPage() {
+  const { contact, yada } = await getSiteContent();
+  const whatsapp = whatsappOf(contact);
 
   return (
     <>

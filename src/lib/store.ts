@@ -1,9 +1,8 @@
 "use client";
 
-import { findBook, type Book } from "@/content/books";
+import type { Book } from "./books";
 import type { Currency } from "./currency";
 import { clearCart } from "./cart";
-import { addToLibrary } from "./library";
 
 // Everything checkout needs from the outside world goes through this file, so swapping the
 // simulation for the real backend touches nothing else. With the backend, placeOrder becomes:
@@ -51,15 +50,18 @@ const newReference = () =>
   `EG-${Array.from({ length: 6 }, () => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random() * 32)]).join("")}`;
 
 export async function placeOrder(input: {
-  slugs: string[];
+  books: Book[];
   currency: Currency;
   method: PaymentMethod;
   email: string;
   /** Test the failure path: the checkout page passes this for ?simulate=fail. */
   simulateFailure?: boolean;
 }): Promise<PlaceOrderResult> {
-  const books = input.slugs.map(findBook).filter((b): b is Book => !!b);
+  const { books } = input;
   if (books.length === 0) return { ok: false, error: "Your cart is empty." };
+  if (books.some((b) => b.prices[input.currency] === undefined)) {
+    return { ok: false, error: "A book in your cart isn’t sold in this currency." };
+  }
   if (!paymentMethods[input.currency].includes(input.method)) {
     return { ok: false, error: "That way to pay isn’t available in this currency." };
   }
@@ -74,7 +76,7 @@ export async function placeOrder(input: {
     reference: newReference(),
     slugs: books.map((b) => b.slug),
     currency: input.currency,
-    total: books.reduce((sum, b) => sum + b.prices[input.currency], 0),
+    total: books.reduce((sum, b) => sum + (b.prices[input.currency] ?? 0), 0),
     method: input.method,
     email: input.email,
     placedAt: new Date().toISOString(),
@@ -84,7 +86,7 @@ export async function placeOrder(input: {
   } catch {
     // The confirmation page falls back to the reference alone.
   }
-  addToLibrary(order.slugs);
+  // Simulated: no book is granted. With Paystack, the server grants books once the payment is verified.
   clearCart();
   return { ok: true, order };
 }

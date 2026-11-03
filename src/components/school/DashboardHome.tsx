@@ -11,10 +11,9 @@ import {
   IconSchool,
   IconSparkles,
 } from "@tabler/icons-react";
-import Image from "next/image";
 import Link from "next/link";
 import type { Account } from "@/components/layout/useFullScreenMenu";
-import { findBook, type Book } from "@/content/books";
+import { BookCover } from "@/components/store/BookCover";
 import { courseLessons, courseProgress } from "@/lib/courses";
 import { useLearning } from "@/lib/learning";
 import type { Course } from "@/types/school";
@@ -28,7 +27,7 @@ const cardTitle = "font-display text-2xl leading-tight text-slate-ink";
 /**
  * The student dashboard, in the order learning platforms recommend: carry on where you left
  * off first, then what is waiting (checkpoints and final checks), then courses, books and the
- * rest. Classes and progress come from the API; e-books are a browser sample until payments.
+ * rest. Classes, progress and e-books come from the API.
  */
 export function DashboardHome({
   account,
@@ -44,7 +43,7 @@ export function DashboardHome({
   const firstName = account.name.split(" ")[0];
   const today = new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
 
-  if (learning.status === "loading" || learning.status === "signed-out" || !library) {
+  if (learning.status === "loading" || learning.status === "signed-out" || library.status === "loading") {
     return (
       <div aria-hidden="true" className="grid gap-6">
         <div className="h-24 rounded-3xl bg-chalk/70" />
@@ -59,7 +58,7 @@ export function DashboardHome({
     return course ? [{ course, completed: e.completed, replies: e.replies }] : [];
   });
   const myCourses = mine.map((m) => m.course);
-  const books = library.map(findBook).filter((b): b is Book => !!b);
+  const books = library.status === "ready" ? library.books : [];
   const allLessons = mine.flatMap(({ course, completed }) =>
     courseLessons(course).map((l) => ({ ...l, course, done: completed.includes(l.lesson.slug) })),
   );
@@ -103,7 +102,6 @@ export function DashboardHome({
       {learning.status === "error" && (
         <p role="alert" className="font-semibold text-amber">Your classes can’t be loaded right now. Please refresh in a moment.</p>
       )}
-      <p className="text-sm text-stone-muted">Test mode: e-books from sample purchases are saved in this browser only.</p>
 
       {/* At a glance */}
       <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -295,14 +293,12 @@ export function DashboardHome({
             <ul className="mt-5 flex gap-3">
               {books.slice(0, 4).map((b) => (
                 <li key={b.slug} className="w-1/4 min-w-0 max-w-24">
-                  <Link href="/my-books" title={b.title}>
-                    <Image
-                      src={b.cover}
+                  <Link href={`/read/${b.slug}`} title={`Read ${b.title}`}>
+                    <BookCover
+                      cover={b.cover_image_url}
                       alt={b.title}
-                      width={683}
-                      height={1024}
                       sizes="6rem"
-                      className="aspect-[2/3] w-full rounded-lg bg-limestone object-cover shadow-[0_10px_24px_-14px_rgb(29_38_48/0.6)]"
+                      className="w-full rounded-lg shadow-[0_10px_24px_-14px_rgb(29_38_48/0.6)]"
                     />
                   </Link>
                 </li>
@@ -341,6 +337,9 @@ export function DashboardHome({
             </div>
           </dl>
           <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <Link href="/account" className="link text-sm font-semibold text-slate-ink">
+              Edit your details
+            </Link>
             <Link href="/reset-password" className="link text-sm font-semibold text-slate-ink">
               Change password
             </Link>

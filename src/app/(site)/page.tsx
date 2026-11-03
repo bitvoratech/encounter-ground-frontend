@@ -4,7 +4,8 @@ import Link from "next/link";
 import { streamIcon } from "@/components/site/streamIcons";
 import { Statement } from "@/components/site/Statement";
 import { YadaBand } from "@/components/site/YadaBand";
-import { contact, home, mandate, programmes, yada, youtubeChannel } from "@/content/ministry";
+import { mandate, programmes, youtubeChannel } from "@/content/ministry";
+import { getSiteContent, whatsappOf } from "@/lib/siteContent";
 import { cta, sectionCopy, signatureStatements } from "@/content/siteCopy";
 import { school, schoolClasses } from "@/content/school";
 import { formatPostDate, posts } from "@/content/posts";
@@ -23,7 +24,8 @@ const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 export default async function HomePage() {
   // Refreshed hourly; null when YouTube can't be reached, and the stream links show instead.
   const videos = (await getLatestVideos(youtubeChannel.id))?.slice(0, 4) ?? null;
-  const whatsapp = contact.socials.find((s) => s.name === "WhatsApp channel")!;
+  const { contact, home, yada } = await getSiteContent();
+  const whatsapp = whatsappOf(contact);
 
   return (
     <>

@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { yada } from "@/content/ministry";
+import { getSiteContent } from "@/lib/siteContent";
 
 /** The conference band: the one place the "fire" is lit. */
-export function YadaBand({ showLink = true }: { showLink?: boolean }) {
+export async function YadaBand({ showLink = true }: { showLink?: boolean }) {
+  const { yada } = await getSiteContent();
   return (
     <section aria-labelledby="yada-heading" className="ember">
       <div className="wrap grid gap-10 py-20 md:grid-cols-[1.4fr_1fr] md:items-end md:py-28">

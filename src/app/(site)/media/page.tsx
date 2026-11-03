@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { streamIcon } from "@/components/site/streamIcons";
 import { VideoLibrary } from "@/components/site/VideoLibrary";
-import { contact, home, programmes, youtubeChannel } from "@/content/ministry";
+import { programmes, youtubeChannel } from "@/content/ministry";
+import { getSiteContent, whatsappOf } from "@/lib/siteContent";
 import { sectionCopy } from "@/content/siteCopy";
 import { getLatestVideos } from "@/lib/youtube";
 import streamsImage from "../../../../public/images/home/streams-gates.jpg";
@@ -20,6 +21,7 @@ const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 export default async function MediaPage() {
   const live = programmes.filter((p) => p.when !== "December");
   const videos = await getLatestVideos(youtubeChannel.id);
+  const { contact, home } = await getSiteContent();
 
   return (
     <>
@@ -132,10 +134,7 @@ export default async function MediaPage() {
             <p className="mt-4 max-w-xs text-stone-muted">
               Times are shared on the{" "}
               <a
-                href={
-                  contact.socials.find((s) => s.name === "WhatsApp channel")!
-                    .href
-                }
+                href={whatsappOf(contact).href}
                 {...external}
                 className="link"
               >
