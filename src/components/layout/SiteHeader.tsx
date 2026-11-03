@@ -31,7 +31,7 @@ function NavDropdown({ group }: { group: NavGroup }) {
   const open = openOn === pathname;
   const ref = useRef<HTMLLIElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const menuId = `nav-${group.label.toLowerCase()}`;
+  const menuId = `nav-${group.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   const groupActive = group.children.some((c) => isActive(c.href));
 
   useEffect(() => {

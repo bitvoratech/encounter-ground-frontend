@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { YadaBand } from "@/components/site/YadaBand";
 import { programmes } from "@/content/ministry";
+import { sectionCopy } from "@/content/siteCopy";
 
 export const metadata: Metadata = {
-  title: "Programmes",
-  description:
-    "Zoe Healing Stream, the 10 Hours and 24 Hours Prayer Stretch, and the YADA Intimacy Conference.",
+  title: "Gatherings & Events",
+  description: sectionCopy.gatherings.short,
 };
 
 export default function EventsPage() {
@@ -14,10 +14,9 @@ export default function EventsPage() {
   return (
     <>
       <header className="page-hero wrap pb-12 pt-14 md:pt-20">
-        <h1 className="text-[length:var(--text-h1)] text-slate-ink">Programmes</h1>
-        <p className="mt-5 max-w-[34rem] text-lede leading-relaxed text-stone-muted">
-          Regular meetings for prayer and healing, and one conference each December.
-        </p>
+        <p className="font-semibold text-amber">Gatherings &amp; Events</p>
+        <h1 className="mt-2 max-w-3xl text-[length:var(--text-h1)] text-slate-ink">{sectionCopy.gatherings.headline}</h1>
+        <p className="mt-5 max-w-[38rem] text-lede leading-relaxed text-stone-muted">{sectionCopy.gatherings.body}</p>
       </header>
 
       <YadaBand />

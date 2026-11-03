@@ -3,15 +3,17 @@
 // TODO: confirm the class descriptions, intake dates and format with the ministry.
 
 import { discipleshipClasses } from "./ministry";
+import { sectionCopy } from "./siteCopy";
 
 export const school = {
   name: "Beth-El Institute of the Supernatural",
   shortName: "Beth-El Institute",
   // Beth-El: "house of God" (Genesis 28:19), where Jacob met God at the gate of heaven.
   meaning: "Beth-El means “house of God”, the place where Jacob saw heaven open and said, “Surely the Lord is in this place.”",
-  summary:
-    "The ministry school of Encounter Ground. Structured discipleship that takes you from hearing the Word to living it, in intimacy with the Holy Spirit.",
+  headline: sectionCopy.bethEl.headline,
+  summary: sectionCopy.bethEl.short,
   about: [
+    sectionCopy.bethEl.body,
     "Beth-El Institute of the Supernatural is an offshoot of Encounter Ground, born from the same mandate: to teach God’s people how to seek Him and find Him, so they can live according to the scroll He has written for them.",
     "The school gathers our discipleship classes into one path of study. Each class builds on a life of prayer, the Word and the presence of God, so that what you learn becomes how you live.",
   ],

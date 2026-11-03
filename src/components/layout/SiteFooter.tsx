@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { contact, home } from "@/content/ministry";
+import { cta, signatureStatements } from "@/content/siteCopy";
 import { isGroup, nav, type NavLink } from "./nav";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
@@ -40,13 +41,11 @@ export function SiteFooter() {
             <p className="font-display text-[clamp(2.25rem,1.5rem+3vw,3.75rem)] leading-none text-chalk">
               Dominion in <span className="text-flame">Intimacy</span>
             </p>
-            <p className="mt-4 max-w-md text-chalk/70">
-              Prayer, worship and the Word, every week. Come as you are.
-            </p>
+            <p className="mt-4 max-w-md text-chalk/70">{signatureStatements[3]}</p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-3">
             <a href={home.joinUsUrl} {...external} className="btn btn-quiet text-chalk">
-              Join us
+              {cta.begin}
             </a>
           </div>
         </div>

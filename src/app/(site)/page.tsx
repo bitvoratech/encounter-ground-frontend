@@ -2,8 +2,10 @@ import { IconArrowRight, IconArrowUpRight, IconBrandWhatsapp, IconPlayerPlayFill
 import Image from "next/image";
 import Link from "next/link";
 import { streamIcon } from "@/components/site/streamIcons";
+import { Statement } from "@/components/site/Statement";
 import { YadaBand } from "@/components/site/YadaBand";
 import { contact, home, mandate, programmes, yada, youtubeChannel } from "@/content/ministry";
+import { cta, sectionCopy, signatureStatements } from "@/content/siteCopy";
 import { school, schoolClasses } from "@/content/school";
 import { formatPostDate, posts } from "@/content/posts";
 import { authorStoreUrl } from "@/content/books";
@@ -65,15 +67,18 @@ export default async function HomePage() {
               <IconArrowRight aria-hidden="true" size={16} stroke={2} />
             </a>
             <h1 className="hero-title mt-6 text-[clamp(3rem,1.5rem+6.5vw,6.5rem)] leading-[0.92]">{home.tagline}</h1>
-            <p className="mx-auto mt-6 max-w-[34rem] text-lede leading-relaxed text-slate-ink/85 md:mx-0">
-              {home.welcome}
+            <p className="mx-auto mt-6 max-w-[34rem] font-display text-[1.5rem] leading-snug text-slate-ink md:mx-0 md:text-[1.75rem]">
+              {sectionCopy.home.headline}
+            </p>
+            <p className="mx-auto mt-4 max-w-[34rem] text-lede leading-relaxed text-slate-ink/85 md:mx-0">
+              {sectionCopy.home.body}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
               <a href={home.joinUsUrl} {...external} className="btn btn-fire">
-                Join us
+                {cta.begin}
               </a>
               <Link href="/about" className="btn btn-quiet text-slate-ink">
-                Read our story
+                {cta.about}
               </Link>
             </div>
           </div>
@@ -96,18 +101,17 @@ export default async function HomePage() {
           <div>
             <p className="font-semibold text-amber">Who we are</p>
             <h2 id="who-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
-              {home.whoWeAre.heading}
+              {sectionCopy.about.headline}
             </h2>
             <div className="prose-eg measure mt-6 text-slate-ink/90 md:text-[1.125rem]">
-              {home.whoWeAre.body.map((p) => (
-                <p key={p.slice(0, 24)}>{p}</p>
-              ))}
+              <p>{sectionCopy.about.body}</p>
+              <p>{sectionCopy.home.short}</p>
             </div>
             <blockquote className="measure mt-8 border-l-4 border-flame pl-5 font-display text-xl leading-snug text-slate-ink md:text-2xl">
               “{mandate}”
             </blockquote>
             <Link href="/about" className="btn btn-fire mt-8">
-              About Encounter Ground
+              {cta.about}
             </Link>
           </div>
         </div>
@@ -144,6 +148,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <Statement>{signatureStatements[0]}</Statement>
+
       {/* Books by the founder */}
       <section aria-labelledby="books-heading">
         <div className="wrap grid gap-10 py-16 md:grid-cols-[3fr_2fr] md:items-center md:py-24">
@@ -157,17 +163,14 @@ export default async function HomePage() {
             />
           </Link>
           <div>
-            <p className="font-semibold text-amber">From the bookshelf</p>
+            <p className="font-semibold text-amber">Books &amp; Publications</p>
             <h2 id="books-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
               Books by Toyin Bello
             </h2>
-            <p className="mt-4 max-w-md text-stone-muted">
-              Devotionals and journals on intimacy with God, prayer and identity, for
-              adults, pre-teens and teenagers.
-            </p>
+            <p className="mt-4 max-w-md text-stone-muted">{sectionCopy.books.short}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/books" className="btn btn-fire">
-                See the books
+                {cta.books}
               </Link>
               <a href={authorStoreUrl} {...external} className="btn btn-quiet text-slate-ink">
                 Order on Amazon
@@ -188,9 +191,9 @@ export default async function HomePage() {
           <div className="text-center">
             <p className="font-semibold text-flame">{youtubeChannel.name}</p>
             <h2 id="streams-heading" className="mx-auto mt-2 max-w-2xl text-[length:var(--text-h2)]">
-              Pray and worship with us, wherever you are
+              {sectionCopy.watch.headline}
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-chalk/80">The latest streams and teachings. Every stream is recorded, so you can catch up any time.</p>
+            <p className="mx-auto mt-3 max-w-xl text-chalk/80">{sectionCopy.watch.short}</p>
           </div>
           {videos && videos.length > 0 ? (
             <>
@@ -267,7 +270,7 @@ export default async function HomePage() {
           )}
           <div className="mt-10 text-center">
             <Link href="/media" className="btn btn-fire">
-              See all replays
+              {cta.watch}
             </Link>
           </div>
         </div>
@@ -278,15 +281,13 @@ export default async function HomePage() {
         <div className="wrap py-16 md:py-24">
           <div className="grid gap-8 md:grid-cols-[1fr_2fr] md:gap-10">
             <div>
-              <p className="font-semibold text-amber">Our events</p>
-              <h2 id="rhythm-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
-                Where to meet us
+              <p className="font-semibold text-amber">Gatherings &amp; Events</p>
+              <h2 id="rhythm-heading" className="mt-2 text-h3 text-slate-ink md:text-[2rem] md:leading-tight">
+                {sectionCopy.gatherings.headline}
               </h2>
-              <p className="mt-4 max-w-xs text-stone-muted">
-                Prayer, healing and teaching run all year. Join any of them.
-              </p>
+              <p className="mt-4 max-w-sm text-stone-muted">{sectionCopy.gatherings.short}</p>
               <Link href="/events" className="link mt-6 inline-block font-semibold text-slate-ink">
-                View all programmes
+                {cta.gatherings}
               </Link>
             </div>
             <ul className="divide-y divide-rule border-y border-rule">
@@ -319,7 +320,8 @@ export default async function HomePage() {
             <h2 id="school-heading" className="mt-2 text-[length:var(--text-h2)] text-slate-ink">
               {school.name}
             </h2>
-            <p className="measure mt-6 text-slate-ink/90 md:text-[1.125rem]">{school.summary}</p>
+            <p className="measure mt-6 font-display text-[1.375rem] leading-snug text-slate-ink">{sectionCopy.bethEl.headline}</p>
+            <p className="measure mt-4 text-slate-ink/90 md:text-[1.125rem]">{school.summary}</p>
             <p className="measure mt-4 text-stone-muted">{school.meaning}</p>
             <ul className="mt-8 grid grid-cols-2 gap-3">
               {schoolClasses.map((c) => (
@@ -331,7 +333,7 @@ export default async function HomePage() {
             </ul>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/school" className="btn btn-fire">
-                Visit the school
+                {cta.bethEl}
               </Link>
               <Link href="/school/enrol" className="btn btn-quiet text-slate-ink">
                 Enrol
@@ -352,6 +354,8 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
+
+      <Statement>{signatureStatements[6]}</Statement>
 
       {/* From the blog */}
       <section aria-labelledby="blog-heading" className="border-t border-rule bg-chalk">
