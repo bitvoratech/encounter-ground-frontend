@@ -37,7 +37,7 @@ export default function SchoolPage() {
             alt="Beth-El Institute of the Supernatural, an offshoot of Encounter Ground"
             placeholder="blur"
             sizes="(min-width: 768px) 35vw, 16rem"
-            className="mx-auto w-full max-w-[16rem] rounded-3xl border border-rule sm:max-w-xs md:max-w-sm"
+            className="hero-blend-soft mx-auto w-full max-w-[16rem] sm:max-w-xs md:max-w-sm"
           />
         </header>
       </div>

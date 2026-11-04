@@ -49,7 +49,8 @@ export default async function HomePage() {
 
         <div className="wrap grid items-center gap-8 pb-16 pt-8 md:grid-cols-[1.15fr_1fr] md:gap-12 md:py-20 lg:py-24">
           <figure className="mx-auto w-full max-w-[15rem] sm:max-w-[18rem] md:order-last md:max-w-[26rem] lg:max-w-[28rem]">
-            <div className="overflow-hidden rounded-t-full border-[6px] border-chalk/80 shadow-[0_30px_70px_-30px_rgb(138_90_6/0.55)]">
+            {/* No frame: the picture's edges fade into the sky around it. */}
+            <div className="hero-blend overflow-hidden rounded-t-full">
               <Image
                 src={heroImage}
                 alt="Golden gates open in the clouds, with two angels standing before them"
