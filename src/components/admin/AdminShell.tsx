@@ -122,10 +122,6 @@ function Account({ profile }: { profile: Profile }) {
           <p className="text-xs text-chalk/60">{roleLabel[profile.role]}</p>
         </div>
       </div>
-      <Link href="/" className="flex items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium text-chalk/70 hover:bg-chalk/5 hover:text-chalk">
-        <IconArrowUpRight aria-hidden="true" size={18} stroke={1.75} />
-        View the website
-      </Link>
       <form action="/auth/signout" method="post">
         <button type="submit" className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium text-chalk/70 hover:bg-chalk/5 hover:text-chalk">
           <IconLogout aria-hidden="true" size={18} stroke={1.75} />
