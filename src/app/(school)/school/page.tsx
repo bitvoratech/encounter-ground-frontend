@@ -14,9 +14,9 @@ export const metadata: Metadata = {
 export default function SchoolPage() {
   return (
     <>
-      {/* Hero, under an open heaven: warm light fading into the page, with clouds drifting by */}
-      <div className="relative isolate overflow-hidden bg-gradient-to-b from-[#f6ead0] to-limestone">
-        <HeavenClouds />
+      {/* Hero, under an open heaven in silver, like the Beth-El banner: cool light fading into the page */}
+      <div className="relative isolate overflow-hidden bg-gradient-to-b from-[#e6e9ee] to-limestone">
+        <HeavenClouds tone="silver" />
         <header className="wrap grid gap-10 pb-14 pt-14 md:grid-cols-[3fr_2fr] md:items-center md:pb-20 md:pt-20">
           <div>
             <p className="font-semibold text-amber">The ministry school</p>

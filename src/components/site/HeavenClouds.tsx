@@ -74,26 +74,35 @@ const motes: [number, number, number, number][] = [
   [96, 12, 4, 3.3],
 ];
 
-export function HeavenClouds() {
+// Cloud colours for each tone: [crown, upper, lower, underside] for the gilded (back) banks and
+// [crown, middle, underside] for the bright (front) ones.
+const tones = {
+  // Cream-white crowns, gilded beneath, as if lit by the glory above (the ministry's gold).
+  gold: { back: ["#fffdf6", "#fff1c9", "#f6cf6e", "#e8b23f"], front: ["#ffffff", "#fff6dc", "#f8d98a"] },
+  // Bright white over cool silver, matching Beth-El's silver banner.
+  silver: { back: ["#ffffff", "#f1f3f6", "#cfd4db", "#aab1bb"], front: ["#ffffff", "#f6f7f9", "#d9dde3"] },
+} as const;
+
+export function HeavenClouds({ tone = "gold" }: { tone?: keyof typeof tones }) {
+  const { back, front } = tones[tone];
   const id = useId().replace(/:/g, "");
   const gold = `${id}-gold`;
   const bright = `${id}-bright`;
 
   return (
-    <div aria-hidden="true" className="heaven">
-      {/* Cloud colours: cream-white crowns, gilded beneath, as if lit by the glory above. */}
+    <div aria-hidden="true" className={`heaven heaven-${tone}`}>
       <svg width="0" height="0" className="absolute">
         <defs>
           <linearGradient id={gold} gradientUnits="userSpaceOnUse" x1="0" y1="20" x2="0" y2="240">
-            <stop offset="0" stopColor="#fffdf6" />
-            <stop offset="0.45" stopColor="#fff1c9" />
-            <stop offset="0.8" stopColor="#f6cf6e" />
-            <stop offset="1" stopColor="#e8b23f" />
+            <stop offset="0" stopColor={back[0]} />
+            <stop offset="0.45" stopColor={back[1]} />
+            <stop offset="0.8" stopColor={back[2]} />
+            <stop offset="1" stopColor={back[3]} />
           </linearGradient>
           <linearGradient id={bright} gradientUnits="userSpaceOnUse" x1="0" y1="20" x2="0" y2="240">
-            <stop offset="0" stopColor="#ffffff" />
-            <stop offset="0.6" stopColor="#fff6dc" />
-            <stop offset="1" stopColor="#f8d98a" />
+            <stop offset="0" stopColor={front[0]} />
+            <stop offset="0.6" stopColor={front[1]} />
+            <stop offset="1" stopColor={front[2]} />
           </linearGradient>
         </defs>
       </svg>
