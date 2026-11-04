@@ -56,7 +56,8 @@ export async function fetchBook(slug: string, init?: RequestInit) {
   return toBook(await api<ApiBook>(`/books/${encodeURIComponent(slug)}`, init));
 }
 
-export const findBook = (books: Book[] | null | undefined, slug: string) => books?.find((b) => b.slug === slug);
+export const findBook = (books: Book[] | "unavailable" | null | undefined, slug: string) =>
+  Array.isArray(books) ? books.find((b) => b.slug === slug) : undefined;
 
 /** For server pages: the catalogue, or "unavailable" when the API can't be reached. */
 export async function loadBooks(): Promise<Book[] | "unavailable"> {

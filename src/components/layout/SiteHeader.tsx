@@ -5,12 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { AccountMenu } from "@/components/school/AccountMenu";
+import { Avatar } from "@/components/school/Avatar";
 import { CartLink } from "@/components/store/CartLink";
 import { WishlistLink } from "@/components/store/WishlistLink";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import type { Social } from "@/lib/siteContent";
 import { useIsStaff } from "@/lib/staff";
-import { useFullScreenMenu, useSignedIn } from "./useFullScreenMenu";
+import { useAccount, useFullScreenMenu } from "./useFullScreenMenu";
 import { isGroup, nav, type NavGroup, type NavItem } from "./nav";
 
 const pill =
@@ -102,11 +104,12 @@ function NavDropdown({ group }: { group: NavGroup }) {
 export function SiteHeader({ socials }: { socials: Social[] }) {
   const isActive = useIsActive();
   const { open, buttonRef: menuButtonRef, menuRef, openMenu, closeMenu } = useFullScreenMenu();
-  const signedIn = useSignedIn();
+  const member = useAccount();
+  const signedIn = !!member;
   const isStaff = useIsStaff();
 
   const account = signedIn
-    ? { href: isStaff ? "/admin" : "/dashboard", label: isStaff ? "Admin" : "My account" }
+    ? { href: isStaff ? "/admin" : "/dashboard", label: isStaff ? "Admin dashboard" : "My dashboard" }
     : { href: "/login", label: "Sign in" };
 
   // Top-level menu entries are numbered from Home (01), and the number also staggers their entrance.
@@ -157,15 +160,23 @@ export function SiteHeader({ socials }: { socials: Social[] }) {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link
-              href={account.href}
-              aria-current={isActive(account.href) ? "page" : undefined}
-              className="hidden rounded-full px-3 py-2 text-[0.95rem] font-semibold text-slate-ink hover:text-amber aria-[current=page]:text-amber lg:inline-block"
-            >
-              {account.label}
-            </Link>
             <WishlistLink />
             <CartLink />
+            {member === undefined ? (
+              // Session not checked yet: hold the avatar's space without guessing.
+              <span aria-hidden="true" className="hidden size-10 rounded-full bg-chalk lg:block" />
+            ) : member ? (
+              // Signed in: their initials (or photo), opening the same account menu as the school and dashboard.
+              <AccountMenu account={member} />
+            ) : (
+              <Link
+                href={account.href}
+                aria-current={isActive(account.href) ? "page" : undefined}
+                className="hidden rounded-full px-3 py-2 text-[0.95rem] font-semibold text-slate-ink hover:text-amber aria-[current=page]:text-amber lg:inline-block"
+              >
+                {account.label}
+              </Link>
+            )}
             <button
               ref={menuButtonRef}
               type="button"
@@ -244,11 +255,24 @@ export function SiteHeader({ socials }: { socials: Social[] }) {
         </nav>
 
         <div className="wrap shrink-0 border-t border-chalk/10 py-5">
-          <div className="flex gap-3">
-            <Link href={account.href} className="btn btn-quiet flex-1 text-chalk">
-              {account.label}
+          {member ? (
+            <Link
+              href={account.href}
+              className="flex items-center gap-3 rounded-2xl border border-chalk/15 p-3 transition-colors hover:border-flame"
+            >
+              <Avatar name={member.name} src={member.avatarUrl} size={44} />
+              <span className="min-w-0">
+                <span className="block truncate font-semibold text-chalk">{member.name}</span>
+                <span className="block text-sm text-chalk/70">{account.label}</span>
+              </span>
             </Link>
-          </div>
+          ) : (
+            <div className="flex gap-3">
+              <Link href={account.href} className="btn btn-quiet flex-1 text-chalk">
+                {account.label}
+              </Link>
+            </div>
+          )}
           <div className="mt-5 flex items-center justify-between gap-4">
             {signedIn ? (
               <span />

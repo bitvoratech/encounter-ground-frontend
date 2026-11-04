@@ -8,6 +8,7 @@ import { removeFromCart, useCart } from "@/lib/cart";
 import { useBooks } from "@/lib/catalogue";
 import { formatPrice } from "@/lib/currency";
 import { useCurrency } from "@/lib/useCurrency";
+import { CatalogueUnavailable } from "./CatalogueUnavailable";
 import { CurrencySwitcher } from "./CurrencySwitcher";
 import { BookCover } from "./BookCover";
 import { Price } from "./Price";
@@ -47,6 +48,15 @@ function CartBody({ onMessage }: { onMessage: (message: string) => void }) {
       <div className="page-hero wrap pb-24 pt-14 md:pt-20">
         {heading}
         <div className="mt-10 h-40 rounded-3xl border border-rule bg-chalk/60" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  if (catalogue === "unavailable" && cart.length > 0) {
+    return (
+      <div className="page-hero wrap pb-24 pt-14 md:pt-20">
+        {heading}
+        <CatalogueUnavailable />
       </div>
     );
   }

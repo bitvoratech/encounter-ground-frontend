@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { HeavenClouds } from "@/components/site/HeavenClouds";
 import { mandate } from "@/content/ministry";
 import { school, schoolClasses } from "@/content/school";
 import bethElImage from "../../../../public/images/home/beth-el-institute.jpg";
@@ -13,29 +14,33 @@ export const metadata: Metadata = {
 export default function SchoolPage() {
   return (
     <>
-      <header className="wrap grid gap-10 pb-14 pt-14 md:grid-cols-[3fr_2fr] md:items-center md:pb-20 md:pt-20">
-        <div>
-          <p className="font-semibold text-amber">The ministry school</p>
-          <h1 className="mt-2 text-[length:var(--text-h1)] text-slate-ink">{school.name}</h1>
-          <p className="mt-6 max-w-[34rem] font-display text-[1.5rem] leading-snug text-slate-ink">{school.headline}</p>
-          <p className="mt-4 max-w-[34rem] text-lede leading-relaxed text-stone-muted">{school.summary}</p>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Link href="/school/enrol" className="btn btn-fire">
-              Enrol
-            </Link>
-            <Link href="/school/classes" className="btn btn-quiet text-slate-ink">
-              See the classes
-            </Link>
+      {/* Hero, under an open heaven: warm light fading into the page, with clouds drifting by */}
+      <div className="relative isolate overflow-hidden bg-gradient-to-b from-[#f6ead0] to-limestone">
+        <HeavenClouds />
+        <header className="wrap grid gap-10 pb-14 pt-14 md:grid-cols-[3fr_2fr] md:items-center md:pb-20 md:pt-20">
+          <div>
+            <p className="font-semibold text-amber">The ministry school</p>
+            <h1 className="mt-2 text-[length:var(--text-h1)] text-slate-ink">{school.name}</h1>
+            <p className="mt-6 max-w-[34rem] font-display text-[1.5rem] leading-snug text-slate-ink">{school.headline}</p>
+            <p className="mt-4 max-w-[34rem] text-lede leading-relaxed text-stone-muted">{school.summary}</p>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Link href="/school/enrol" className="btn btn-fire">
+                Enrol
+              </Link>
+              <Link href="/school/classes" className="btn btn-quiet text-slate-ink">
+                See the classes
+              </Link>
+            </div>
           </div>
-        </div>
-        <Image
-          src={bethElImage}
-          alt="Beth-El Institute of the Supernatural, an offshoot of Encounter Ground"
-          placeholder="blur"
-          sizes="(min-width: 768px) 35vw, 16rem"
-          className="mx-auto w-full max-w-[16rem] rounded-3xl border border-rule sm:max-w-xs md:max-w-sm"
-        />
-      </header>
+          <Image
+            src={bethElImage}
+            alt="Beth-El Institute of the Supernatural, an offshoot of Encounter Ground"
+            placeholder="blur"
+            sizes="(min-width: 768px) 35vw, 16rem"
+            className="mx-auto w-full max-w-[16rem] rounded-3xl border border-rule sm:max-w-xs md:max-w-sm"
+          />
+        </header>
+      </div>
 
       <section aria-labelledby="about-heading" className="border-t border-rule">
         <div className="wrap grid gap-10 py-14 md:grid-cols-[1fr_2fr] md:py-20">

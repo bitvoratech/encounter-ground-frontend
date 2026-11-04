@@ -7,6 +7,7 @@ import { useId, useRef, useState } from "react";
 import { findBook, type Book } from "@/lib/books";
 import { useCart } from "@/lib/cart";
 import { useBooks } from "@/lib/catalogue";
+import { CatalogueUnavailable } from "./CatalogueUnavailable";
 import { formatPrice } from "@/lib/currency";
 import { methodDetails, paymentMethods, paymentsAreSimulated, placeOrder, type PaymentMethod } from "@/lib/store";
 import { useCurrency } from "@/lib/useCurrency";
@@ -52,6 +53,8 @@ export function CheckoutView({ email: accountEmail, simulateFailure }: { email: 
       </p>
     );
   }
+
+  if (catalogue === "unavailable" && cart.length > 0) return <CatalogueUnavailable />;
 
   if (items.length === 0) {
     return (
