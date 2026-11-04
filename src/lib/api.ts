@@ -1,7 +1,9 @@
 // Thin client for the Encounter Ground API (backend/). Usable from Server and
 // Client Components; the base URL is public.
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+// Trailing slashes are stripped so `${API_URL}/me` never becomes "//me": the
+// backend redirects that, and browsers refuse redirects on CORS preflights.
+export const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000").trim().replace(/\/+$/, "");
 
 export class ApiError extends Error {
   constructor(
