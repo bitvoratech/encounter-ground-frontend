@@ -2,6 +2,7 @@ import { IconArrowRight, IconArrowUpRight, IconBrandWhatsapp, IconPlayerPlayFill
 import Image from "next/image";
 import Link from "next/link";
 import { streamIcon } from "@/components/site/streamIcons";
+import { HeavenClouds } from "@/components/site/HeavenClouds";
 import { Statement } from "@/components/site/Statement";
 import { YadaBand } from "@/components/site/YadaBand";
 import { mandate, programmes, youtubeChannel } from "@/content/ministry";
@@ -44,6 +45,7 @@ export default async function HomePage() {
           aria-hidden="true"
           className="absolute inset-0 -z-10 bg-gradient-to-b from-[#fdf6e6]/30 via-[#fdf6e6]/55 to-limestone"
         />
+        <HeavenClouds />
 
         <div className="wrap grid items-center gap-8 pb-16 pt-8 md:grid-cols-[1.15fr_1fr] md:gap-12 md:py-20 lg:py-24">
           <figure className="mx-auto w-full max-w-[15rem] sm:max-w-[18rem] md:order-last md:max-w-[26rem] lg:max-w-[28rem]">
