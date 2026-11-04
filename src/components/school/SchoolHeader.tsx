@@ -75,7 +75,8 @@ export function SchoolHeader() {
                 <Link href={signIn} className="hidden rounded-full px-3 py-2 text-[0.95rem] font-semibold text-slate-ink hover:text-amber sm:inline-block">
                   Sign in
                 </Link>
-                <Link href="/school/enrol" className="btn btn-fire min-h-11 px-5 py-2">
+                {/* Phones: Enrol lives in the menu, so the bar stays uncluttered. */}
+                <Link href="/school/enrol" className="btn btn-fire hidden min-h-11 px-5 py-2 lg:inline-flex">
                   Enrol
                 </Link>
               </>
@@ -99,7 +100,7 @@ export function SchoolHeader() {
                     <home.Icon aria-hidden="true" size={20} stroke={1.75} />
                   </Link>
                 ) : (
-                  <Link href="/school/classes" className="btn btn-fire min-h-11 px-5 py-2">
+                  <Link href="/school/classes" className="btn btn-fire hidden min-h-11 px-5 py-2 lg:inline-flex">
                     Enrol
                   </Link>
                 )}

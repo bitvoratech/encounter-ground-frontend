@@ -1,11 +1,11 @@
 "use client";
 
-import { IconChevronDown, IconMenu2, IconX } from "@tabler/icons-react";
+import { IconChevronDown, IconLogout, IconMenu2, IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { AccountMenu } from "@/components/school/AccountMenu";
+import { AccountMenu, accountLinks, staffLinks } from "@/components/school/AccountMenu";
 import { Avatar } from "@/components/school/Avatar";
 import { CartLink } from "@/components/store/CartLink";
 import { WishlistLink } from "@/components/store/WishlistLink";
@@ -101,6 +101,53 @@ function NavDropdown({ group }: { group: NavGroup }) {
   );
 }
 
+const mobileLink =
+  "flex items-baseline gap-4 py-3.5 font-display text-[1.75rem] leading-tight text-chalk transition-colors hover:text-flame aria-[current=page]:text-flame";
+const mobileNum = "w-6 shrink-0 font-sans text-xs font-semibold text-flame";
+
+/** Phone menu: a dropdown's links fold open beneath it, so the whole menu fits on one screen.
+ * The group holding the current page starts open. */
+function MobileGroup({ group, num, isActive }: { group: NavGroup; num: string; isActive: (href: string) => boolean }) {
+  const holdsCurrent = group.children.some((c) => isActive(c.href));
+  const [expanded, setExpanded] = useState(holdsCurrent);
+  const panelId = `m-${group.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+  return (
+    <>
+      <button
+        type="button"
+        aria-expanded={expanded}
+        aria-controls={panelId}
+        onClick={() => setExpanded(!expanded)}
+        className={`${mobileLink} w-full text-left ${holdsCurrent ? "text-flame" : ""}`}
+      >
+        <span aria-hidden="true" className={mobileNum}>
+          {num}
+        </span>
+        <span className="flex-1">{group.label}</span>
+        <IconChevronDown
+          aria-hidden="true"
+          size={22}
+          stroke={2}
+          className={`self-center text-chalk/60 transition-transform ${expanded ? "rotate-180" : ""}`}
+        />
+      </button>
+      <ul id={panelId} hidden={!expanded} className="pb-3 pl-10">
+        {group.children.map((child) => (
+          <li key={child.href}>
+            <Link
+              href={child.href}
+              aria-current={isActive(child.href) ? "page" : undefined}
+              className="flex min-h-11 items-center text-lg font-medium text-chalk/80 transition-colors hover:text-flame aria-[current=page]:text-flame"
+            >
+              {child.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
+
 export function SiteHeader({ socials }: { socials: Social[] }) {
   const isActive = useIsActive();
   const { open, buttonRef: menuButtonRef, menuRef, openMenu, closeMenu } = useFullScreenMenu();
@@ -115,8 +162,6 @@ export function SiteHeader({ socials }: { socials: Social[] }) {
   // Top-level menu entries are numbered from Home (01), and the number also staggers their entrance.
   const entries = [{ href: "/", label: "Home" } as NavItem, ...nav];
   const num = (i: number) => String(i + 1).padStart(2, "0");
-  const fullLink =
-    "flex items-baseline gap-4 py-2 font-display text-[clamp(2rem,1.4rem+3vw,2.75rem)] leading-tight text-chalk transition-colors hover:text-flame aria-[current=page]:text-flame";
 
   return (
     <>
@@ -217,71 +262,72 @@ export function SiteHeader({ socials }: { socials: Social[] }) {
           </button>
         </div>
 
-        <nav aria-label="Main" className="flex-1 overflow-y-auto">
-          <ul className="wrap py-6">
-            {entries.map((item, i) =>
-              isGroup(item) ? (
-                <li key={item.label} className="menu-in py-3" style={{ "--i": i } as React.CSSProperties}>
-                  <p className="flex items-baseline gap-4 text-sm font-semibold uppercase tracking-[0.18em] text-flame">
-                    <span aria-hidden="true">{num(i)}</span>
-                    {item.label}
-                  </p>
-                  <ul className="mt-2 grid grid-cols-2 gap-x-4 border-l border-chalk/15 pl-9">
-                    {item.children.map((child) => (
-                      <li key={child.href}>
-                        <Link
-                          href={child.href}
-                          aria-current={isActive(child.href) ? "page" : undefined}
-                          className="block py-2.5 text-lg font-medium text-chalk/85 transition-colors hover:text-flame aria-[current=page]:text-flame"
-                        >
-                          {child.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+        <div className="flex-1 overflow-y-auto overscroll-contain">
+          <nav aria-label="Main" className="wrap">
+            <ul className="py-3">
+              {entries.map((item, i) => (
+                <li key={isGroup(item) ? item.label : item.href} className="menu-in border-b border-chalk/10" style={{ "--i": i } as React.CSSProperties}>
+                  {isGroup(item) ? (
+                    <MobileGroup group={item} num={num(i)} isActive={isActive} />
+                  ) : (
+                    <Link href={item.href} aria-current={isActive(item.href) ? "page" : undefined} className={mobileLink}>
+                      <span aria-hidden="true" className={mobileNum}>
+                        {num(i)}
+                      </span>
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
-              ) : (
-                <li key={item.href} className="menu-in" style={{ "--i": i } as React.CSSProperties}>
-                  <Link href={item.href} aria-current={isActive(item.href) ? "page" : undefined} className={fullLink}>
-                    <span aria-hidden="true" className="font-sans text-sm font-semibold text-flame">
-                      {num(i)}
-                    </span>
-                    {item.label}
-                  </Link>
-                </li>
-              ),
-            )}
-          </ul>
-        </nav>
+              ))}
+            </ul>
+          </nav>
 
-        <div className="wrap shrink-0 border-t border-chalk/10 py-5">
-          {member ? (
-            <Link
-              href={account.href}
-              className="flex items-center gap-3 rounded-2xl border border-chalk/15 p-3 transition-colors hover:border-flame"
-            >
-              <Avatar name={member.name} src={member.avatarUrl} size={44} />
-              <span className="min-w-0">
-                <span className="block truncate font-semibold text-chalk">{member.name}</span>
-                <span className="block text-sm text-chalk/70">{account.label}</span>
-              </span>
-            </Link>
-          ) : (
-            <div className="flex gap-3">
-              <Link href={account.href} className="btn btn-quiet flex-1 text-chalk">
-                {account.label}
-              </Link>
-            </div>
-          )}
-          <div className="mt-5 flex items-center justify-between gap-4">
-            {signedIn ? (
-              <span />
+          <section aria-label="Your account" className="wrap pb-6 pt-3">
+            {member ? (
+              <div className="rounded-2xl bg-chalk/[0.06] p-2">
+                <div className="flex items-center gap-3 px-2 pb-3 pt-2">
+                  <Avatar name={member.name} src={member.avatarUrl} size={44} />
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold text-chalk">{member.name}</p>
+                    <p className="truncate text-sm text-chalk/65">{member.email}</p>
+                  </div>
+                </div>
+                <ul className="grid gap-0.5 border-t border-chalk/10 pt-2">
+                  {(isStaff ? staffLinks : accountLinks).map(({ href, label, Icon }) => (
+                    <li key={href}>
+                      <Link
+                        href={href}
+                        aria-current={isActive(href) ? "page" : undefined}
+                        className="flex min-h-11 items-center gap-2.5 rounded-xl px-2.5 py-2 font-medium text-chalk/90 hover:bg-chalk/10 aria-[current=page]:bg-chalk/10 aria-[current=page]:text-flame"
+                      >
+                        <Icon aria-hidden="true" size={20} stroke={1.75} className="shrink-0 text-flame" />
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                <form action="/auth/signout" method="post" className="mt-1 border-t border-chalk/10 pt-1">
+                  <button
+                    type="submit"
+                    className="flex min-h-11 w-full items-center gap-2.5 rounded-xl px-2.5 py-2 font-medium text-chalk/75 hover:bg-chalk/10"
+                  >
+                    <IconLogout aria-hidden="true" size={20} stroke={1.75} className="shrink-0" />
+                    Sign out
+                  </button>
+                </form>
+              </div>
             ) : (
-              <Link href="/register" className="text-sm font-semibold text-chalk/80 hover:text-flame">
-                Create an account
-              </Link>
+              <div className="grid grid-cols-2 gap-3">
+                <Link href="/login" className="btn btn-fire">
+                  Sign in
+                </Link>
+                <Link href="/register" className="btn btn-quiet text-chalk">
+                  Create account
+                </Link>
+              </div>
             )}
-            <ul className="flex gap-2" aria-label="Encounter Ground on social media">
+
+            <ul className="mt-6 flex gap-2" aria-label="Encounter Ground on social media">
               {socials.map((s) => (
                 <li key={s.name}>
                   <a
@@ -296,7 +342,7 @@ export function SiteHeader({ socials }: { socials: Social[] }) {
                 </li>
               ))}
             </ul>
-          </div>
+          </section>
         </div>
       </div>
     </>
