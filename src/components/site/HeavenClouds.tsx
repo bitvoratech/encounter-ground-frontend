@@ -1,8 +1,11 @@
+import { useId } from "react";
+
 /**
- * A soft sky for a hero: warm light from above, faint rays, and banks of cloud drifting slowly
- * across. Purely decorative and CSS-only (see .heaven in globals.css). Put it as the first child
- * of a `relative isolate overflow-hidden` section; it sits behind the content. With reduced
- * motion the clouds hold still.
+ * An open heaven behind a hero: a golden sunburst and glow from above, a thick bank of golden
+ * cloud across the top, more banks rising from below, and motes of light twinkling between.
+ * Purely decorative and CSS/SVG-only (see .heaven in globals.css). Put it as the first child of
+ * a `relative isolate overflow-hidden` section; it sits behind the content. With reduced motion
+ * everything holds still.
  */
 
 type Circle = [cx: number, cy: number, r: number];
@@ -29,9 +32,9 @@ const circles: Circle[] = clumps.flatMap(([x, width, height]) => {
   });
 });
 
-function Tile() {
+function Tile({ fill }: { fill: string }) {
   return (
-    <svg viewBox="0 0 1200 240" className="h-full w-auto shrink-0" focusable="false">
+    <svg viewBox="0 0 1200 240" className="h-full w-auto shrink-0 overflow-visible" focusable="false" fill={fill}>
       {circles.map(([cx, cy, r], i) => (
         <circle key={i} cx={cx} cy={cy} r={r} />
       ))}
@@ -42,24 +45,75 @@ function Tile() {
 
 // Each strip holds two identical halves, so sliding it left by half its width loops without a
 // seam. Three tiles per half keep the screen covered up to very wide monitors.
-function Strip({ className }: { className: string }) {
+function Strip({ className, fill }: { className: string; fill: string }) {
   return (
     <div className={`heaven-strip ${className}`}>
       {Array.from({ length: 6 }, (_, i) => (
-        <Tile key={i} />
+        <Tile key={i} fill={fill} />
       ))}
     </div>
   );
 }
 
+// Motes of light: [left %, top %, size px, delay s]. Kept mostly to the edges and the top so they
+// stay clear of the text.
+const motes: [number, number, number, number][] = [
+  [6, 30, 6, 0],
+  [14, 62, 4, 1.8],
+  [22, 18, 5, 3.1],
+  [38, 12, 4, 0.9],
+  [48, 26, 7, 2.4],
+  [57, 8, 4, 4.2],
+  [64, 40, 5, 1.2],
+  [72, 16, 6, 3.6],
+  [80, 58, 4, 0.4],
+  [88, 24, 7, 2.9],
+  [94, 46, 5, 1.5],
+  [32, 70, 4, 4.8],
+  [60, 72, 5, 2.1],
+  [96, 12, 4, 3.3],
+];
+
 export function HeavenClouds() {
+  const id = useId().replace(/:/g, "");
+  const gold = `${id}-gold`;
+  const bright = `${id}-bright`;
+
   return (
     <div aria-hidden="true" className="heaven">
+      {/* Cloud colours: cream-white crowns, gilded beneath, as if lit by the glory above. */}
+      <svg width="0" height="0" className="absolute">
+        <defs>
+          <linearGradient id={gold} gradientUnits="userSpaceOnUse" x1="0" y1="20" x2="0" y2="240">
+            <stop offset="0" stopColor="#fffdf6" />
+            <stop offset="0.45" stopColor="#fff1c9" />
+            <stop offset="0.8" stopColor="#f6cf6e" />
+            <stop offset="1" stopColor="#e8b23f" />
+          </linearGradient>
+          <linearGradient id={bright} gradientUnits="userSpaceOnUse" x1="0" y1="20" x2="0" y2="240">
+            <stop offset="0" stopColor="#ffffff" />
+            <stop offset="0.6" stopColor="#fff6dc" />
+            <stop offset="1" stopColor="#f8d98a" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <div className="heaven-glow" />
       <div className="heaven-rays" />
-      <Strip className="heaven-strip-high" />
-      <Strip className="heaven-strip-far" />
-      <Strip className="heaven-strip-near" />
+      <div className="heaven-sun" />
+
+      <Strip className="heaven-strip-top-back" fill={`url(#${gold})`} />
+      <Strip className="heaven-strip-top" fill={`url(#${bright})`} />
+      <Strip className="heaven-strip-far" fill={`url(#${gold})`} />
+      <Strip className="heaven-strip-near" fill={`url(#${bright})`} />
+
+      {motes.map(([left, top, size, delay]) => (
+        <span
+          key={`${left}-${top}`}
+          className="heaven-mote"
+          style={{ left: `${left}%`, top: `${top}%`, width: size * 1.6, height: size * 1.6, animationDelay: `${delay}s` }}
+        />
+      ))}
     </div>
   );
 }
