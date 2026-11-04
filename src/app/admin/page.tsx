@@ -146,8 +146,8 @@ export default async function AdminOverviewPage() {
         <h2 id="classes-heading" className="font-sans text-xl font-bold text-slate-ink">
           Beth-El classes
         </h2>
-        <div className="-mx-5 mt-4 overflow-x-auto px-5 md:-mx-6 md:px-6">
-          <table className="w-full min-w-[28rem] text-left">
+        <div className="mt-4">
+          <table className="w-full text-left">
             <thead className="text-xs uppercase tracking-wider text-stone-muted">
               <tr className="border-b border-rule/80">
                 <th scope="col" className="py-2 pr-4 font-semibold">Class</th>
