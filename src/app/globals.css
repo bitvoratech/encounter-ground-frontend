@@ -351,6 +351,30 @@
   animation: heaven-twinkle 5s ease-in-out infinite;
 }
 
+/* Silver tone (Beth-El): the same sky in white and cool silver, like the school's banner */
+.heaven-silver .heaven-glow {
+  background:
+    radial-gradient(40% 50% at 50% 12%, rgb(255 255 255 / 0.95), transparent 70%),
+    radial-gradient(60% 60% at 50% 0%, rgb(190 198 210 / 0.45), transparent 75%);
+}
+.heaven-silver .heaven-rays {
+  background: repeating-conic-gradient(from 0deg, rgb(255 255 255 / 0.75) 0deg 2.5deg, transparent 2.5deg 9deg);
+  opacity: 0.8;
+}
+.heaven-silver .heaven-sun {
+  background: radial-gradient(closest-side, #fff 0%, rgb(248 250 252 / 0.95) 40%, rgb(200 208 220 / 0.5) 70%, transparent);
+}
+.heaven-silver .heaven-strip-top {
+  filter: blur(2.5px) drop-shadow(0 8px 16px rgb(110 122 140 / 0.3));
+}
+.heaven-silver .heaven-strip-near {
+  filter: blur(2.5px) drop-shadow(0 -8px 20px rgb(110 122 140 / 0.25));
+}
+.heaven-silver .heaven-mote {
+  background: radial-gradient(closest-side, #fff, #dfe4ea 60%, transparent);
+  box-shadow: 0 0 14px 5px rgb(255 255 255 / 0.8);
+}
+
 @keyframes heaven-drift {
   to { transform: translateX(-50%); }
 }
