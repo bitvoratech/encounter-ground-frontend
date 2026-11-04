@@ -198,7 +198,7 @@ export function AdminShell({ profile, counts, children }: { profile: Profile; co
         Skip to content
       </a>
 
-      <aside className="sticky top-0 hidden h-dvh flex-col gap-7 overflow-y-auto bg-slate-deep p-4 pt-6 lg:flex">
+      <aside className="no-scrollbar sticky top-0 hidden h-dvh flex-col gap-7 overflow-y-auto bg-slate-deep p-4 pt-6 lg:flex">
         <div className="px-3">
           <Logo />
         </div>
