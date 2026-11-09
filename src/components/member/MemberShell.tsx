@@ -51,7 +51,7 @@ const isCurrent = (href: string, pathname: string) => pathname === href || pathn
 function Logo() {
   return (
     <Link href="/dashboard" className="flex items-center gap-3" aria-label="Encounter Ground: my dashboard">
-      <Image src="/brand/lockup-light.png" alt="" width={467} height={480} className="h-11 w-auto" />
+      <Image src="/brand/lockup-light.png" alt="" width={467} height={480} className="h-11 w-auto [@media(max-height:41rem)]:h-9" />
       <span className="rounded-full bg-flame/15 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-flame">Member</span>
     </Link>
   );
@@ -59,17 +59,21 @@ function Logo() {
 
 function Nav({ pathname }: { pathname: string }) {
   return (
-    <nav aria-label="My account" className="grid gap-4 [@media(min-height:50rem)]:gap-6">
+    <nav aria-label="My account" className="grid gap-4 [@media(max-height:41rem)]:gap-2.5 [@media(min-height:50rem)]:gap-6">
       {groups.map((group) => (
-        <div key={group.label ?? "main"} className={group.label === "Explore" ? "[@media(max-height:41rem)]:hidden" : undefined}>
-          {group.label && <p className="mb-1.5 px-3 text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-chalk/40">{group.label}</p>}
+        <div key={group.label ?? "main"}>
+          {group.label && (
+            <p className="mb-1.5 px-3 [@media(max-height:41rem)]:mb-0.5 text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-chalk/40">
+              {group.label}
+            </p>
+          )}
           <ul className="grid gap-0.5">
             {group.links.map(({ href, label, Icon, external }) => (
               <li key={href}>
                 <Link
                   href={href}
                   aria-current={!external && isCurrent(href, pathname) ? "page" : undefined}
-                  className="group relative flex items-center gap-3 rounded-lg px-3 py-2 text-[0.9375rem] font-medium text-chalk/70 transition-colors hover:bg-chalk/5 hover:text-chalk aria-[current=page]:bg-chalk/10 aria-[current=page]:text-chalk"
+                  className="group relative flex items-center gap-3 rounded-lg px-3 py-2 [@media(max-height:41rem)]:py-1.5 text-[0.9375rem] font-medium text-chalk/70 transition-colors hover:bg-chalk/5 hover:text-chalk aria-[current=page]:bg-chalk/10 aria-[current=page]:text-chalk"
                 >
                   <span
                     aria-hidden="true"
@@ -92,8 +96,8 @@ function Nav({ pathname }: { pathname: string }) {
 
 function AccountBox({ account }: { account: Account }) {
   return (
-    <div className="grid gap-0.5 rounded-xl bg-chalk/5 p-2">
-      <Link href="/account" className="flex min-w-0 items-center gap-3 rounded-lg px-2 pb-2 pt-1 hover:bg-chalk/5">
+    <div className="flex items-center gap-1 rounded-xl bg-chalk/5 p-1.5">
+      <Link href="/account" className="flex min-w-0 flex-1 items-center gap-3 rounded-lg p-1.5 hover:bg-chalk/5">
         <Avatar name={account.name} src={account.avatarUrl} size={36} />
         <div className="min-w-0">
           <p className="truncate text-[0.9375rem] font-semibold text-chalk">{account.name}</p>
@@ -103,10 +107,11 @@ function AccountBox({ account }: { account: Account }) {
       <form action="/auth/signout" method="post">
         <button
           type="submit"
-          className="flex min-h-10 w-full items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium text-chalk/70 hover:bg-chalk/5 hover:text-chalk"
+          aria-label="Sign out"
+          title="Sign out"
+          className="grid size-10 place-items-center rounded-lg text-chalk/60 hover:bg-chalk/10 hover:text-chalk"
         >
-          <IconLogout aria-hidden="true" size={18} stroke={1.75} />
-          Sign out
+          <IconLogout aria-hidden="true" size={19} stroke={1.75} />
         </button>
       </form>
     </div>
@@ -176,7 +181,7 @@ export function MemberShell({ account, children }: { account: Account; children:
         Skip to content
       </a>
 
-      <aside className="sticky top-0 hidden h-dvh flex-col gap-5 overflow-hidden bg-slate-deep p-4 pt-5 lg:flex [@media(min-height:50rem)]:gap-7 [@media(min-height:50rem)]:pt-6">
+      <aside className="sticky top-0 hidden h-dvh flex-col gap-5 overflow-hidden bg-slate-deep p-4 pt-5 lg:flex [@media(max-height:41rem)]:gap-3 [@media(max-height:41rem)]:py-3 [@media(min-height:50rem)]:gap-7 [@media(min-height:50rem)]:pt-6">
         <div className="px-3">
           <Logo />
         </div>
