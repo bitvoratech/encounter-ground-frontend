@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { PageHeader } from "@/components/admin/ui";
 import { MyBooks } from "@/components/store/MyBooks";
 import { createClient } from "@/lib/supabase/server";
 
@@ -15,8 +16,7 @@ export default async function MyBooksPage() {
 
   return (
     <div>
-      <h1 className="text-[length:var(--text-h2)] text-slate-ink">My books</h1>
-      <p className="mt-3 max-w-xl text-stone-muted">Your e-books, to read on this site on any device.</p>
+      <PageHeader title="My books">Your e-books, to read here on any device. Each one opens where you stopped.</PageHeader>
       <MyBooks />
     </div>
   );

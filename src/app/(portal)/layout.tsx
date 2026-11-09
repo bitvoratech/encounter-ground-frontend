@@ -1,24 +1,32 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { PortalNav } from "@/components/school/PortalNav";
-import { SchoolShell } from "@/components/school/SchoolShell";
-import { school } from "@/content/school";
+import { MemberShell } from "@/components/member/MemberShell";
 import { getStaff } from "@/lib/admin";
+import { createClient } from "@/lib/supabase/server";
 
-// The school and dashboard are their own site under the ministry, so titles carry the school's name.
 export const metadata: Metadata = {
-  title: { default: school.name, template: `%s | ${school.shortName}` },
+  title: { default: "My dashboard", template: "%s | Encounter Ground" },
+  robots: { index: false },
 };
 
-/** The member area: dashboard, My courses and My books share a sidebar. The ministry team has its own. */
+/**
+ * The member area: dashboard, My courses, My books and My account, in a frame built like the
+ * admin dashboard. The ministry team has its own.
+ */
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   if ((await getStaff()).status === "staff") redirect("/admin");
-  return (
-    <SchoolShell>
-      <div className="wrap grid grid-cols-[minmax(0,1fr)] gap-8 pb-24 pt-6 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-12 lg:pt-10">
-        <PortalNav />
-        <div className="min-w-0">{children}</div>
-      </div>
-    </SchoolShell>
-  );
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login?next=/dashboard");
+  const meta = user.user_metadata ?? {};
+  const account = {
+    name: (meta.full_name as string | undefined) || user.email || "Member",
+    email: user.email ?? "",
+    avatarUrl: (meta.avatar_url as string | undefined) ?? null,
+  };
+
+  return <MemberShell account={account}>{children}</MemberShell>;
 }
