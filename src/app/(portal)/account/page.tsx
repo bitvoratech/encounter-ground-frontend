@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AccountForm } from "@/components/account/AccountForm";
+import { PageHeader } from "@/components/admin/ui";
 import { api } from "@/lib/api";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/types/admin";
@@ -26,8 +27,7 @@ export default async function AccountPage() {
 
   return (
     <div>
-      <h1 className="text-[length:var(--text-h2)] text-slate-ink">My account</h1>
-      <p className="mt-3 max-w-xl text-stone-muted">Your name and phone number, as the ministry team sees them.</p>
+      <PageHeader title="My account">Your name and phone number, as the ministry team sees them, and your password.</PageHeader>
       <AccountForm
         email={profile?.email ?? user.email ?? ""}
         fullName={profile?.full_name ?? (meta.full_name as string | undefined) ?? ""}

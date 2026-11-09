@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { PageHeader } from "@/components/admin/ui";
 import { MyCourses } from "@/components/school/MyCourses";
 import { connection } from "next/server";
 import { getAllCourses } from "@/lib/courses";
@@ -26,12 +27,11 @@ export default async function MyCoursesPage() {
 
   return (
     <div>
-      <h1 className="text-[length:var(--text-h2)] text-slate-ink">My courses</h1>
-      <p className="mt-3 max-w-xl text-stone-muted">Your Beth-El Institute classes, and where you left off.</p>
+      <PageHeader title="My courses">Your Beth-El Institute classes, and where you left off.</PageHeader>
       {courses ? (
         <MyCourses courses={courses} />
       ) : (
-        <p role="status" className="mt-10 font-semibold text-amber">
+        <p role="alert" className="rounded-xl border border-flame/50 bg-flame/10 px-4 py-3 font-semibold text-slate-ink">
           Your classes can’t be loaded right now. Please try again in a little while.
         </p>
       )}
