@@ -123,6 +123,19 @@ export function BookReader({ slug }: { slug: string }) {
     scroller.current?.scrollTo({ top: 0, left: 0 });
   }, [page]);
 
+  // The space the page can use, so at 100% the whole page fits on screen without scrolling.
+  const [box, setBox] = useState<{ w: number; h: number } | null>(null);
+  const ready = load.status === "ready";
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    const measure = () => setBox({ w: el.clientWidth, h: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ready]);
+
   // Swipe to turn on touch screens, when not zoomed in.
   const touch = useRef<{ x: number; y: number } | null>(null);
 
@@ -161,6 +174,9 @@ export function BookReader({ slug }: { slug: string }) {
   const ratio = meta?.w && meta?.h ? meta.h / meta.w : 1.5;
   const current = urls[page];
   const scale = ZOOMS[zoom]!;
+  // Fit the page inside the space between the bars (wider on desktop, taller on phones), then zoom from there.
+  const pad = box && box.w >= 640 ? 24 : 8;
+  const fit = box ? Math.max(120, Math.min(box.w - pad * 2, (box.h - pad * 2) / ratio)) : null;
 
   return (
     <Frame
@@ -208,10 +224,10 @@ export function BookReader({ slug }: { slug: string }) {
           if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(page + (dx < 0 ? 1 : -1));
         }}
       >
-        <div className="mx-auto px-3 py-4 sm:px-6 sm:py-6" style={{ width: `min(${scale * 100}%, ${scale * 56}rem)`, minWidth: zoom > 0 ? `${scale * 100}%` : undefined }}>
+        <div className="flex min-h-full w-max min-w-full items-center justify-center" style={{ padding: pad }}>
           <div
-            className="relative w-full select-none overflow-hidden rounded-sm bg-white shadow-[0_20px_50px_-20px_rgb(0_0_0/0.6)]"
-            style={{ aspectRatio: `1 / ${ratio}` }}
+            className="relative shrink-0 select-none overflow-hidden rounded-sm bg-white shadow-[0_20px_50px_-20px_rgb(0_0_0/0.6)]"
+            style={{ width: fit ? fit * scale : 0, aspectRatio: `1 / ${ratio}`, visibility: fit ? undefined : "hidden" }}
           >
             {current ? (
               // eslint-disable-next-line @next/next/no-img-element -- signed, short-lived links; next/image would re-host them
