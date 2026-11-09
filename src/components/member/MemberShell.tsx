@@ -59,9 +59,9 @@ function Logo() {
 
 function Nav({ pathname }: { pathname: string }) {
   return (
-    <nav aria-label="My account" className="grid gap-6">
+    <nav aria-label="My account" className="grid gap-4 [@media(min-height:50rem)]:gap-6">
       {groups.map((group) => (
-        <div key={group.label ?? "main"}>
+        <div key={group.label ?? "main"} className={group.label === "Explore" ? "[@media(max-height:41rem)]:hidden" : undefined}>
           {group.label && <p className="mb-1.5 px-3 text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-chalk/40">{group.label}</p>}
           <ul className="grid gap-0.5">
             {group.links.map(({ href, label, Icon, external }) => (
@@ -69,7 +69,7 @@ function Nav({ pathname }: { pathname: string }) {
                 <Link
                   href={href}
                   aria-current={!external && isCurrent(href, pathname) ? "page" : undefined}
-                  className="group relative flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-[0.9375rem] font-medium text-chalk/70 transition-colors hover:bg-chalk/5 hover:text-chalk aria-[current=page]:bg-chalk/10 aria-[current=page]:text-chalk"
+                  className="group relative flex items-center gap-3 rounded-lg px-3 py-2 text-[0.9375rem] font-medium text-chalk/70 transition-colors hover:bg-chalk/5 hover:text-chalk aria-[current=page]:bg-chalk/10 aria-[current=page]:text-chalk"
                 >
                   <span
                     aria-hidden="true"
@@ -176,7 +176,7 @@ export function MemberShell({ account, children }: { account: Account; children:
         Skip to content
       </a>
 
-      <aside className="no-scrollbar sticky top-0 hidden h-dvh flex-col gap-7 overflow-y-auto bg-slate-deep p-4 pt-6 lg:flex">
+      <aside className="sticky top-0 hidden h-dvh flex-col gap-5 overflow-hidden bg-slate-deep p-4 pt-5 lg:flex [@media(min-height:50rem)]:gap-7 [@media(min-height:50rem)]:pt-6">
         <div className="px-3">
           <Logo />
         </div>
@@ -208,15 +208,15 @@ export function MemberShell({ account, children }: { account: Account; children:
         </div>
         {/* Phones: the member's own pages stay one tap away, without opening the menu. */}
         <nav aria-label="My pages" className="border-t border-chalk/10">
-          <ul className="no-scrollbar wrap flex gap-1 overflow-x-auto py-2">
+          <ul className="wrap flex justify-between gap-1 py-2 sm:justify-start">
             {[...groups[0]!.links, ...groups[1]!.links, ...groups[2]!.links].map(({ href, label, Icon }) => (
               <li key={href} className="shrink-0">
                 <Link
                   href={href}
                   aria-current={isCurrent(href, pathname) ? "page" : undefined}
-                  className="flex min-h-10 items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold text-chalk/70 aria-[current=page]:bg-flame aria-[current=page]:text-slate-ink"
+                  className="flex min-h-10 items-center gap-2 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-[0.8125rem] font-semibold max-[359px]:px-1 max-[359px]:text-xs min-[400px]:text-sm text-chalk/70 aria-[current=page]:bg-flame aria-[current=page]:text-slate-ink min-[400px]:px-2.5 sm:px-3"
                 >
-                  <Icon aria-hidden="true" size={17} stroke={1.75} />
+                  <Icon aria-hidden="true" size={17} stroke={1.75} className="hidden sm:block" />
                   {label}
                 </Link>
               </li>
