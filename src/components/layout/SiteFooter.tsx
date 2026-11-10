@@ -56,7 +56,7 @@ export async function SiteFooter() {
       <div className="wrap grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.85fr_0.85fr_1.5fr]">
         <div className="max-w-sm sm:col-span-2 lg:col-span-1">
           <Image
-            src="/brand/lockup-light.png"
+            src="/brand/logo.png"
             alt="Encounter Ground"
             width={467}
             height={480}

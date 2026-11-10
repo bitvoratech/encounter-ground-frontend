@@ -78,7 +78,7 @@ export function AdminNotice({ title, children }: { title: string; children: Reac
   return (
     <main id="main" className="grid flex-1 place-items-center bg-slate-deep px-5 py-16 text-center text-chalk">
       <div className="max-w-md">
-        <Image src="/brand/lockup-light.png" alt="Encounter Ground" width={467} height={480} className="mx-auto h-24 w-auto" />
+        <Image src="/brand/logo.png" alt="Encounter Ground" width={467} height={480} className="mx-auto h-24 w-auto" />
         <h1 className="mt-8 text-[length:var(--text-h2)] leading-tight">{title}</h1>
         <p className="mt-3 text-chalk/75">{children}</p>
         <Link href="/" className="btn btn-fire mt-8">

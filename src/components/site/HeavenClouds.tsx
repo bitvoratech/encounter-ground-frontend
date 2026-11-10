@@ -10,46 +10,55 @@ import { useId } from "react";
 
 type Circle = [cx: number, cy: number, r: number];
 
-// Billowing cumulus clumps along a 1200×240 tile: each clump is a flat-bottomed row of puffs,
-// tallest in the middle. Fixed numbers (not random) so server and client render the same.
-const clumps: [x: number, width: number, height: number][] = [
-  [0, 260, 120],
-  [210, 300, 160],
-  [470, 240, 110],
-  [660, 320, 175],
-  [940, 260, 130],
-  [1140, 260, 120],
+// Cumulus clumps along a 1200×240 tile: [x, width, height, peak]. `peak` (0..1) is where along
+// the clump its tallest puff sits, so each clump leans one way instead of all being symmetric.
+const clumps: [x: number, width: number, height: number, peak: number][] = [
+  [0, 270, 120, 0.4],
+  [215, 310, 165, 0.58],
+  [480, 250, 112, 0.35],
+  [665, 330, 180, 0.62],
+  [945, 270, 132, 0.45],
+  [1130, 250, 118, 0.5],
 ];
 
-const circles: Circle[] = clumps.flatMap(([x, width, height]) => {
-  const base = 230;
+const BASE = 232;
+
+// Few, large, heavily overlapping round puffs whose size swells smoothly to the peak and falls
+// away either side (no jitter), plus a "bridge" puff in every dip so the outline reads as one soft,
+// rounded cloud and not a row of bumps. Fixed numbers, so server and client render the same.
+const circles: Circle[] = clumps.flatMap(([x, width, height, peak]) => {
   const puffs = 6;
-  return Array.from({ length: puffs }, (_, i) => {
-    const t = (i + 0.5) / puffs; // 0..1 across the clump
-    const lift = Math.sin(Math.PI * t); // tallest in the middle
-    const r = height * (0.32 + 0.38 * lift) * (i % 2 ? 0.92 : 1);
-    return [Math.round(x + width * t), Math.round(base - r * 0.55 - height * 0.35 * lift), Math.round(r)] as Circle;
+  const main = Array.from({ length: puffs }, (_, i) => {
+    const t = i / (puffs - 1); // 0..1 across the clump
+    const swell = Math.exp(-(((t - peak) / 0.38) ** 2)); // 1 at the peak, easing off either side
+    const r = height * (0.3 + 0.4 * swell);
+    return [x + width * (0.08 + 0.84 * t), BASE - r * 0.6, r] as Circle;
   });
+  const bridges = main.slice(0, -1).map(([cx, , r], i) => {
+    const [nx, , nr] = main[i + 1];
+    const br = 0.82 * Math.min(r, nr);
+    return [(cx + nx) / 2, BASE - br * 0.6, br] as Circle;
+  });
+  return [...main, ...bridges].map(([cx, cy, r]) => [Math.round(cx), Math.round(cy), Math.round(r)] as Circle);
 });
 
-function Tile({ fill }: { fill: string }) {
+// Each strip is made of identical tiles. The tile's shapes are drawn once (in <defs>) and every
+// tile just <use>s them, so a strip is a handful of nodes instead of hundreds of circles.
+function Tile({ href, fill }: { href: string; fill: string }) {
   return (
-    <svg viewBox="0 0 1200 240" className="h-full w-auto shrink-0 overflow-visible" focusable="false" fill={fill}>
-      {circles.map(([cx, cy, r], i) => (
-        <circle key={i} cx={cx} cy={cy} r={r} />
-      ))}
-      <rect x="-40" y="200" width="1280" height="40" />
+    <svg viewBox="0 0 1200 240" className="h-full w-auto shrink-0 overflow-visible" focusable="false">
+      <use href={href} fill={fill} />
     </svg>
   );
 }
 
 // Each strip holds two identical halves, so sliding it left by half its width loops without a
 // seam. Three tiles per half keep the screen covered up to very wide monitors.
-function Strip({ className, fill }: { className: string; fill: string }) {
+function Strip({ className, href, fill }: { className: string; href: string; fill: string }) {
   return (
     <div className={`heaven-strip ${className}`}>
       {Array.from({ length: 6 }, (_, i) => (
-        <Tile key={i} fill={fill} />
+        <Tile key={i} href={href} fill={fill} />
       ))}
     </div>
   );
@@ -88,6 +97,8 @@ export function HeavenClouds({ tone = "gold" }: { tone?: keyof typeof tones }) {
   const id = useId().replace(/:/g, "");
   const gold = `${id}-gold`;
   const bright = `${id}-bright`;
+  const tile = `${id}-tile`;
+  const clip = `${id}-clip`;
 
   return (
     <div aria-hidden="true" className={`heaven heaven-${tone}`}>
@@ -104,6 +115,16 @@ export function HeavenClouds({ tone = "gold" }: { tone?: keyof typeof tones }) {
             <stop offset="0.6" stopColor={front[1]} />
             <stop offset="1" stopColor={front[2]} />
           </linearGradient>
+          {/* Puffs may rise above the tile, but are cut flat along the base */}
+          <clipPath id={clip}>
+            <rect x="-100" y="-120" width="1400" height="360" />
+          </clipPath>
+          <g id={tile} clipPath={`url(#${clip})`}>
+            {circles.map(([cx, cy, r], i) => (
+              <circle key={i} cx={cx} cy={cy} r={r} />
+            ))}
+            <rect x="-40" y="204" width="1280" height="36" />
+          </g>
         </defs>
       </svg>
 
@@ -111,10 +132,10 @@ export function HeavenClouds({ tone = "gold" }: { tone?: keyof typeof tones }) {
       <div className="heaven-rays" />
       <div className="heaven-sun" /> */}
 
-      <Strip className="heaven-strip-top-back" fill={`url(#${gold})`} />
-      <Strip className="heaven-strip-top" fill={`url(#${bright})`} />
-      <Strip className="heaven-strip-far" fill={`url(#${gold})`} />
-      <Strip className="heaven-strip-near" fill={`url(#${bright})`} />
+      <Strip className="heaven-strip-top-back" href={`#${tile}`} fill={`url(#${gold})`} />
+      <Strip className="heaven-strip-top" href={`#${tile}`} fill={`url(#${bright})`} />
+      <Strip className="heaven-strip-far" href={`#${tile}`} fill={`url(#${gold})`} />
+      <Strip className="heaven-strip-near" href={`#${tile}`} fill={`url(#${bright})`} />
 
       {motes.map(([left, top, size, delay]) => (
         <span

@@ -60,7 +60,7 @@ const roleLabel = { admin: "Admin", editor: "Editor", member: "Member" };
 function Logo() {
   return (
     <Link href="/admin" className="flex items-center gap-3" aria-label="Encounter Ground admin">
-      <Image src="/brand/lockup-light.png" alt="" width={467} height={480} className="h-11 w-auto" />
+      <Image src="/brand/logo.png" alt="" width={467} height={480} className="h-11 w-auto" />
       <span className="rounded-full bg-flame/15 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-flame">Admin</span>
     </Link>
   );

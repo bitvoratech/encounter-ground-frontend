@@ -51,7 +51,7 @@ const isCurrent = (href: string, pathname: string) => pathname === href || pathn
 function Logo() {
   return (
     <Link href="/dashboard" className="flex items-center gap-3" aria-label="Encounter Ground: my dashboard">
-      <Image src="/brand/lockup-light.png" alt="" width={467} height={480} className="h-11 w-auto" />
+      <Image src="/brand/logo.png" alt="" width={467} height={480} className="h-11 w-auto" />
       <span className="rounded-full bg-flame/15 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-flame">Member</span>
     </Link>
   );

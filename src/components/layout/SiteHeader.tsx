@@ -175,7 +175,7 @@ export function SiteHeader({ socials }: { socials: Social[] }) {
         <div className="wrap flex h-18 lg:h-22 items-center justify-between gap-4">
           <Link href="/" className="shrink-0" aria-label="Encounter Ground home">
             <Image
-              src="/brand/lockup.png"
+              src="/brand/logo.png"
               alt="Encounter Ground"
               width={467}
               height={480}
@@ -250,7 +250,7 @@ export function SiteHeader({ socials }: { socials: Social[] }) {
       >
         <div className="wrap flex h-18 shrink-0 items-center justify-between gap-4 border-b border-chalk/10">
           <Link href="/" aria-label="Encounter Ground home">
-            <Image src="/brand/lockup-light.png" alt="" width={467} height={480} className="h-14 w-auto" />
+            <Image src="/brand/logo.png" alt="" width={507} height={580} className="h-20 w-auto" />
           </Link>
           <button
             type="button"
