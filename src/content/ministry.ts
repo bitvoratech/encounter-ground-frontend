@@ -78,15 +78,20 @@ export const yada = {
   year: 2026,
   theme: "Reviving the Ancient Well Of True Worship",
   registerUrl: "https://tinyurl.com/RegisterforYADA2026",
-  // Dates and times are withheld until the ministry confirms them.
-  when: "December 2026",
+  when: "Dec. 18th – 20th, 2026",
+  time: "2:00 PM – 7:00 PM WAT",
+  timezone: "Africa/Lagos",
+  where: " 2 Rock Drive, off Bisola Durosinmi Etti Drive, Lekki Phase 1, Lagos.",
+  venue: "THE SOMI PLACE,",
+
   about: [
-    "YADA Intimacy Conference is a call into the deeper reality of YADA—knowing God beyond intellectual awareness and into experiential, relational, intimate knowing.",
-    "It is a journey from knowing about God to truly knowing Him through desire, encounter, fellowship, surrender, obedience, and continual communion.",
+    "YADA Intimacy Conference is a call into the deeper reality of YADA; the Hebrew concept of knowing what goes beyond intellectual awareness into experiential, relational, intimate knowing. It speaks of knowing God through encounter, fellowship, trust, surrender, obedience, and continual communion until what we know of Him becomes something we have experienced and lived.",
+    "YADA is not simply gathering information about God; it is being brought into such depth of relationship with Him that His nature, voice, heart, and ways becomes one with us. YADA is the journey from knowing about God to knowing God.",
   ],
   dress: [
-    "Decent and modest dressing is a priority for this event.",
-    "Dress as one who is coming into the presence of their King.",
+    "As we gather in the presence of God, we encourage everyone to dress modestly and appropriately for the meeting.",
+    "The power of God will be present, and we would not want anyone to become distracted, uncomfortable, or embarrassed because of their choice of clothing.",
+    "Let your dress reflect your reverence for the presence of God.",
   ],
 };
 

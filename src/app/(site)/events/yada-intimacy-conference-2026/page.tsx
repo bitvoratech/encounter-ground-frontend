@@ -48,17 +48,18 @@ export default async function YadaPage() {
           <div>
             <dt className="text-stone-muted">When</dt>
             <dd className="mt-1 font-display text-2xl text-slate-ink">{yada.when}</dd>
-            <dd className="mt-1 text-stone-muted">Exact dates and times will be announced.</dd>
+            <dd className="mt-1 text-stone-muted">{yada.time}</dd>
+            <dd className="mt-1 text-stone-muted">{yada.timezone}</dd>
           </div>
           <div>
             <dt className="text-stone-muted">Where</dt>
-            <dd className="mt-1 font-display text-2xl text-slate-ink">Lagos</dd>
-            <dd className="mt-1 text-stone-muted">Venue to be announced.</dd>
+            <dd className="mt-1 font-display text-2xl text-slate-ink">{yada.venue}</dd>
+            <dd className="mt-1 text-stone-muted">{yada.where}</dd>
           </div>
           <div>
             <dt className="text-stone-muted">What to wear</dt>
             {yada.dress.map((d) => (
-              <dd key={d} className="mt-1 text-slate-ink/90">
+              <dd key={d} className="mt-1 text-slate-ink/90 font-bold">
                 {d}
               </dd>
             ))}
