@@ -107,9 +107,9 @@ export function HeavenClouds({ tone = "gold" }: { tone?: keyof typeof tones }) {
         </defs>
       </svg>
 
-      <div className="heaven-glow" />
+      {/* <div className="heaven-glow" />
       <div className="heaven-rays" />
-      <div className="heaven-sun" />
+      <div className="heaven-sun" /> */}
 
       <Strip className="heaven-strip-top-back" fill={`url(#${gold})`} />
       <Strip className="heaven-strip-top" fill={`url(#${bright})`} />

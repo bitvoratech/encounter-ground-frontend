@@ -5,6 +5,7 @@ import { streamIcon } from "@/components/site/streamIcons";
 import { HeavenClouds } from "@/components/site/HeavenClouds";
 import { Statement } from "@/components/site/Statement";
 import { YadaBand } from "@/components/site/YadaBand";
+import { SectionClouds } from "@/components/site/SectionClouds";
 import { mandate, programmes, youtubeChannel } from "@/content/ministry";
 import { getSiteContent, whatsappOf } from "@/lib/siteContent";
 import { cta, sectionCopy, signatureStatements } from "@/content/siteCopy";
@@ -92,7 +93,8 @@ export default async function HomePage() {
       </section>
 
       {/* Who we are: the one deep band near the top, with a studio portrait */}
-      <section aria-labelledby="who-heading" className="bg-slate-deep text-chalk">
+      <section aria-labelledby="who-heading" className="relative isolate overflow-hidden bg-slate-deep text-chalk">
+        <SectionClouds tone="night" />
         <div className="wrap grid gap-12 py-16 md:grid-cols-[2fr_3fr] md:items-center md:gap-16 md:py-24">
           <figure className="mx-auto w-full max-w-[17rem] sm:max-w-xs md:max-w-none">
             <div className="photo-frame">
@@ -126,7 +128,8 @@ export default async function HomePage() {
       </section>
 
       {/* The four pillars: a swipeable row on phones, a grid from tablet up */}
-      <section aria-labelledby="pillars-heading" className="border-t border-rule bg-chalk">
+      <section aria-labelledby="pillars-heading" className="relative isolate overflow-hidden bg-chalk">
+        <SectionClouds />
         <div className="wrap py-16 md:py-24">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
@@ -159,7 +162,8 @@ export default async function HomePage() {
       <Statement>{signatureStatements[0]}</Statement>
 
       {/* Books by the founder */}
-      <section aria-labelledby="books-heading">
+      <section aria-labelledby="books-heading" className="relative isolate overflow-hidden">
+        <SectionClouds />
         <div className="wrap grid gap-10 py-16 md:grid-cols-[3fr_2fr] md:items-center md:py-24">
           <Link href="/books" className="group block overflow-hidden rounded-3xl">
             <Image
@@ -195,6 +199,7 @@ export default async function HomePage() {
           aria-hidden="true"
           className="absolute inset-0 -z-10 bg-gradient-to-b from-slate-deep/75 via-slate-deep/55 to-slate-deep/80"
         />
+        <SectionClouds tone="night" />
         <div className="wrap py-16 md:py-28">
           <div className="text-center">
             <p className="eyebrow eyebrow-light">{youtubeChannel.name}</p>
@@ -285,7 +290,8 @@ export default async function HomePage() {
       </section>
 
       {/* Our events: the regular rhythm, read as a schedule */}
-      <section aria-labelledby="rhythm-heading" className="bg-chalk">
+      <section aria-labelledby="rhythm-heading" className="relative isolate overflow-hidden bg-chalk">
+        <SectionClouds />
         <div className="wrap py-16 md:py-24">
           <div className="grid gap-8 md:grid-cols-[1fr_2fr] md:gap-10">
             <div>
@@ -330,7 +336,8 @@ export default async function HomePage() {
       <YadaBand />
 
       {/* The school: Beth-El Institute, a separate site under the ministry */}
-      <section aria-labelledby="school-heading">
+      <section aria-labelledby="school-heading" className="relative isolate overflow-hidden">
+        <SectionClouds />
         <div className="wrap grid gap-10 py-16 md:grid-cols-[3fr_2fr] md:items-center md:gap-16 md:py-24">
           <div>
             <p className="eyebrow">The ministry school</p>
@@ -375,7 +382,8 @@ export default async function HomePage() {
       <Statement>{signatureStatements[6]}</Statement>
 
       {/* From the blog */}
-      <section aria-labelledby="blog-heading" className="border-t border-rule bg-chalk">
+      <section aria-labelledby="blog-heading" className="relative isolate overflow-hidden bg-chalk">
+        <SectionClouds />
         <div className="wrap py-16 md:py-24">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
@@ -419,7 +427,8 @@ export default async function HomePage() {
       </section>
 
       {/* Stay connected: replaces the old newsletter form, which never worked */}
-      <section aria-labelledby="connect-heading">
+      <section aria-labelledby="connect-heading" className="relative isolate overflow-hidden">
+        <SectionClouds />
         <div className="wrap py-14 md:py-20">
           <div className="flex flex-col gap-6 rounded-3xl border border-rule bg-chalk p-6 sm:flex-row sm:items-center sm:justify-between md:p-10">
             <div className="flex flex-col items-start gap-4 sm:flex-row">

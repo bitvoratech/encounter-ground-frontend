@@ -215,12 +215,12 @@ export function SiteHeader({ socials }: { socials: Social[] }) {
               <AccountMenu account={member} />
             ) : (
               <Link
-                href={account.href}
-                aria-current={isActive(account.href) ? "page" : undefined}
-                className="hidden rounded-full px-3 py-2 text-[0.95rem] font-semibold text-slate-ink hover:text-amber aria-[current=page]:text-amber lg:inline-block"
-              >
-                {account.label}
-              </Link>
+                  href={account.href}
+                  aria-current={isActive(account.href) ? "page" : undefined}
+                  className="hidden rounded-full border-[1.5px] border-current px-5 py-2 text-[0.95rem] font-semibold text-slate-ink transition-colors hover:bg-slate-ink/5 hover:text-amber aria-[current=page]:text-amber lg:inline-flex lg:items-center"
+                >
+                  {account.label}
+                </Link>
             )}
             <button
               ref={menuButtonRef}
@@ -318,7 +318,7 @@ export function SiteHeader({ socials }: { socials: Social[] }) {
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
-                <Link href="/login" className="btn btn-fire">
+                <Link href="/login" className="btn btn-fire border-black">
                   Sign in
                 </Link>
                 <Link href="/register" className="btn btn-quiet text-chalk">

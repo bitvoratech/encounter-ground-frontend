@@ -215,7 +215,7 @@
   without causing horizontal scroll.
 */
 .page-hero {
-  border-image: linear-gradient(180deg, #f6ead0, var(--color-limestone)) fill 0 // 0 100vw;
+  border-image: linear-gradient(180deg, #f6ead0, var(--color-limestone)) fill 0 / 0 100vw;
 }
 
 /*
@@ -428,4 +428,57 @@
 }
 .hero-blend-soft {
   mask-image: radial-gradient(58% 58% at 50% 50%, #000 72%, transparent 100%);
+}
+
+
+/*
+  Section clouds: small cloud banks tucked into the corners of a section (SectionClouds).
+  Top corners are flipped so the flat edge sits on the section edge; right corners are mirrored.
+  They fade out toward the middle, sit behind the content, and drift very slowly.
+*/
+.section-clouds {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sc-corner {
+  position: absolute;
+  width: clamp(6rem, 15vw, 13rem);
+  aspect-ratio: 360 / 160;
+  mask-image: linear-gradient(90deg, #000 55%, transparent 100%);
+  opacity: 1;
+}
+.sc-tl { top: -0.5rem; left: -1.5rem; transform: scaleY(-1); }
+.sc-tr { top: -0.5rem; right: -1.5rem; transform: scale(-1, -1); }
+.sc-bl { bottom: -0.5rem; left: -1.5rem; }
+.sc-br { bottom: -0.5rem; right: -1.5rem; transform: scaleX(-1); }
+
+.sc-back,
+.sc-front {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: sc-drift 20s ease-in-out infinite alternate;
+}
+.sc-back { opacity: 0.9; translate: 14% -10%; animation-duration: 28s; animation-direction: alternate-reverse; }
+/* A thin amber edge and a warm shadow lift the cream clouds off the pale section backgrounds */
+.sc-front { filter: drop-shadow(0 0 0.75px rgb(150 96 8 / 0.7)) drop-shadow(0 6px 10px rgb(190 125 15 / 0.35)); }
+.sc-back { filter: drop-shadow(0 0 0.75px rgb(150 96 8 / 0.5)); }
+
+.section-clouds-night .sc-corner { opacity: 0.7; }
+.section-clouds-night .sc-front { filter: drop-shadow(0 6px 12px rgb(0 0 0 / 0.35)); }
+.section-clouds-night .sc-back { filter: none; }
+
+@keyframes sc-drift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(1rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sc-back, .sc-front { animation: none; }
+}
+@media (forced-colors: active) {
+  .section-clouds { display: none; }
 }
