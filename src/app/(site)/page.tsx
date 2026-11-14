@@ -44,12 +44,12 @@ export default async function HomePage() {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-gradient-to-b from-[#fdf6e6]/30 via-[#fdf6e6]/55 to-limestone"
+          className="absolute inset-0 -z-10 bg-linear-to-b from-[#fdf6e6]/30 via-[#fdf6e6]/55 to-limestone"
         />
         <HeavenClouds />
 
         <div className="wrap grid items-center gap-8 pb-16 pt-8 md:grid-cols-[1.15fr_1fr] md:gap-12 md:py-20 lg:py-24">
-          <figure className="mx-auto w-full max-w-[15rem] sm:max-w-[18rem] md:order-last md:max-w-[26rem] lg:max-w-[28rem]">
+          <figure className="mx-auto w-full max-w-60 sm:max-w-[18rem] md:order-last md:max-w-104 lg:max-w-md">
             {/* No frame: the picture's edges fade into the sky around it. */}
             <div className="hero-blend overflow-hidden rounded-t-full">
               <Image
@@ -58,7 +58,7 @@ export default async function HomePage() {
                 priority
                 placeholder="blur"
                 sizes="(min-width: 1024px) 28rem, (min-width: 768px) 26rem, 18rem"
-                className="aspect-[496/655] w-full scale-[1.03] object-cover object-left-top"
+                className="aspect-496/655 w-full scale-[1.03] object-cover object-top-left"
               />
             </div>
           </figure>
@@ -74,10 +74,10 @@ export default async function HomePage() {
               <IconArrowRight aria-hidden="true" size={16} stroke={2} />
             </a>
             <h1 className="hero-title mt-6 text-[clamp(3rem,1.5rem+6.5vw,6.5rem)] leading-[0.92]">{home.tagline}</h1>
-            <p className="mx-auto mt-6 max-w-[34rem] font-display text-[1.5rem] leading-snug text-slate-ink md:mx-0 md:text-[1.75rem]">
+            <p className="mx-auto mt-6 max-w-136 font-display text-h3 leading-snug text-slate-ink md:mx-0 md:text-[1.75rem]">
               {sectionCopy.home.headline}
             </p>
-            <p className="mx-auto mt-4 max-w-[34rem] text-lede leading-relaxed text-slate-ink/85 md:mx-0">
+            <p className="mx-auto mt-4 max-w-136 text-lede leading-relaxed text-slate-ink/85 md:mx-0">
               {sectionCopy.home.body}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
@@ -96,21 +96,21 @@ export default async function HomePage() {
       <section aria-labelledby="who-heading" className="relative isolate overflow-hidden bg-slate-deep text-chalk">
         <SectionClouds tone="night" />
         <div className="wrap grid gap-12 py-16 md:grid-cols-[2fr_3fr] md:items-center md:gap-16 md:py-24">
-          <figure className="mx-auto w-full max-w-[17rem] sm:max-w-xs md:max-w-none">
+          <figure className="mx-auto w-full max-w-68 sm:max-w-xs md:max-w-none">
             <div className="photo-frame">
               <Image
                 src={founderImage}
                 alt="Toyin Bello of Encounter Ground, in a T-shirt that reads “I am my Beloved’s, my Beloved is mine”"
                 placeholder="blur"
                 sizes="(min-width: 768px) 40vw, 17rem"
-                className="aspect-[4/5] w-full rounded-2xl object-cover object-top"
+                className="aspect-4/5 w-full rounded-2xl object-cover object-top"
               />
             </div>
             <figcaption className="mt-5 text-center text-sm text-chalk/70 md:text-left">Toyin Bello</figcaption>
           </figure>
           <div>
             <p className="eyebrow eyebrow-light">Who we are</p>
-            <h2 id="who-heading" className="mt-4 text-[length:var(--text-h2)]">
+            <h2 id="who-heading" className="mt-4 text-h2">
               {sectionCopy.about.headline}
             </h2>
             <div className="prose-eg measure mt-6 text-chalk/85 md:text-[1.125rem]">
@@ -134,7 +134,7 @@ export default async function HomePage() {
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="eyebrow">Our vision &amp; mission</p>
-              <h2 id="pillars-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+              <h2 id="pillars-heading" className="mt-4 text-h2 text-slate-ink">
                 The pillars of <em>Encounter Ground</em>
               </h2>
             </div>
@@ -176,7 +176,7 @@ export default async function HomePage() {
           </Link>
           <div>
             <p className="eyebrow">From the bookshelf</p>
-            <h2 id="books-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+            <h2 id="books-heading" className="mt-4 text-h2 text-slate-ink">
               Books by <em>Toyin Bello</em>
             </h2>
             <p className="mt-4 max-w-md text-stone-muted">{sectionCopy.books.short}</p>
@@ -197,13 +197,13 @@ export default async function HomePage() {
         <Image src={streamsImage} alt="" fill placeholder="blur" sizes="100vw" className="-z-10 object-cover" />
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-gradient-to-b from-slate-deep/75 via-slate-deep/55 to-slate-deep/80"
+          className="absolute inset-0 -z-10 bg-linear-to-b from-slate-deep/75 via-slate-deep/55 to-slate-deep/80"
         />
         <SectionClouds tone="night" />
         <div className="wrap py-16 md:py-28">
           <div className="text-center">
             <p className="eyebrow eyebrow-light">{youtubeChannel.name}</p>
-            <h2 id="streams-heading" className="mx-auto mt-4 max-w-2xl text-[length:var(--text-h2)]">
+            <h2 id="streams-heading" className="mx-auto mt-4 max-w-2xl text-h2">
               Pray and worship with us, <em className="text-flame">wherever you are</em>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-chalk/80">{sectionCopy.watch.short}</p>
@@ -296,7 +296,7 @@ export default async function HomePage() {
           <div className="grid gap-8 md:grid-cols-[1fr_2fr] md:gap-10">
             <div>
               <p className="eyebrow">Our events</p>
-              <h2 id="rhythm-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+              <h2 id="rhythm-heading" className="mt-4 text-h2 text-slate-ink">
                 Where to <em>meet us</em>
               </h2>
               <p className="mt-4 max-w-sm text-stone-muted">{sectionCopy.gatherings.short}</p>
@@ -309,7 +309,7 @@ export default async function HomePage() {
                   alt="Toyin Bello leading an Encounter Ground revival meeting, arms open, with musicians behind her"
                   placeholder="blur"
                   sizes="30vw"
-                  className="aspect-[4/3] w-full rounded-2xl object-cover"
+                  className="aspect-4/3 w-full rounded-2xl object-cover"
                 />
               </div>
             </div>
@@ -341,7 +341,7 @@ export default async function HomePage() {
         <div className="wrap grid gap-10 py-16 md:grid-cols-[3fr_2fr] md:items-center md:gap-16 md:py-24">
           <div>
             <p className="eyebrow">The ministry school</p>
-            <h2 id="school-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+            <h2 id="school-heading" className="mt-4 text-h2 text-slate-ink">
               {school.name}
             </h2>
             <p className="measure mt-6 font-display text-[1.375rem] leading-snug text-slate-ink">{sectionCopy.bethEl.headline}</p>
@@ -366,7 +366,7 @@ export default async function HomePage() {
           </div>
           <Link
             href="/school"
-            className="group order-first mx-auto block w-full max-w-[16rem] overflow-hidden rounded-3xl border border-rule sm:max-w-xs md:order-none md:max-w-none"
+            className="group order-first mx-auto block w-full max-w-[16rem] overflow-hidden rounded-3xl border border-rule sm:max-w-xs md:order-0 md:max-w-none"
           >
             <Image
               src={bethElImage}
@@ -388,7 +388,7 @@ export default async function HomePage() {
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="eyebrow">From our blog</p>
-              <h2 id="blog-heading" className="mt-4 text-[length:var(--text-h2)] text-slate-ink">
+              <h2 id="blog-heading" className="mt-4 text-h2 text-slate-ink">
                 Discover faith, grow in grace, <em>behold His beauty</em>
               </h2>
             </div>
@@ -407,7 +407,7 @@ export default async function HomePage() {
                       width={740}
                       height={473}
                       sizes="(min-width: 768px) 45vw, 100vw"
-                      className="aspect-[740/473] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      className="`aspect-740/473` w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                     />
                   </div>
                   <p className="mt-4 text-sm text-stone-muted">

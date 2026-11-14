@@ -15,7 +15,7 @@ export default async function YadaPage() {
       <header className="ember">
         <div className="wrap pb-20 pt-16 md:pb-32 md:pt-24">
           <p className="text-lg text-flame">{yada.when}</p>
-          <h1 className="mt-3 text-[length:var(--text-display)] leading-[0.95] text-chalk">
+          <h1 className="mt-3 text-display leading-[0.95] text-chalk">
             YADA
             <span className="block text-[0.5em] md:text-[0.42em] leading-tight text-chalk/90">
               Intimacy Conference
@@ -32,7 +32,7 @@ export default async function YadaPage() {
       {/* The write-up comes first, as the ministry asked */}
       <section aria-labelledby="about-heading">
         <div className="wrap grid gap-10 py-16 md:grid-cols-[1fr_2fr] md:py-24">
-          <h2 id="about-heading" className="text-[length:var(--text-h2)] text-slate-ink">
+          <h2 id="about-heading" className="text-h2 text-slate-ink">
             What YADA means
           </h2>
           <div className="prose-eg measure text-[1.2rem] text-slate-ink/90">

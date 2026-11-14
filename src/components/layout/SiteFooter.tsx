@@ -52,8 +52,8 @@ export async function SiteFooter() {
         </div>
       </div>
 
-      {/* Columns */}
-      <div className="wrap grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.85fr_0.85fr_1.5fr]">
+      {/* Columns: brand | link columns | contact */}
+      <div className="wrap grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.2fr_2.4fr_1.4fr]">
         <div className="max-w-sm sm:col-span-2 lg:col-span-1">
           <Image
             src="/brand/logo.png"
@@ -83,7 +83,11 @@ export async function SiteFooter() {
           </ul>
         </div>
 
-        <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:col-span-2 sm:gap-12 lg:col-span-2">
+        {/* Explore + one column per dropdown: 2-up on phones, 3-up from sm */}
+        <nav
+          aria-label="Footer"
+          className="grid grid-cols-2 gap-8 sm:col-span-2 sm:grid-cols-3 sm:gap-10 lg:col-span-1"
+        >
           <Column title="Explore">
             {explore.map((item) => (
               <li key={item.href}>
@@ -106,38 +110,51 @@ export async function SiteFooter() {
           ))}
         </nav>
 
-        <Column title="Reach us">
-          <li>
-            <a href={`mailto:${contact.email}`} className={`${linkClass} [overflow-wrap:anywhere]`}>
-              <IconMail aria-hidden="true" size={18} stroke={1.75} className="shrink-0 text-flame" />
-              {contact.email}
-            </a>
-          </li>
-          <li>
-            <a href={contact.phoneHref} className={linkClass}>
-              <IconPhone aria-hidden="true" size={18} stroke={1.75} className="shrink-0 text-flame" />
-              {contact.phoneDisplay}
-            </a>
-          </li>
-          <li>
-            <a href={whatsapp.href} {...external} className={linkClass}>
-              <IconBrandWhatsapp aria-hidden="true" size={18} stroke={1.75} className="shrink-0 text-flame" />
-              WhatsApp channel
-            </a>
-          </li>
-          <li>
-            <Link href="/login" className={linkClass}>
-              <IconUserCircle aria-hidden="true" size={18} stroke={1.75} className="shrink-0 text-flame" />
-              Sign in or create an account
-            </Link>
-          </li>
-        </Column>
+        <div className="sm:col-span-2 lg:col-span-1">
+          <Column title="Reach us">
+            <li>
+              <a href={`mailto:${contact.email}`} className={`${linkClass} wrap-anywhere]`}>
+                <IconMail aria-hidden="true" size={18} stroke={1.75} className="shrink-0 text-flame" />
+                {contact.email}
+              </a>
+            </li>
+            <li>
+              <a href={contact.phoneHref} className={linkClass}>
+                <IconPhone aria-hidden="true" size={18} stroke={1.75} className="shrink-0 text-flame" />
+                {contact.phoneDisplay}
+              </a>
+            </li>
+            <li>
+              <a href={whatsapp.href} {...external} className={linkClass}>
+                <IconBrandWhatsapp aria-hidden="true" size={18} stroke={1.75} className="shrink-0 text-flame" />
+                WhatsApp channel
+              </a>
+            </li>
+            <li>
+              <Link href="/login" className={linkClass}>
+                <IconUserCircle aria-hidden="true" size={18} stroke={1.75} className="shrink-0 text-flame" />
+                Sign in or create an account
+              </Link>
+            </li>
+          </Column>
+        </div>
       </div>
 
-      {/* Bottom bar */}
       <div className="border-t border-chalk/10">
         <div className="wrap flex flex-col gap-4 py-6 text-sm text-chalk/55 lg:flex-row lg:items-center lg:justify-between">
-          <p>© {new Date().getFullYear()} Encounter Ground. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} Encounter Ground. All rights reserved.
+            <span aria-hidden="true" className="mx-2">·</span>
+            Built by{" "}
+            <a
+              href="https://bitvoratech.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-chalk/80 hover:text-flame"
+            >
+              Bitvora Technologies Limited
+            </a>
+          </p>
           <p className="font-display text-base text-chalk/70">
             Hunger, Intimacy, Partnership, Revival, Dominion.
           </p>
