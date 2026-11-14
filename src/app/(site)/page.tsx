@@ -64,15 +64,14 @@ export default async function HomePage() {
           </figure>
 
           <div className="text-center md:text-left">
-            <a
-              href={yada.registerUrl}
-              {...external}
+            <Link
+              href={`/events/${yada.slug}/register`}
               className="inline-flex items-center gap-2 rounded-full border border-amber/25 bg-chalk/70 py-1.5 pl-1.5 pr-4 text-sm font-semibold text-slate-ink backdrop-blur transition-colors hover:border-amber/60"
             >
               <span className="rounded-full bg-flame px-2.5 py-0.5 text-xs">YADA {yada.year}</span>
               Registration is open
               <IconArrowRight aria-hidden="true" size={16} stroke={2} />
-            </a>
+            </Link>
             <h1 className="hero-title mt-6 text-[clamp(3rem,1.5rem+6.5vw,6.5rem)] leading-[0.92]">{home.tagline}</h1>
             <p className="mx-auto mt-6 max-w-136 font-display text-h3 leading-snug text-slate-ink md:mx-0 md:text-[1.75rem]">
               {sectionCopy.home.headline}

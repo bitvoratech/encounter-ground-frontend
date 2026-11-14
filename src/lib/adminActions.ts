@@ -21,6 +21,8 @@ export const setMessageHandled = (id: string, handled: boolean) => send(`/messag
 
 export const setMemberRole = (id: string, role: Role) => send(`/members/${id}`, { role });
 
+export const deleteRegistration = (id: string) => send(`/registrations/${id}`, undefined, "DELETE");
+
 // ---------------------------------------------------------------------------
 // Books
 // ---------------------------------------------------------------------------

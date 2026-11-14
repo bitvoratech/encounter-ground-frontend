@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getSiteContent, whatsappOf } from "@/lib/siteContent";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -23,9 +24,9 @@ export default async function YadaPage() {
           </h1>
           <p className="mt-10 text-chalk/70">Theme</p>
           <p className="font-display text-3xl text-flame-hot md:text-5xl">{yada.theme}</p>
-          <a href={yada.registerUrl} target="_blank" rel="noopener noreferrer" className="btn btn-fire mt-10">
+          <Link href={`/events/${yada.slug}/register`} className="btn btn-fire mt-10">
             Register now
-          </a>
+          </Link>
         </div>
       </header>
 
@@ -79,9 +80,9 @@ export default async function YadaPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3 self-start md:self-auto">
-            <a href={yada.registerUrl} target="_blank" rel="noopener noreferrer" className="btn btn-fire">
+            <Link href={`/events/${yada.slug}/register`} className="btn btn-fire">
               Register for YADA 2026
-            </a>
+            </Link>
             <a href={whatsapp.href} target="_blank" rel="noopener noreferrer" className="btn btn-quiet text-slate-ink">
               Follow on WhatsApp
             </a>

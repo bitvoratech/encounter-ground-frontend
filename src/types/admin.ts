@@ -153,3 +153,41 @@ export type BookOwner = {
   /** Bought (with an order) rather than given by the team. */
   purchased: boolean;
 };
+
+/** One sign-up for an event such as YADA (GET /admin/registrations). */
+export type EventRegistration = {
+  id: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  gender: string;
+  age_range: string;
+  church: string;
+  /** ISO dates, e.g. "2026-12-18" */
+  days: string[];
+  first_time: "yes" | "no" | "";
+  heard_from: string;
+  needs_transport: boolean;
+  location_area: string;
+  location_other: string;
+  special_needs: string;
+  created_at: string;
+};
+
+export type RegistrationsPage = {
+  event: { slug: string; title: string } | null;
+  events: { slug: string; title: string; registration_open: boolean; total: number }[];
+  stats: {
+    total: number;
+    transport: number;
+    first_timers: number;
+    by_area: { area: string; count: number }[];
+    by_day: { day: string; count: number }[];
+  } | null;
+  rows: EventRegistration[];
+  /** Registrations matching the search and filter. */
+  total: number;
+  page: number;
+  page_size: number;
+  filters: { q: string; transport: "yes" | "no" | "" };
+};

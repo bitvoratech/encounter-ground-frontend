@@ -11,6 +11,7 @@ import {
   IconMail,
   IconMenu2,
   IconSchool,
+  IconTicket,
   IconUsers,
   IconWorld,
   IconX,
@@ -50,7 +51,13 @@ const groups: { label: string | null; links: NavLink[] }[] = [
       { href: "/admin/content", label: "Site content", Icon: IconFileText, count: null, adminOnly: false },
     ],
   },
-  { label: "People", links: [{ href: "/admin/members", label: "Members", Icon: IconUsers, count: null, adminOnly: true }] },
+  {
+    label: "People",
+    links: [
+      { href: "/admin/registrations", label: "Registrations", Icon: IconTicket, count: null, adminOnly: false },
+      { href: "/admin/members", label: "Members", Icon: IconUsers, count: null, adminOnly: true },
+    ],
+  },
 ];
 
 const isCurrent = (href: string, pathname: string) => (href === "/admin" ? pathname === href : pathname.startsWith(href));

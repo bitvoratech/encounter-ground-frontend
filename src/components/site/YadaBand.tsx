@@ -26,9 +26,9 @@ export async function YadaBand({ showLink = true }: { showLink?: boolean }) {
             {yada.theme}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href={yada.registerUrl} target="_blank" rel="noopener noreferrer" className="btn btn-fire">
+            <Link href={`/events/${yada.slug}/register`} className="btn btn-fire">
               Register now
-            </a>
+            </Link>
             {showLink && (
               <Link href={`/events/${yada.slug}`} className="btn btn-quiet text-chalk">
                 About the conference
