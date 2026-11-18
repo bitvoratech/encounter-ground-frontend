@@ -97,7 +97,7 @@ export const yada = {
 
 // Home page sections carried over from the former WordPress site (encounterground.org).
 export const home = {
-  tagline: "Dominion in Intimacy",
+  tagline: "Dominion Through Intimacy",
   // TODO: replace with on-site registration once member accounts ship.
   joinUsUrl:
     "https://docs.google.com/forms/d/e/1FAIpQLScAXJFIqkya7AkuC0X5mHlw9oz1aKj93E97rCyAc5XLgufk7A/viewform",
